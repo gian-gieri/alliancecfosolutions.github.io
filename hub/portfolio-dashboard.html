@@ -1,0 +1,1777 @@
+<!--
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  CONFIDENTIAL — PERSONAL FINANCIAL DASHBOARD                     ║
+  ║  This file contains financial data. Do not upload, host, or      ║
+  ║  commit to any repository.                                       ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gieri Capital — Portfolio Dashboard</title>
+<style>
+:root {
+  --bg-primary: #0a0a1a;
+  --bg-secondary: #12122a;
+  --bg-card: #161638;
+  --bg-card-alt: #1a1a40;
+  --bg-hover: #1e1e4a;
+  --border: #2a2a5a;
+  --text-primary: #e8e8f0;
+  --text-secondary: #9090b0;
+  --text-muted: #606080;
+  --gold: #C9963B;
+  --gold-dim: #a07828;
+  --green: #00c853;
+  --green-dim: #1b5e20;
+  --red: #ff1744;
+  --red-dim: #7f0000;
+  --blue: #448aff;
+  --cyan: #00e5ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+.container { max-width: 1440px; margin: 0 auto; padding: 20px 24px; }
+
+/* Header */
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; border-bottom: 1px solid var(--border); margin-bottom: 24px;
+}
+.header-left h1 { font-size: 20px; font-weight: 600; letter-spacing: 1.5px; color: var(--gold); }
+.header-left span { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; }
+.badge-local {
+  background: rgba(0,200,80,0.12); border: 1px solid rgba(0,200,80,0.3);
+  color: var(--green); padding: 4px 12px; border-radius: 4px; font-size: 11px;
+  font-weight: 600; letter-spacing: 1px;
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 20px; margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.card-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+}
+.card-header h2 { font-size: 14px; font-weight: 600; letter-spacing: 1.5px; color: var(--gold); text-transform: uppercase; }
+.refresh-btn {
+  background: none; border: 1px solid var(--border); color: var(--text-muted);
+  padding: 4px 10px; border-radius: 4px; font-size: 10px; cursor: pointer;
+  letter-spacing: 0.5px; transition: all 0.2s;
+}
+.refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Welcome */
+.welcome { font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+.welcome-date { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
+.quote { color: var(--text-secondary); font-style: italic; font-size: 14px; margin-bottom: 16px; border-left: 3px solid var(--gold); padding-left: 14px; }
+.quote-author { color: var(--gold-dim); font-style: normal; font-size: 12px; }
+.macro-brief { background: var(--bg-secondary); border-radius: 6px; padding: 14px; margin-bottom: 12px; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+.theme-day { background: linear-gradient(135deg, rgba(201,150,59,0.08), rgba(201,150,59,0.02)); border: 1px solid rgba(201,150,59,0.2); border-radius: 6px; padding: 10px 14px; font-size: 13px; }
+.theme-day strong { color: var(--gold); }
+.update-note { font-size: 10px; color: var(--text-muted); margin-top: 6px; }
+
+/* KPI Row */
+.kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px; }
+.kpi-card {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.kpi-label { font-size: 10px; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.kpi-value { font-size: 26px; font-weight: 600; }
+.kpi-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.kpi-green { color: var(--green); }
+.kpi-red { color: var(--red); }
+.kpi-gold { color: var(--gold); }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; color: var(--text-muted); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; border-bottom: 1px solid var(--border); font-weight: 600; }
+td { padding: 10px 12px; border-bottom: 1px solid rgba(42,42,90,0.5); }
+tr:hover td { background: var(--bg-hover); }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.gain { color: var(--green); }
+.loss { color: var(--red); }
+.ticker { color: var(--cyan); font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+.owner-tag { font-size: 10px; padding: 2px 6px; border-radius: 3px; font-weight: 600; }
+.owner-gian { background: rgba(68,138,255,0.15); color: var(--blue); }
+.owner-amber { background: rgba(201,150,59,0.15); color: var(--gold); }
+.owner-joint { background: rgba(0,229,255,0.15); color: var(--cyan); }
+
+/* Tabs */
+.tab-bar { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.tab-btn {
+  background: none; border: none; color: var(--text-muted); padding: 10px 18px;
+  font-size: 12px; cursor: pointer; letter-spacing: 0.5px; border-bottom: 2px solid transparent;
+  transition: all 0.2s; font-weight: 500;
+}
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+.tab-btn:hover { color: var(--text-primary); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* Donut */
+.donut-container { display: flex; align-items: center; gap: 30px; justify-content: center; }
+.donut-legend { font-size: 12px; }
+.donut-legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.donut-legend-color { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+.donut-legend-label { color: var(--text-secondary); }
+.donut-legend-val { color: var(--text-primary); font-weight: 600; margin-left: auto; padding-left: 16px; }
+
+/* Classification */
+.class-tag {
+  font-size: 10px; padding: 3px 8px; border-radius: 3px; font-weight: 700; letter-spacing: 1px;
+}
+.class-investment { background: rgba(0,200,83,0.12); color: var(--green); border: 1px solid rgba(0,200,83,0.3); }
+.class-trade { background: rgba(255,23,68,0.12); color: var(--red); border: 1px solid rgba(255,23,68,0.3); }
+
+/* Placeholder */
+.placeholder-box {
+  background: var(--bg-secondary); border: 1px dashed var(--border);
+  border-radius: 6px; padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px;
+}
+
+/* Feed */
+.feed-section { margin-bottom: 14px; }
+.feed-section h3 { font-size: 12px; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+.feed-list { list-style: none; }
+.feed-list li { color: var(--text-secondary); font-size: 13px; padding: 4px 0; }
+.feed-list li::before { content: '→ '; color: var(--gold-dim); }
+
+/* Footer */
+.footer {
+  text-align: center; padding: 20px 0; margin-top: 24px;
+  border-top: 1px solid var(--border); color: var(--text-muted); font-size: 11px;
+}
+
+/* Two col */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+@media (max-width: 1200px) { .kpi-row { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 900px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .two-col, .three-col { grid-template-columns: 1fr; }
+}
+
+/* === PORTFOLIO ANALYSIS STYLES === */
+.risk-badge {
+  display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 11px;
+  font-weight: 700; letter-spacing: 1.5px;
+}
+.risk-high { background: rgba(255,193,7,0.15); border: 1px solid rgba(255,193,7,0.4); color: #ffc107; }
+.risk-critical { background: rgba(255,23,68,0.12); border: 1px solid rgba(255,23,68,0.3); color: var(--red); }
+.risk-positive { background: rgba(0,200,83,0.12); border: 1px solid rgba(0,200,83,0.3); color: var(--green); }
+
+.alloc-bar-container { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.alloc-bar-label { font-size: 12px; color: var(--text-secondary); min-width: 140px; }
+.alloc-bar { height: 20px; border-radius: 3px; position: relative; min-width: 4px; }
+.alloc-bar-pct { font-size: 11px; color: var(--text-primary); font-weight: 600; min-width: 45px; text-align: right; }
+
+.concentration-warning {
+  background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.25); border-left: 4px solid #ffc107;
+  border-radius: 6px; padding: 12px 16px; margin-top: 14px; font-size: 13px; color: #ffc107;
+}
+
+.thesis-align { font-size: 16px; }
+.thesis-strong { color: var(--green); }
+.thesis-moderate { color: #ffc107; }
+.thesis-weak { color: var(--red); }
+
+.board-quote {
+  background: var(--bg-secondary); border-left: 3px solid var(--gold-dim);
+  border-radius: 0 6px 6px 0; padding: 14px 18px; margin-bottom: 12px; font-size: 13px;
+  color: var(--text-secondary); line-height: 1.7;
+}
+.board-quote-name { color: var(--gold); font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+
+.risk-item { padding: 8px 0; font-size: 13px; color: var(--text-secondary); line-height: 1.6; border-bottom: 1px solid rgba(42,42,90,0.3); }
+.risk-item:last-child { border-bottom: none; }
+.risk-item strong { color: var(--text-primary); }
+
+.section-subtitle {
+  font-size: 12px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase;
+  font-weight: 600; margin: 20px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+.section-subtitle:first-of-type { margin-top: 0; }
+
+.action-list { list-style: none; counter-reset: actions; }
+.action-list li {
+  counter-increment: actions; padding: 10px 0 10px 36px; position: relative;
+  font-size: 13px; color: var(--text-secondary); line-height: 1.6;
+  border-bottom: 1px solid rgba(42,42,90,0.3);
+}
+.action-list li::before {
+  content: counter(actions); position: absolute; left: 0; top: 10px;
+  width: 24px; height: 24px; border-radius: 50%; background: var(--gold);
+  color: var(--bg-primary); font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.action-list li strong { color: var(--text-primary); }
+
+/* Trade Cards */
+.trade-card {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-left: 4px solid var(--green);
+  border-radius: 6px; padding: 18px; margin-bottom: 14px; position: relative;
+}
+.trade-card.urgent { border-left: 4px solid var(--red); }
+.trade-card.event-driven { border-left: 4px solid #ff6d00; }
+.trade-card-header {
+  display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;
+}
+.trade-card-title { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.trade-card-action {
+  font-size: 10px; font-weight: 700; letter-spacing: 1.5px; padding: 3px 10px;
+  border-radius: 3px; background: rgba(0,200,83,0.15); color: var(--green); border: 1px solid rgba(0,200,83,0.3);
+}
+.trade-card-status {
+  font-size: 10px; font-weight: 600; letter-spacing: 1px; padding: 3px 10px;
+  border-radius: 3px; background: rgba(255,193,7,0.12); color: #ffc107; border: 1px solid rgba(255,193,7,0.3);
+}
+.trade-card-status.urgent-badge {
+  background: rgba(255,23,68,0.15); color: var(--red); border: 1px solid rgba(255,23,68,0.3);
+}
+.trade-card-tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px; padding: 2px 8px;
+  border-radius: 3px; background: rgba(255,109,0,0.15); color: #ff6d00; border: 1px solid rgba(255,109,0,0.3);
+}
+.trade-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px 16px; font-size: 12px; margin-bottom: 12px; }
+.trade-meta-item { color: var(--text-muted); }
+.trade-meta-item span { color: var(--text-primary); font-weight: 600; display: block; }
+.trade-rr-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+.trade-rr-risk { background: var(--red); }
+.trade-rr-reward { background: var(--green); }
+.trade-thesis { font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 8px; }
+.trade-sponsor { font-size: 11px; color: var(--gold); font-weight: 600; }
+.trade-invalidation { font-size: 11px; color: var(--text-muted); margin-top: 6px; }
+
+.checklist { list-style: none; }
+.checklist li { padding: 6px 0; font-size: 13px; color: var(--text-secondary); }
+.checklist li::before { content: '☐ '; color: var(--text-muted); }
+
+/* Gravity Fund & 529 special styles */
+.gf-metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 16px; }
+.gf-metric { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 12px; text-align: center; }
+.gf-metric-label { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
+.gf-metric-value { font-size: 18px; font-weight: 600; color: var(--text-primary); margin-top: 4px; }
+.gf-status-badge {
+  display: inline-block; padding: 6px 16px; border-radius: 4px; font-size: 11px;
+  font-weight: 700; letter-spacing: 1.5px;
+  background: rgba(0,200,83,0.12); border: 1px solid rgba(0,200,83,0.3); color: var(--green);
+  margin-bottom: 16px;
+}
+.star-holding {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px;
+  padding: 14px; margin-bottom: 10px;
+}
+.star-holding-title { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+.star-holding-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+.five29-account {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; margin-bottom: 12px;
+}
+.five29-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.five29-name { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+.five29-status {
+  font-size: 10px; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 4px;
+}
+.five29-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; font-size: 12px; }
+.five29-meta-item { color: var(--text-muted); }
+.five29-meta-item span { color: var(--text-primary); font-weight: 600; display: block; }
+
+/* === ACTIVE RECOMMENDATIONS — PROMINENT SECTION === */
+.reco-card {
+  background: var(--bg-card); border: 2px solid var(--gold); border-radius: 12px;
+  padding: 24px; margin-bottom: 20px;
+  box-shadow: 0 0 30px rgba(201,150,59,0.1), 0 4px 20px rgba(0,0,0,0.4);
+}
+.reco-card .card-header { border-bottom: 2px solid var(--gold); }
+.reco-card .card-header h2 { font-size: 16px; letter-spacing: 2px; }
+
+.market-pulse {
+  background: linear-gradient(135deg, rgba(255,23,68,0.08), rgba(255,193,7,0.08));
+  border: 1px solid rgba(255,193,7,0.3); border-radius: 8px; padding: 16px;
+  margin-bottom: 20px; font-size: 13px; line-height: 1.8;
+}
+.market-pulse-title { font-size: 12px; font-weight: 700; letter-spacing: 2px; color: var(--gold); margin-bottom: 8px; }
+
+.priority-block {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-left: 4px solid var(--gold);
+  border-radius: 6px; padding: 16px; margin-bottom: 14px;
+}
+.priority-block h4 { font-size: 13px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+.priority-block p, .priority-block li { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+.priority-block ul { list-style: none; padding: 0; }
+.priority-block ul li { padding: 4px 0; }
+.priority-block ul li::before { content: '• '; color: var(--gold); }
+
+@keyframes pulse-urgent {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,23,68,0.4); }
+  50% { box-shadow: 0 0 12px 4px rgba(255,23,68,0.2); }
+}
+.pulse-indicator {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red); animation: pulse-urgent 2s infinite; margin-right: 6px;
+}
+
+/* Period Toggle Pills */
+.period-pills { display: flex; gap: 4px; margin-bottom: 16px; flex-wrap: wrap; }
+.period-pill {
+  background: var(--bg-secondary); border: 1px solid var(--border); color: var(--text-muted);
+  padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer;
+  letter-spacing: 0.5px; transition: all 0.2s; font-weight: 600;
+}
+.period-pill:hover { border-color: var(--gold); color: var(--gold); }
+.period-pill.active { background: var(--gold); color: var(--bg-primary); border-color: var(--gold); }
+
+/* Deep Dive Holdings */
+.deep-dive-item {
+  background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; margin-bottom: 14px;
+}
+.deep-dive-item h4 { font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; }
+.deep-dive-item .dd-meta { font-size: 12px; color: var(--text-secondary); line-height: 1.7; }
+.deep-dive-item .dd-reco {
+  margin-top: 8px; padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: 600;
+}
+.dd-reco-hold { background: rgba(255,193,7,0.1); color: #ffc107; border: 1px solid rgba(255,193,7,0.3); }
+.dd-reco-sell { background: rgba(255,23,68,0.1); color: var(--red); border: 1px solid rgba(255,23,68,0.3); }
+.dd-reco-buy { background: rgba(0,200,83,0.1); color: var(--green); border: 1px solid rgba(0,200,83,0.3); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 1. HEADER                                                  -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="header">
+  <div class="header-left">
+    <h1>GIERI CAPITAL</h1>
+    <span>PORTFOLIO INTELLIGENCE DASHBOARD</span>
+  </div>
+  <div class="badge-local">🔒 LOCAL ONLY</div></div>
+
+<!-- LAST REFRESHED BANNER -->
+<div style="background:linear-gradient(135deg,rgba(201,150,59,0.12),rgba(201,150,59,0.04));border:2px solid var(--gold);border-radius:8px;padding:14px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+  <div style="font-size:13px;color:var(--gold);font-weight:700;letter-spacing:1px;">🔄 Last Refreshed: March 11, 2026 6:10 AM MDT — Live crypto + stock prices</div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;font-weight:600;">
+    <span style="color:var(--cyan);">₿ $69,079 <span style="color:var(--red);font-size:10px;">−1.9%</span></span>
+    <span style="color:#627eea;">ETH $2,015 <span style="color:var(--red);font-size:10px;">−2.0%</span></span>
+    <span style="color:#14F195;">SOL $84.53 <span style="color:var(--red);font-size:10px;">−2.3%</span></span>
+    <span style="color:var(--red);">F&G: 15 <span style="font-size:10px;">EXTREME FEAR</span></span>
+    <span style="color:var(--text-muted);">Markets: Pre-market <span style="font-size:10px;">(Opens 7:30 AM MDT)</span></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 2. WELCOME & INTELLIGENCE BRIEF                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="welcome" id="welcomeMsg">Good morning, Gian</div>
+  <div class="welcome-date" id="welcomeDate">Wednesday, March 11, 2026</div>
+  <div class="quote">
+    "The big money is not in the buying and the selling, but in the waiting."
+    <span class="quote-author">— Charlie Munger</span>
+  </div>
+  <div class="macro-brief">
+    <strong style="color:var(--gold);">Daily Macro Brief</strong><br>
+    <span style="color:var(--gold);font-weight:700;">⚡ OIL REBOUND, MARKETS LOWER:</span> Oil rebounding to <strong>$84.43/bbl</strong> (+1.2%) despite IEA's historic 400M barrel reserve release — market says it's not enough. S&amp;P closed at <strong>6,775.80</strong> (-0.08%), Dow -0.61%. <strong>10Y yield rising to 4.22%</strong> as oil-driven inflation concerns mount. Gold holding near <strong>$5,182/oz</strong> — still elevated. BTC at <strong>~$69,334</strong>, relatively resilient. DXY at 99.20 as dollar strengthens on inflation fears. CPI came in at 2.4% YoY — in line. Markets still pricing geopolitical risk premium — VIX at 25.21 (elevated).
+    <div class="update-note">🔄 Updated March 12, 2026 6:45 AM MDT — Live Prices + March 11 Stock Closes + Board Commentary</div>
+  </div>
+  <div class="theme-day">
+    <strong>Theme of the Day:</strong> Oil reserve release didn't kill the rally — $84 and climbing again. Gold at $5,182 says risk is real. Yields rising = dual pressure on equities from oil AND rates. BTC holding its range.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 3. KPI CARDS                                               -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="kpi-row">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Portfolio Value</div>
+    <div class="kpi-value kpi-gold">$1,359,014</div>
+    <div class="kpi-sub">All accounts incl. 529s &amp; 401(k) — Live</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Daily P&L</div>
+    <div class="kpi-value" style="color:var(--text-muted);">$0.00</div>
+    <div class="kpi-sub">🔄 Coming soon</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Unrealized P&L</div>
+    <div class="kpi-value kpi-red">−$105,417</div>
+    <div class="kpi-sub">All tracked positions</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">BTC Price</div>
+    <div class="kpi-value" style="color:var(--cyan);">$69,334</div>
+    <div class="kpi-sub">As of 03/12/2026 6:45 AM</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">BTC Holdings</div>
+    <div class="kpi-value" style="color:var(--cyan);">6.5650 ₿</div>
+    <div class="kpi-sub">River + Kingdom Trust + Choice Roth</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 4. 🎯 ACTIVE RECOMMENDATIONS — ACTION REQUIRED             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="reco-card">
+  <div class="card-header">
+    <h2><span class="pulse-indicator"></span>🎯 Active Recommendations — Action Required</h2>
+  </div>
+
+  <!-- Market Context Banner -->
+  <div class="market-pulse">
+    <div class="market-pulse-title">MARKET PULSE — March 12, 2026</div>
+    <div style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:12px;">
+      📡 <strong style="color:var(--cyan);">LIVE DATA</strong> <span style="color:var(--text-muted);">(March 11 close + pre-market March 12, 6:45 AM MDT)</span>
+    </div>
+    <strong style="color:var(--text-primary);">BTC:</strong> $69,334 <span class="loss">(−1.15%)</span> &nbsp;|&nbsp;
+    <strong style="color:var(--text-primary);">Gold:</strong> $5,182/oz &nbsp;|&nbsp;
+    <strong style="color:var(--text-primary);">Silver:</strong> $87.76/oz &nbsp;|&nbsp;
+    <strong style="color:var(--gold);font-weight:700;">Oil WTI: $84.43 📈 +1.2% (rebounding)</strong> &nbsp;|&nbsp;
+    <strong style="color:var(--text-primary);">S&amp;P 500:</strong> 6,775.80 <span class="loss">(−0.08%)</span><br>
+    <strong style="color:var(--text-primary);">Dow:</strong> 47,417 <span class="loss">(−0.61%)</span> &nbsp;|&nbsp;
+    <strong style="color:var(--text-primary);">Nasdaq:</strong> 22,716 <span class="gain">(+0.08%)</span> &nbsp;|&nbsp;
+    <strong style="color:var(--text-primary);">10Y Yield:</strong> 4.22% &nbsp;|&nbsp;
+    <strong style="color:var(--text-primary);">DXY:</strong> 99.20 <span class="gain">(+0.38%)</span> &nbsp;|&nbsp;
+    <strong style="color:var(--red);">VIX: 25.21 (ELEVATED)</strong><br>
+    <span style="color:var(--gold);font-weight:700;font-size:14px;">⚡ IEA 400M BARREL RELEASE FAILED TO COOL OIL — $84 and climbing back. Market doesn't believe supply fix is enough.</span><br>
+    <span style="color:var(--text-secondary);">Oil rebounding despite historic reserve release. Goldman says it only offsets 12 days of disruption. Iran conflict still unresolved.</span><br>
+    <span style="color:var(--text-secondary);">📊 <strong>BTC:</strong> Consolidating $65K-$73K range. Down slightly but holding well vs equities. Fear &amp; Greed still extreme fear territory.<br>
+    🛢️ <strong>Oil:</strong> Reserve release → brief dip → now rebounding. Structural supply risk remains while Hormuz contested.<br>
+    📈 <strong>Yields rising:</strong> 10Y at 4.22% — oil-driven inflation pushing rates higher. Dual pressure on equities (oil + rates).<br>
+    🥇 <strong>Gold/Silver:</strong> $5,182 / $87.76 — still near highs. Market doesn't trust the de-escalation narrative.</span>
+  </div>
+
+  <!-- BOARD OF DIRECTORS LIVE COMMENTARY -->
+  <div class="section-subtitle" style="margin-top:0;">📡 BOARD OF DIRECTORS — LIVE FROM X (March 8-12, 2026)</div>
+
+  <div class="board-quote" style="border-left:4px solid var(--gold);">
+    <div class="board-quote-name">Peter Schiff <span style="font-weight:400;color:var(--text-muted);font-size:11px;">(Gold/Macro) — Updated 3/12</span></div>
+    <em>"The dollar could collapse. Central banks are buying gold to back up their currencies."</em> (Benzinga 3/11)<br>
+    <em>"Soaring oil prices cause recession. Policy RESPONSE causes inflation."</em><br>
+    <em>"Gold/silver selling won't last — great opportunity to buy more."</em><br>
+    🆕 <strong>Gold above $5,100 and pushing higher.</strong> Schiff says this is a warning flare about the USD. Central bank gold buying = de-dollarization accelerating.<br>
+    <span style="color:var(--green);font-weight:700;font-size:12px;margin-top:6px;display:inline-block;">CALL: Dollar collapse thesis strengthening. Gold is THE trade. Buy aggressively.</span>
+  </div>
+
+  <div class="board-quote" style="border-left:4px solid var(--gold);">
+    <div class="board-quote-name">Luke Gromen <span style="font-weight:400;color:var(--text-muted);font-size:11px;">(Macro/BTC) — Updated 3/12</span></div>
+    🆕 <strong>SOLD his BTC holdings before March</strong> — but says Bitcoin held value as "risk-off safe haven" during Iran escalation while other risk assets fell. (Coinpaprika 3/11)<br>
+    <em>"Our entire financial system will blow up without their factories, without their oil. And they know that. So they can wait."</em> (YouTube interview 3/10)<br>
+    <em>"Iran &amp; AI only ACCELERATE the US debt death spiral."</em> (Goldfinger Capital 3/10)<br>
+    <em>"Flight capital out of the Mideast"</em> — driving crypto resilience.<br>
+    <span style="color:var(--red);font-weight:700;font-size:12px;margin-top:6px;display:inline-block;">CALL: US debt spiral accelerating. Oil = existential. BTC = safe haven narrative building. Gromen personally sold but acknowledges BTC resilience.</span>
+  </div>
+
+  <div class="board-quote" style="border-left:4px solid var(--gold);">
+    <div class="board-quote-name">Raoul Pal <span style="font-weight:400;color:var(--text-muted);font-size:11px;">(Crypto/Liquidity) — Updated 3/12</span></div>
+    <em>"Global liquidity has 90% correlation to BTC and 97% to NDX since 2012. Growing ~10%/yr."</em> (X 3/8)<br>
+    <em>"Pure chartists think it's over. I don't agree."</em><br>
+    🆕 <strong>$10T debt wall</strong> → central banks flooding system with liquidity → growth phase should continue into late 2026. (Bitget 3/10)<br>
+    🆕 <strong>$3.51B stablecoin inflows</strong> + public companies acquired 18,083 BTC last week. (Phemex 3/9)<br>
+    Still adding to altcoins. DeMark 13 buy signal in play.<br>
+    <span style="color:var(--green);font-weight:700;font-size:12px;margin-top:6px;display:inline-block;">CALL: BUY crypto. Liquidity dominates. $10T debt wall = monetization = bullish crypto. Stablecoin flows confirm.</span>
+  </div>
+
+  <div class="board-quote" style="border-left:4px solid var(--gold);">
+    <div class="board-quote-name">Michael Burry <span style="font-weight:400;color:var(--text-muted);font-size:11px;">(Contrarian) — Updated 3/12</span></div>
+    <em>"Trump may have gotten into something incredibly dangerous if a falling stock market is his kryptonite."</em><br>
+    🆕 <strong>Now focused on Nvidia/AI bubble:</strong> "Nvidia is mafia-like" — OpenAI walked away from Oracle data center deal, Meta swooped in, Nvidia paid $150M to block AMD. (X 3/10)<br>
+    🆕 <strong>Buying Chinese stocks:</strong> Says Chinese equities suffered "1929-style crashes while the businesses kept growing." Sees significant upside in HK-listed companies. (StockTwits 3/12)<br>
+    🆕 <strong>Gold bet paying off:</strong> Made million-dollar gold bet that's winning as gold hits $5,182. (Yahoo Finance 3/9)<br>
+    <span style="color:#ffc107;font-weight:700;font-size:12px;margin-top:6px;display:inline-block;">CALL: AI capex bubble forming. China = contrarian value. Gold working. Policy panic risk remains.</span>
+  </div>
+
+  <!-- LONG-TERM RESTRUCTURING -->
+  <div class="section-subtitle">Long-Term Portfolio Restructuring</div>
+
+  <!-- PRIORITY 1 -->
+  <div class="priority-block">
+    <h4>PRIORITY 1: Tax-Optimized FBTC Consolidation</h4>
+    <p style="margin-bottom:8px;">FBTC is your largest single holding (~$228K across 4 accounts). It should be concentrated in Traditional IRAs for maximum tax deferral on high-growth assets.</p>
+    <ul>
+      <li><strong>Gian's Roth IRA (...7212):</strong> <span style="color:var(--red);font-weight:600;">SELL</span> all 110 shares FBTC ($6,368). Use proceeds to <span style="color:var(--green);font-weight:600;">BUY</span> more MSTR (add ~48 shares at $129.50). <em>Rationale: MSTR is a leveraged BTC play — tax-free Roth amplifies upside.</em></li>
+      <li><strong>Amber's Roth IRA (...4705):</strong> KEEP FBTC ($45,332) — already large position, maintain for tax-free growth.</li>
+      <li><strong>Gian's Traditional IRA (...0666):</strong> KEEP FBTC ($105,885) — this is where the bulk should live. Tax-deferred compounding.</li>
+      <li><strong>Amber's Traditional IRA (...4817):</strong> KEEP FBTC ($73,678). Also has FETH — keep for L1 diversification.</li>
+    </ul>
+  </div>
+
+  <!-- PRIORITY 2 -->
+  <div class="priority-block" style="border-left-color:var(--red);">
+    <h4><span class="pulse-indicator"></span>PRIORITY 2: Harvest BKKT Losses — URGENT</h4>
+    <ul>
+      <li><strong>Gian's Rollover IRA (...5161):</strong> <span style="color:var(--red);font-weight:600;">SELL</span> all 37 shares BKKT ($354). Realize ~$1,167 loss. Redeploy into CIFR (add ~23 shares at $15.60).</li>
+      <li><strong>Amber's Traditional IRA (...4817):</strong> <span style="color:var(--red);font-weight:600;">SELL</span> all 25 shares BKKT ($239). Realize ~$788 loss. Redeploy into WULF (add ~15 shares at $13.75) — WULF is the stronger miner.</li>
+      <li><strong>Total loss harvested: ~$1,955</strong></li>
+    </ul>
+  </div>
+
+  <!-- PRIORITY 3 -->
+  <div class="priority-block">
+    <h4>PRIORITY 3: IREN Position Decision</h4>
+    <ul>
+      <li>Held in BOTH Gian's Rollover (...5161) and Amber's Trad (...4817) — 40 shares each</li>
+      <li>Combined down ~$1,045</li>
+      <li><strong>RECOMMENDATION:</strong> <span style="color:var(--red);">SELL</span> in Gian's Rollover (small account, simplify). KEEP in Amber's Trad — energy/AI data center pivot thesis still valid but on watch.</li>
+    </ul>
+  </div>
+
+  <!-- PRIORITY 4 -->
+  <div class="priority-block">
+    <h4>PRIORITY 4: Consolidate Mining Exposure</h4>
+    <ul>
+      <li><strong>WULF</strong> is the winner (+$7.3K unrealized). Keep in Gian's Roth (...7212) — tax-free gains.</li>
+      <li><strong>CIFR</strong> is flat. Keep in Gian's Rollover (...5161) after BKKT proceeds added.</li>
+      <li><strong>MU (Micron)</strong> in Gian's Rollover — only non-crypto equity. KEEP for diversification. AI memory play.</li>
+    </ul>
+  </div>
+
+  <!-- SHORT-TERM TRADE IDEAS -->
+  <div class="section-subtitle">Short-Term Trade Ideas</div>
+
+  <!-- Trade 1: XLE Oil Play -->
+  <div class="trade-card event-driven">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title">🔥 <span class="ticker">XLE</span> — Energy Select Sector SPDR — OIL PLAY</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Gian's Traditional IRA (...0666) — sell $2,000 of SPAXX/cash</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="trade-card-tag">⚡ EVENT-DRIVEN</span>
+        <span class="trade-card-action">BUY</span>
+        <span class="trade-card-status urgent-badge">🔴 URGENT</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Entry<span style="color:var(--green);">~$105 (XLE pulled back with oil $120→$84)</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$125+ if oil retests $100</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">$95 (-10%)</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>2.0 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>2-6 weeks</span></div>
+    </div>
+    <div style="background:rgba(0,200,83,0.1);border:1px solid rgba(0,200,83,0.3);border-radius:6px;padding:10px 14px;margin-bottom:10px;font-size:12px;color:var(--green);line-height:1.6;">
+      🟢 <strong>PULLBACK ENTRY OPENED</strong> — Oil crashed from $120→$84 despite IEA 400M barrel release. XLE has pulled back from highs. If oil thesis intact (Hormuz still contested, structural supply risk), this is the re-entry. XLE up 25%+ YTD — energy is THE sector.
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:13;"></div><div class="trade-rr-reward" style="flex:18;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> Strait of Hormuz CLOSED. Oil has exploded past $110/bbl — highest since 2008. Goldman's $100 target was CONSERVATIVE. $3.2T wiped from global stocks. Energy sector is the only thing working.<br>
+    <em style="color:var(--gold);">Schiff: "Oil at highest since 2008. Coming crisis could be far worse."</em><br>
+    <em style="color:var(--gold);">Gromen: "This becomes US Suez moment."</em></div>
+    <div class="trade-sponsor">Board: Peter Schiff, Luke Gromen, Warren Pies, Stanley Druckenmiller</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:var(--green);font-weight:700;">🟢 X BULLISH</span> <span style="color:var(--text-muted);">— Oil NOT temporary, Hormuz closed, energy repricing violently higher</span></div>
+    <div class="trade-invalidation">❌ Invalidation: Ceasefire/Hormuz reopens, Brent drops below $90</div>
+  </div>
+
+  <!-- Trade 2: BTC Accumulation -->
+  <div class="trade-card urgent">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title">₿ BTC Accumulation — EXTREME FEAR = BUY SIGNAL</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: River Financial (taxable, DCA)</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="trade-card-action">BUY / DCA</span>
+        <span class="trade-card-status urgent-badge">🔴 URGENT</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Action<span>INCREASE DCA $50→$250/wk + $1K lump buy</span></div>
+      <div class="trade-meta-item">Entry<span>$69,334 (current 3/12)</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$85K-$95K</span></div>
+      <div class="trade-meta-item">Stop Loss<span>No stop — DCA through</span></div>
+    </div>
+    <div class="trade-thesis"><strong>Thesis:</strong> Fear & Greed at 18 (Extreme Fear). Historically, buying BTC at Extreme Fear has produced 40-80% returns within 6 months. BTC showing relative resilience amid oil chaos.<br>
+    <em style="color:var(--gold);">Raoul Pal: "Crypto is the most oversold in history. Next 2 weeks are key. Higher."</em><br>
+    <em style="color:var(--gold);">Luke Gromen: "Flight capital out of the Mideast" — driving crypto resilience.</em><br>
+    Your thesis is intact and STRENGTHENING — monetary debasement, institutional adoption, flight capital from geopolitical crisis. PTJ: "The best trades are the ones that scare you."</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:var(--green);font-weight:700;">🟢 X BULLISH (CONTRARIAN)</span> <span style="color:var(--text-muted);">— Raoul Pal adding aggressively. Gromen: BTC = flight capital. DeMark 13 buy signal coming.</span></div>
+    <div class="trade-sponsor">Board: Raoul Pal, Luke Gromen, Paul Tudor Jones, Lyn Alden</div>
+  </div>
+
+  <!-- Trade 3: MSTR -->
+  <div class="trade-card">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title"><span class="ticker">MSTR</span> — Leveraged BTC at a Discount</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Gian's Roth IRA (...7212) — use proceeds from FBTC sale ($6,368)</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <span class="trade-card-action">BUY</span>
+        <span class="trade-card-status">PENDING REVIEW</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Entry<span>$138 (current 3/12) 📈</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$180 (B. Riley PT) → $195</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">$110 (-20%)</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>1.5 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>4-8 weeks</span></div>
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:23;"></div><div class="trade-rr-reward" style="flex:50;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> MSTR up from $106 YTD low to $138. Saylor bought another 17,944 BTC last week. Expert PT $180. Short interest surging but historically that's fuel for squeezes. B. Riley Buy @ $175 PT.<br>
+    <span style="color:var(--gold);">⚠️ Price moved from $129.50 → $138 since last review. R/R compressed but still favorable if BTC breaks $73K.</span></div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:var(--green);font-weight:700;">🟢 X BULLISH</span> <span style="color:var(--text-muted);">— Saylor buying 17,944 BTC, B. Riley Buy ($175 PT), expert targets $180. Short interest = squeeze potential.</span></div>
+    <div class="trade-sponsor">Board: Raoul Pal, Quinn Thompson</div>
+  </div>
+
+  <!-- Trade 4: WULF -->
+  <div class="trade-card">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title"><span class="ticker">WULF</span> — TeraWulf — Add to Winner on Pullback</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Amber's Rollover IRA (...2340) — sell COIN ($8) + BKKT proceeds</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <span class="trade-card-action">BUY</span>
+        <span class="trade-card-status">PENDING REVIEW</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Entry<span>$13.75 (current)</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$28 (+73%)</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">$11.50 (-29%)</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>2.5 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>4-8 weeks</span></div>
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:29;"></div><div class="trade-rr-reward" style="flex:73;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> TeraWulf pivoting to AI/HPC workloads — WULF and CIFR landing major hyperscaler deals. Dual revenue model (BTC mining + AI compute) de-risks. Lowest-cost power among miners.</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:#ffc107;font-weight:700;">🟡 X MIXED</span> <span style="color:var(--text-muted);">— Wall St cutting CIFR/WULF PTs (Keefe Bruyette CIFR $22→$20) citing lower hash prices. But CIFR has $9.3B in contracted HPC revenue (15yr AWS + 10yr Google leases). AI/HPC pivot is real.</span></div>
+    <div class="trade-sponsor">Board: Warren Pies, Quinn Thompson</div>
+  </div>
+
+  <!-- Trade 5: CLSK -->
+  <div class="trade-card">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title"><span class="ticker">CLSK</span> — CleanSpark — New Position</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Gian's Rollover IRA (...5161) — use $1,098 cash</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <span class="trade-card-action">BUY</span>
+        <span class="trade-card-status">PENDING REVIEW</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Entry<span>$8-9</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$14 (+60%)</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">$6.50 (-25%)</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>2.4 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>4-8 weeks</span></div>
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:25;"></div><div class="trade-rr-reward" style="flex:60;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> Trading at discount to NAV of BTC held. Expanding hash rate. Mining sector leads BTC rallies.</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:#ffc107;font-weight:700;">🟡 X MIXED</span> <span style="color:var(--text-muted);">— Support at $29-31, strong balance sheet. But sector-wide EMA rejections.</span></div>
+    <div class="trade-sponsor">Board: Quinn Thompson, Warren Pies</div>
+  </div>
+
+  <!-- Trade 6: USO/UCO -->
+  <div class="trade-card event-driven">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title">🛢️ <span class="ticker">USO / UCO</span> — Direct Oil Play</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Amber's Traditional IRA (...4817) — use $4.33 cash + BKKT sale proceeds ($239)</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="trade-card-tag">⚡ EVENT-DRIVEN</span>
+        <span class="trade-card-action">BUY</span>
+        <span class="trade-card-status">PENDING REVIEW</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Entry<span>Current</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">+20% if oil hits $100</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">-15%</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>1.3 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>2-4 weeks</span></div>
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:15;"></div><div class="trade-rr-reward" style="flex:20;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> Direct crude oil exposure. Iran conflict is the catalyst. Even if it de-escalates, structural supply tightness remains. Small position size — this is a trade, not an investment.</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:var(--green);font-weight:700;">🟢 X BULLISH</span> <span style="color:var(--text-muted);">— consensus oil is NOT a temporary spike</span></div>
+    <div class="trade-sponsor">Board: Warren Pies, Stanley Druckenmiller</div>
+  </div>
+
+  <!-- Trade 7b: GOLD — NEW -->
+  <div class="trade-card urgent">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title">🥇 <span class="ticker">GLD</span> / Physical Gold — FLIGHT TO SAFETY</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Any IRA with available cash — Fidelity IRAs or add via Kingdom Trust</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="trade-card-tag">⚡ EVENT-DRIVEN</span>
+        <span class="trade-card-action">BUY</span>
+        <span class="trade-card-status urgent-badge">🔴 URGENT</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Entry<span>$5,182/oz (current 3/12) 🚀</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$6,000+/oz (Schiff: dollar collapse)</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">$4,500</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>2.2 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>3-12 months</span></div>
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:14;"></div><div class="trade-rr-reward" style="flex:30;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> Gold at $5,182 — parabolic. Schiff (3/11): "Dollar could collapse. Central banks buying gold to back currencies." Burry's gold bet paying off big. Oil shock → recession → policy response → inflation → gold. The classic playbook is PLAYING OUT.<br>
+    <em style="color:var(--gold);">Schiff (3/11): "Central banks are buying gold to back up their currencies. Dollar could collapse."</em><br>
+    <em style="color:var(--gold);">Silver at $87.76 — gold/silver ratio compressing.</em><br>
+    Kingdom Trust holds 5oz ($25,910 at current). This position is UP massively. Consider adding via GLD in Fidelity IRAs.</div>
+    <div class="trade-sponsor">Board: Peter Schiff, Luke Gromen, Michael Burry</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:var(--green);font-weight:700;">🟢 X OVERWHELMINGLY BULLISH</span> <span style="color:var(--text-muted);">— Schiff: dollar collapse. Burry: gold bet winning. Central bank buying accelerating. De-dollarization thesis confirmed.</span></div>
+    <div class="trade-invalidation">❌ Invalidation: Rapid ceasefire + oil collapse below $80 + strong jobs recovery</div>
+  </div>
+
+  <!-- Trade 7: SOL -->
+  <div class="trade-card">
+    <div class="trade-card-header">
+      <div>
+        <div class="trade-card-title"><span class="ticker">SOL</span> — Solana Accumulation via Kingdom Trust</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Account: Kingdom Trust (Amber) — already holds 54.79 SOL at $82</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <span class="trade-card-action" style="background:rgba(255,193,7,0.15);color:#ffc107;border-color:rgba(255,193,7,0.3);">HOLD / WATCH</span>
+        <span class="trade-card-status">PENDING REVIEW</span>
+      </div>
+    </div>
+    <div class="trade-meta">
+      <div class="trade-meta-item">Action<span>HOLD current + add on dip below $78</span></div>
+      <div class="trade-meta-item">Entry<span>~$83 (current 3/12)</span></div>
+      <div class="trade-meta-item">Target<span style="color:var(--green);">$150 (+88%)</span></div>
+      <div class="trade-meta-item">Stop Loss<span style="color:var(--red);">$60 (-25%)</span></div>
+      <div class="trade-meta-item">Risk / Reward<span>3.5 : 1</span></div>
+      <div class="trade-meta-item">Holding Period<span>3-6 months</span></div>
+    </div>
+    <div class="trade-rr-bar"><div class="trade-rr-risk" style="flex:25;"></div><div class="trade-rr-reward" style="flex:88;"></div></div>
+    <div class="trade-thesis"><strong>Thesis:</strong> Gravity Fund GP is highest conviction on SOL. AI agent economy L1 infrastructure thesis. Fear & Greed at Extreme Fear — altcoins tend to recover faster than BTC off bottoms.</div>
+    <div style="margin-top:8px;font-size:11px;"><span style="color:#ffc107;font-weight:700;">🟡 X NEUTRAL</span> <span style="color:var(--text-muted);">— mostly promotional noise, limited deep analysis</span></div>
+    <div class="trade-sponsor">Board: Raoul Pal, Jordi Visser</div>
+  </div>
+
+</div><!-- /reco-card -->
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 5. ACCOUNT BREAKDOWN (with time period toggles)            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>Account Breakdown</h2>
+    <button class="refresh-btn" onclick="alert('Ask Axel to refresh account data')">⟳ Ask Axel to refresh</button>
+  </div>
+  <div class="period-pills">
+    <button class="period-pill active" onclick="periodAlert('1D')">1D</button>
+    <button class="period-pill" onclick="periodAlert('1W')">1W</button>
+    <button class="period-pill" onclick="periodAlert('1M')">1M</button>
+    <button class="period-pill" onclick="periodAlert('3M')">3M</button>
+    <button class="period-pill" onclick="periodAlert('6M')">6M</button>
+    <button class="period-pill" onclick="periodAlert('1Y')">1Y</button>
+    <button class="period-pill" onclick="periodAlert('5Y')">5Y</button>
+  </div>
+  <!-- Owner Breakdown -->
+  <div class="section-subtitle" style="margin-top:0;">Owner Breakdown</div>
+  <table>
+    <thead><tr><th>Owner</th><th class="text-right">Accounts Value</th><th class="text-right">% of Total</th><th>Major Holdings</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="owner-tag owner-gian">Gian</span></td>
+        <td class="text-right">$344,425</td>
+        <td class="text-right">25.3%</td>
+        <td>Fidelity IRAs, Choice Roth IRA, Gravity 1008, Entrust Roth</td>
+      </tr>
+      <tr>
+        <td><span class="owner-tag owner-amber">Amber</span></td>
+        <td class="text-right">$473,352</td>
+        <td class="text-right">34.8%</td>
+        <td>Fidelity IRAs, Kingdom Trust, Gravity 1009, Entrust Trad, T. Rowe 401(k)</td>
+      </tr>
+      <tr>
+        <td><span class="owner-tag owner-joint">Joint</span></td>
+        <td class="text-right">$515,374</td>
+        <td class="text-right">37.9%</td>
+        <td>River BTC, HSA, CIT Bank, US Eagle, Wells Fargo, 529s (Emma & Luke)</td>
+      </tr>
+      <tr style="border-top:2px solid var(--gold);font-weight:700;">
+        <td>Total (Accounts)</td>
+        <td class="text-right" style="color:var(--gold);">$1,359,014</td>
+        <td class="text-right">—</td>
+        <td style="font-size:11px;color:var(--text-muted);">Updated March 11, 2026 6:10 AM MDT</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">All Accounts</div>
+  <table>
+    <thead>
+      <tr><th>Platform</th><th>Account Type</th><th>Owner</th><th class="text-right">Balance</th><th class="text-right">Period Δ</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>River Financial</td><td>Individual Bitcoin (...3936)</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$241,851</td><td class="text-right loss">−$38,311</td></tr>
+      <tr><td>Kingdom Trust (Choice)</td><td>Self-Directed IRA</td><td><span class="owner-tag owner-amber">Amber</span></td><td class="text-right">$168,906</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>Fidelity</td><td>Traditional IRA (...4817)</td><td><span class="owner-tag owner-amber">Amber</span></td><td class="text-right">$153,972</td><td class="text-right loss">−$48,209</td></tr>
+      <tr><td>Fidelity</td><td>Roth IRA (...7212) + Trad (...0666)</td><td><span class="owner-tag owner-gian">Gian</span></td><td class="text-right">$134,344</td><td class="text-right loss">−$31,089</td></tr>
+      <tr><td>Gravity Fund I LP</td><td>LP Investment (...1009) — NAV</td><td><span class="owner-tag owner-amber">Amber</span></td><td class="text-right">$117,998.32</td><td class="text-right loss">−$80,941</td></tr>
+      <tr><td>Choice (fka Kingdom Trust)</td><td>Roth IRA — RADP019403</td><td><span class="owner-tag owner-gian">Gian</span></td><td class="text-right">$98,941</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>IDeal 529</td><td>College Savings — Emma (...4101)</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$77,791.14</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>IDeal 529</td><td>College Savings — Luke (...4102)</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$67,936.71</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>Fidelity</td><td>Roth IRA (...4705) + Roll (...2340)</td><td><span class="owner-tag owner-amber">Amber</span></td><td class="text-right">$54,267</td><td class="text-right loss">−$13,029</td></tr>
+      <tr><td>Entrust Group</td><td>Traditional IRA (...3577) — Cash Only</td><td><span class="owner-tag owner-amber">Amber</span></td><td class="text-right">$47,449.77</td><td class="text-right" style="color:var(--gold);">⚠ Earmarked for Gravity Fund</td></tr>
+      <tr><td>Gravity Fund I LP</td><td>LP Investment (...1008) — NAV</td><td><span class="owner-tag owner-gian">Gian</span></td><td class="text-right">$39,753.43</td><td class="text-right loss">−$27,269</td></tr>
+      <tr><td>HSA</td><td>Health Savings Account</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$25,000.00</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>US Eagle FCU</td><td>Checking/Savings (...7568)</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$22,619.09</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>T. Rowe Price</td><td>401(k) — Intermountain</td><td><span class="owner-tag owner-amber">Amber</span></td><td class="text-right">$19,545.86</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>Entrust Group</td><td>Roth IRA (...3576) — Cash Only</td><td><span class="owner-tag owner-gian">Gian</span></td><td class="text-right">$16,300.22</td><td class="text-right" style="color:var(--gold);">⚠ Earmarked for Gravity Fund</td></tr>
+      <tr><td>CIT Bank</td><td>Cash Savings</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$10,500.00</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+      <tr><td>Fidelity</td><td>Rollover IRA (...5161)</td><td><span class="owner-tag owner-gian">Gian</span></td><td class="text-right">$6,232</td><td class="text-right loss">−$577</td></tr>
+      <tr><td>Wells Fargo</td><td>Checking (...0718)</td><td><span class="owner-tag owner-joint">Joint</span></td><td class="text-right">$1,407.49</td><td class="text-right" style="color:var(--text-muted);">—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 6. HOLDINGS DETAIL (all accounts)                          -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>Holdings Detail</h2>
+    <button class="refresh-btn" onclick="alert('Ask Axel to refresh holdings')">⟳ Ask Axel to refresh</button>
+  </div>
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="showTab('tab-river')">River BTC</button>
+    <button class="tab-btn" onclick="showTab('tab-kingdom')">Amber Kingdom Trust</button>
+    <button class="tab-btn" onclick="showTab('tab-fid-amber-4817')">Amber Trad 4817</button>
+    <button class="tab-btn" onclick="showTab('tab-fid-gian-7212')">Gian Roth 7212</button>
+    <button class="tab-btn" onclick="showTab('tab-fid-gian-0666')">Gian Trad 0666</button>
+    <button class="tab-btn" onclick="showTab('tab-fid-amber-4705')">Amber Roth 4705</button>
+    <button class="tab-btn" onclick="showTab('tab-fid-amber-2340')">Amber Roll 2340</button>
+    <button class="tab-btn" onclick="showTab('tab-fid-gian-5161')">Gian Roll 5161</button>
+    <button class="tab-btn" onclick="showTab('tab-choice-gian')">Gian Choice Roth</button>
+    <button class="tab-btn" onclick="showTab('tab-trowe')">T. Rowe 401(k)</button>
+    <button class="tab-btn" onclick="showTab('tab-529-emma')">529 Emma</button>
+    <button class="tab-btn" onclick="showTab('tab-529-luke')">529 Luke</button>
+  </div>
+
+  <!-- River BTC -->
+  <div class="tab-content active" id="tab-river">
+    <table>
+      <thead><tr><th>Asset</th><th class="text-right">Quantity</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">₿ BTC</td><td class="text-right">3.56475750</td><td class="text-right">$69,079</td><td class="text-right">$246,250</td><td class="text-right">$308,868.47</td><td class="text-right loss">−$62,619</td><td class="text-right">17.6%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Kingdom Trust -->
+  <div class="tab-content" id="tab-kingdom">
+    <table>
+      <thead><tr><th>Asset</th><th class="text-right">Quantity</th><th class="text-right">Market Value</th><th class="text-right">% Acct</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">₿ BTC</td><td class="text-right">2.00000000</td><td class="text-right">$138,158</td><td class="text-right">80.4%</td></tr>
+        <tr><td style="color:#FFD700;font-weight:600;">🥇 Gold Istanbul Refinery 1oz Bar</td><td class="text-right">5 oz</td><td class="text-right">$26,090</td><td class="text-right">15.2%</td></tr>
+        <tr><td class="ticker">SOL</td><td class="text-right">54.79</td><td class="text-right">$4,631</td><td class="text-right">2.7%</td></tr>
+        <tr><td class="ticker">XLM</td><td class="text-right">17,257</td><td class="text-right">$2,711</td><td class="text-right">1.6%</td></tr>
+        <tr><td style="color:var(--text-muted)">Cash</td><td class="text-right">—</td><td class="text-right">$199</td><td class="text-right">0.1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Amber Trad 4817 -->
+  <div class="tab-content" id="tab-fid-amber-4817">
+    <table>
+      <thead><tr><th>Ticker</th><th class="text-right">Shares</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">FETH</td><td class="text-right">3,989.360</td><td class="text-right">$20.66</td><td class="text-right">$82,380</td><td class="text-right">$149,999.98</td><td class="text-right loss">−$67,620</td><td class="text-right">5.8%</td></tr>
+        <tr><td class="ticker">FBTC</td><td class="text-right">1,272.722</td><td class="text-right">$62.21</td><td class="text-right">$79,179</td><td class="text-right">$115,274.94</td><td class="text-right loss">−$36,096</td><td class="text-right">5.6%</td></tr>
+        <tr><td class="ticker">IREN</td><td class="text-right">40.000</td><td class="text-right">$36.70</td><td class="text-right">$1,468</td><td class="text-right">$2,160.40</td><td class="text-right loss">−$692</td><td class="text-right">0.1%</td></tr>
+        <tr><td class="ticker">CIFR</td><td class="text-right">27.680</td><td class="text-right">$14.23</td><td class="text-right">$393.89</td><td class="text-right">$428.49</td><td class="text-right loss">−$34.60</td><td class="text-right">0.0%</td></tr>
+        <tr><td class="ticker">BKKT</td><td class="text-right">25.000</td><td class="text-right">$9.56</td><td class="text-right">$239.00</td><td class="text-right">$1,027.25</td><td class="text-right loss">−$788.25</td><td class="text-right">0.0%</td></tr>
+        <tr><td style="color:var(--text-muted)">FDIC Core</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">$4.33</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gian Roth 7212 -->
+  <div class="tab-content" id="tab-fid-gian-7212">
+    <table>
+      <thead><tr><th>Ticker</th><th class="text-right">Shares</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">MSTR</td><td class="text-right">100.000</td><td class="text-right">$138.46</td><td class="text-right">$13,846.00</td><td class="text-right">$10,310.00</td><td class="text-right gain">+$3,536.00</td><td class="text-right">1.0%</td></tr>
+        <tr><td class="ticker">WULF</td><td class="text-right">648.824</td><td class="text-right">$14.35</td><td class="text-right">$9,311</td><td class="text-right">$4,000.00</td><td class="text-right gain">+$5,311</td><td class="text-right">0.7%</td></tr>
+        <tr><td class="ticker">FBTC</td><td class="text-right">110.000</td><td class="text-right">$62.21</td><td class="text-right">$6,843</td><td class="text-right">$9,406.10</td><td class="text-right loss">−$2,563</td><td class="text-right">0.5%</td></tr>
+        <tr><td class="ticker">COIN</td><td class="text-right">0.048</td><td class="text-right">$199.79</td><td class="text-right">$9.59</td><td class="text-right">$19.92</td><td class="text-right loss">−$10.33</td><td class="text-right">0.0%</td></tr>
+        <tr><td style="color:var(--text-muted)">FDIC Core</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">$179.62</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gian Trad 0666 -->
+  <div class="tab-content" id="tab-fid-gian-0666">
+    <table>
+      <thead><tr><th>Ticker</th><th class="text-right">Shares</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">FBTC</td><td class="text-right">1,828.741</td><td class="text-right">$62.21</td><td class="text-right">$113,794</td><td class="text-right">$108,407.76</td><td class="text-right gain">+$5,386</td><td class="text-right">8.1%</td></tr>
+        <tr><td style="color:var(--text-muted)">SPAXX</td><td class="text-right">31.630</td><td class="text-right">$1.00</td><td class="text-right">$31.63</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Amber Roth 4705 -->
+  <div class="tab-content" id="tab-fid-amber-4705">
+    <table>
+      <thead><tr><th>Ticker</th><th class="text-right">Shares</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">FBTC</td><td class="text-right">783.062</td><td class="text-right">$62.21</td><td class="text-right">$48,711</td><td class="text-right">$46,404.25</td><td class="text-right gain">+$2,307</td><td class="text-right">3.5%</td></tr>
+        <tr><td class="ticker">MSTR</td><td class="text-right">60.000</td><td class="text-right">$138.46</td><td class="text-right">$8,308</td><td class="text-right">$6,198.55</td><td class="text-right gain">+$2,109</td><td class="text-right">0.6%</td></tr>
+        <tr><td style="color:var(--text-muted)">FDIC Core</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">$4.81</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Amber Rollover 2340 -->
+  <div class="tab-content" id="tab-fid-amber-2340">
+    <table>
+      <thead><tr><th>Ticker</th><th class="text-right">Shares</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">WULF</td><td class="text-right">81.833</td><td class="text-right">$14.35</td><td class="text-right">$1,174</td><td class="text-right">$500.00</td><td class="text-right gain">+$674</td><td class="text-right">0.1%</td></tr>
+        <tr><td class="ticker">COIN</td><td class="text-right">0.048</td><td class="text-right">$199.79</td><td class="text-right">$9.59</td><td class="text-right">$19.92</td><td class="text-right loss">−$10.33</td><td class="text-right">0.0%</td></tr>
+        <tr><td style="color:var(--text-muted)">SPAXX</td><td class="text-right">26.420</td><td class="text-right">$1.00</td><td class="text-right">$26.42</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.0%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Gian Rollover 5161 -->
+  <div class="tab-content" id="tab-fid-gian-5161">
+    <table>
+      <thead><tr><th>Ticker</th><th class="text-right">Shares</th><th class="text-right">Price</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Port</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">MU</td><td class="text-right">6.084</td><td class="text-right">$370.00</td><td class="text-right">$2,251</td><td class="text-right">$1,799.94</td><td class="text-right gain">+$451</td><td class="text-right">0.2%</td></tr>
+        <tr><td class="ticker">IREN</td><td class="text-right">40.000</td><td class="text-right">$36.70</td><td class="text-right">$1,468</td><td class="text-right">$2,160.40</td><td class="text-right loss">−$522.40</td><td class="text-right">0.1%</td></tr>
+        <tr><td class="ticker">CIFR</td><td class="text-right">68.000</td><td class="text-right">$14.23</td><td class="text-right">$967.64</td><td class="text-right">$1,052.64</td><td class="text-right loss">−$85.00</td><td class="text-right">0.1%</td></tr>
+        <tr><td class="ticker">BKKT</td><td class="text-right">37.000</td><td class="text-right">$9.56</td><td class="text-right">$353.72</td><td class="text-right">$1,520.33</td><td class="text-right loss">−$1,166.61</td><td class="text-right">0.0%</td></tr>
+        <tr><td style="color:var(--text-muted)">FDIC Core</td><td class="text-right">1,098.040</td><td class="text-right">$1.00</td><td class="text-right">$1,098.04</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.1%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Choice (fka Kingdom Trust) — Gian Roth IRA -->
+  <div class="tab-content" id="tab-choice-gian">
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Statement Period: 01/01/2025 – 12/31/2025 &nbsp;|&nbsp; Ending Balance: <strong style="color:var(--gold);">$100,522</strong></div>
+    <table>
+      <thead><tr><th>Asset</th><th class="text-right">Quantity</th><th class="text-right">Market Value</th><th class="text-right">Cost Basis</th><th class="text-right">Unrealized G/L</th><th class="text-right">% Acct</th></tr></thead>
+      <tbody>
+        <tr><td class="ticker">₿ BTC</td><td class="text-right">1.0001535</td><td class="text-right">$69,090</td><td class="text-right">$30,177.88</td><td class="text-right gain">+$38,912</td><td class="text-right">68.7%</td></tr>
+        <tr><td style="color:#FFD700;font-weight:600;">🥇 Gold Istanbul Refinery 1oz Bar</td><td class="text-right">5 oz</td><td class="text-right">$26,090</td><td class="text-right">$9,715.00</td><td class="text-right gain">+$16,375</td><td class="text-right">25.9%</td></tr>
+        <tr><td class="ticker">SOL</td><td class="text-right">44.155</td><td class="text-right">$3,732</td><td class="text-right">$12,166.11</td><td class="text-right loss">−$8,434</td><td class="text-right">3.7%</td></tr>
+        <tr><td class="ticker">XLM</td><td class="text-right">9,091.59</td><td class="text-right">$1,428</td><td class="text-right">$987.39</td><td class="text-right gain">+$441</td><td class="text-right">1.4%</td></tr>
+        <tr><td style="color:var(--text-muted)">Cash</td><td class="text-right">—</td><td class="text-right">$182.15</td><td class="text-right">—</td><td class="text-right">—</td><td class="text-right">0.2%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- T. Rowe Price 401(k) -->
+  <div class="tab-content" id="tab-trowe">
+    <table>
+      <thead><tr><th>Fund</th><th class="text-right">Market Value</th><th class="text-right">% Acct</th></tr></thead>
+      <tbody>
+        <tr><td>U.S. Large Company Index</td><td class="text-right">$4,900.07</td><td class="text-right">25.1%</td></tr>
+        <tr><td>U.S. Large Company Growth</td><td class="text-right">$4,522.20</td><td class="text-right">23.1%</td></tr>
+        <tr><td>International Index</td><td class="text-right">$3,082.13</td><td class="text-right">15.8%</td></tr>
+        <tr><td>U.S. Large Company Value</td><td class="text-right">$2,976.50</td><td class="text-right">15.2%</td></tr>
+        <tr><td>Emerging Markets</td><td class="text-right">$2,062.30</td><td class="text-right">10.6%</td></tr>
+        <tr><td>U.S. Small Cap Core Growth</td><td class="text-right">$2,002.66</td><td class="text-right">10.2%</td></tr>
+        <tr style="border-top:1px solid var(--border);font-weight:600;"><td>Total</td><td class="text-right" style="color:var(--gold);">$19,545.86</td><td class="text-right">100%</td></tr>
+      </tbody>
+    </table>
+    <div class="update-note" style="margin-top:8px;">Return since inception (04/30/2025): +24.71% | Contribution rate: 5% of salary | Vested: $12,677.07</div>
+  </div>
+
+  <!-- 529 Emma -->
+  <div class="tab-content" id="tab-529-emma">
+    <table>
+      <thead><tr><th>Detail</th><th class="text-right">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Balance</td><td class="text-right" style="color:var(--gold);font-weight:600;">$77,791.14</td></tr>
+        <tr><td>Principal</td><td class="text-right">$60,352.05</td></tr>
+        <tr><td>Earnings</td><td class="text-right gain">$17,439.09</td></tr>
+        <tr><td>Allocation</td><td class="text-right">Equity 11% / Bonds 81.6% / Cash 7.4%</td></tr>
+        <tr><td>Monthly Contribution</td><td class="text-right">$564.73</td></tr>
+        <tr><td>Target Enrollment</td><td class="text-right">2026/2027</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 529 Luke -->
+  <div class="tab-content" id="tab-529-luke">
+    <table>
+      <thead><tr><th>Detail</th><th class="text-right">Value</th></tr></thead>
+      <tbody>
+        <tr><td>Balance</td><td class="text-right" style="color:var(--gold);font-weight:600;">$67,936.71</td></tr>
+        <tr><td>Principal</td><td class="text-right">$50,271.45</td></tr>
+        <tr><td>Earnings</td><td class="text-right gain">$17,665.26</td></tr>
+        <tr><td>Allocation</td><td class="text-right">Equity 34% / Bonds 56% / Short-term 10%</td></tr>
+        <tr><td>Monthly Contribution</td><td class="text-right">$564.73</td></tr>
+        <tr><td>Target Enrollment</td><td class="text-right">2030/2031</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 7. ASSET ALLOCATION DONUT + SUMMARY                        -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="two-col">
+  <div class="card">
+    <div class="card-header">
+      <h2>Asset Allocation</h2>
+    </div>
+    <div class="donut-container">
+      <svg width="220" height="220" viewBox="0 0 220 220">
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#f7931a" stroke-width="32"
+          stroke-dasharray="176.9 325.8" stroke-dashoffset="0" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#e68a00" stroke-width="32"
+          stroke-dasharray="87.5 415.2" stroke-dashoffset="-176.9" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#627eea" stroke-width="32"
+          stroke-dasharray="29.2 473.5" stroke-dashoffset="-264.4" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#14F195" stroke-width="32"
+          stroke-dasharray="5.5 497.2" stroke-dashoffset="-293.6" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#00e5ff" stroke-width="32"
+          stroke-dasharray="14.1 488.6" stroke-dashoffset="-299.1" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#FFD700" stroke-width="32"
+          stroke-dasharray="18.1 484.6" stroke-dashoffset="-313.2" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#2196f3" stroke-width="32"
+          stroke-dasharray="7.5 495.2" stroke-dashoffset="-331.3" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#9c27b0" stroke-width="32"
+          stroke-dasharray="60.3 442.4" stroke-dashoffset="-338.8" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#4caf50" stroke-width="32"
+          stroke-dasharray="55.8 446.9" stroke-dashoffset="-399.1" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#78909c" stroke-width="32"
+          stroke-dasharray="37.7 465.0" stroke-dashoffset="-454.9" />
+        <circle cx="110" cy="110" r="80" fill="none" stroke="#607d8b" stroke-width="32"
+          stroke-dasharray="9.5 493.2" stroke-dashoffset="-492.6" />
+        <circle cx="110" cy="110" r="60" fill="var(--bg-card)" />
+        <text x="110" y="106" text-anchor="middle" fill="var(--gold)" font-size="14" font-weight="600">$1.36M</text>
+        <text x="110" y="122" text-anchor="middle" fill="var(--text-muted)" font-size="9">TOTAL NAV</text>
+      </svg>
+      <div class="donut-legend">
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#f7931a"></div><span class="donut-legend-label">Bitcoin (Direct)</span><span class="donut-legend-val">33.4%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#e68a00"></div><span class="donut-legend-label">Bitcoin ETF (FBTC)</span><span class="donut-legend-val">18.3%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#627eea"></div><span class="donut-legend-label">Ethereum ETF (FETH)</span><span class="donut-legend-val">6.1%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#14F195"></div><span class="donut-legend-label">Solana + XLM</span><span class="donut-legend-val">0.4%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#00e5ff"></div><span class="donut-legend-label">Crypto Stocks</span><span class="donut-legend-val">2.9%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#FFD700"></div><span class="donut-legend-label">Gold</span><span class="donut-legend-val">3.8%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#2196f3"></div><span class="donut-legend-label">Trad. Equities (401k)</span><span class="donut-legend-val">1.4%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#9c27b0"></div><span class="donut-legend-label">Gravity Fund LP</span><span class="donut-legend-val">13.8%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#4caf50"></div><span class="donut-legend-label">529 College Savings</span><span class="donut-legend-val">10.7%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#78909c"></div><span class="donut-legend-label">Cash (Liquid + Earmarked)</span><span class="donut-legend-val">7.2%</span></div>
+        <div class="donut-legend-item"><div class="donut-legend-color" style="background:#607d8b"></div><span class="donut-legend-label">HSA</span><span class="donut-legend-val">1.8%</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <h2>Allocation Detail</h2>
+    </div>
+    <table>
+      <thead><tr><th>Asset Class</th><th class="text-right">Value</th><th class="text-right">Weight</th></tr></thead>
+      <tbody>
+        <tr><td>Bitcoin (Direct — River + Kingdom Trust + Choice)</td><td class="text-right">$453,497</td><td class="text-right">33.4%</td></tr>
+        <tr><td>Bitcoin ETF (FBTC)</td><td class="text-right">$248,499</td><td class="text-right">18.3%</td></tr>
+        <tr><td>Ethereum ETF (FETH)</td><td class="text-right">$82,420</td><td class="text-right">6.1%</td></tr>
+        <tr><td>Solana (SOL)</td><td class="text-right">$3,732</td><td class="text-right">0.3%</td></tr>
+        <tr><td>Other Crypto (XLM)</td><td class="text-right">$1,428</td><td class="text-right">0.1%</td></tr>
+        <tr><td>Crypto Stocks</td><td class="text-right">$39,799</td><td class="text-right">2.9%</td></tr>
+        <tr><td>Gold (Physical)</td><td class="text-right">$51,940</td><td class="text-right">3.8%</td></tr>
+        <tr><td>Traditional Equities (T. Rowe 401k)</td><td class="text-right">$19,546</td><td class="text-right">1.4%</td></tr>
+        <tr><td>Gravity Fund I LP (NAV)</td><td class="text-right">$187,500</td><td class="text-right">13.8%</td></tr>
+        <tr><td>529 College Savings</td><td class="text-right">$145,728</td><td class="text-right">10.7%</td></tr>
+        <tr><td>Cash — Liquid</td><td class="text-right">$34,646</td><td class="text-right">2.5%</td></tr>
+        <tr><td>Cash — Earmarked (Gravity Fund)</td><td class="text-right">$63,750</td><td class="text-right">4.7%</td></tr>
+        <tr><td>HSA</td><td class="text-right">$25,000</td><td class="text-right">1.8%</td></tr>
+        <tr style="border-top:2px solid var(--gold);font-weight:700;"><td>Total</td><td class="text-right" style="color:var(--gold);">$1,359,014</td><td class="text-right">100%</td></tr>
+      </tbody>
+    </table>
+    <div class="update-note" style="margin-top:8px;">Crypto exposure (BTC+ETH+SOL+XLM+Stocks): 61.0% | Total incl. Gravity Fund crypto: ~67%</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 8. BENCHMARKS (5 indices with toggles)                     -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>Benchmark Comparison</h2>
+  </div>
+  <div class="period-pills">
+    <button class="period-pill active" onclick="benchmarkPeriodAlert('1D')">1D</button>
+    <button class="period-pill" onclick="benchmarkPeriodAlert('1W')">1W</button>
+    <button class="period-pill" onclick="benchmarkPeriodAlert('1M')">1M</button>
+    <button class="period-pill" onclick="benchmarkPeriodAlert('3M')">3M</button>
+    <button class="period-pill" onclick="benchmarkPeriodAlert('6M')">6M</button>
+    <button class="period-pill" onclick="benchmarkPeriodAlert('1Y')">1Y</button>
+    <button class="period-pill" onclick="benchmarkPeriodAlert('5Y')">5Y</button>
+  </div>
+  <table>
+    <thead>
+      <tr><th>Benchmark</th><th>Ticker</th><th class="text-right">Current</th><th class="text-right">1D</th><th class="text-right">1W</th><th class="text-right">1M</th><th class="text-right">YTD</th><th class="text-right">1Y</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>S&P 500</td><td class="ticker">SPX</td>
+        <td class="text-right">$6,781</td>
+        <td class="text-right loss">-0.5%</td>
+        <td class="text-right loss">-3.1%</td>
+        <td class="text-right loss">-4.2%</td>
+        <td class="text-right loss">-2.8%</td>
+        <td class="text-right gain">+9.4%</td>
+      </tr>
+      <tr>
+        <td>Nasdaq Composite</td><td class="ticker">IXIC</td>
+        <td class="text-right">$18,120</td>
+        <td class="text-right loss">-2.6%</td>
+        <td class="text-right loss">-4.5%</td>
+        <td class="text-right loss">-6.1%</td>
+        <td class="text-right loss">-5.7%</td>
+        <td class="text-right gain">+7.2%</td>
+      </tr>
+      <tr>
+        <td>Bitcoin</td><td class="ticker">BTC</td>
+        <td class="text-right">$69,079</td>
+        <td class="text-right loss">-1.9%</td>
+        <td class="text-right loss">-5.8%</td>
+        <td class="text-right loss">-9.3%</td>
+        <td class="text-right loss">-28.1%</td>
+        <td class="text-right gain">+2.1%</td>
+      </tr>
+      <tr>
+        <td>Gold</td><td class="ticker">GLD</td>
+        <td class="text-right">$5,194</td>
+        <td class="text-right gain">+0.8%</td>
+        <td class="text-right gain">+2.1%</td>
+        <td class="text-right gain">+5.4%</td>
+        <td class="text-right gain">+12.3%</td>
+        <td class="text-right gain">+38.7%</td>
+      </tr>
+      <tr>
+        <td>Bloomberg Commodity</td><td class="ticker">BCOM</td>
+        <td class="text-right">$108</td>
+        <td class="text-right gain">+1.2%</td>
+        <td class="text-right gain">+3.8%</td>
+        <td class="text-right gain">+6.2%</td>
+        <td class="text-right gain">+8.1%</td>
+        <td class="text-right gain">+14.5%</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="update-note" style="margin-top:10px;">🔄 Ask Axel to refresh with live data — placeholder values shown</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 9. PORTFOLIO ANALYSIS                                      -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>📊 Portfolio Analysis</h2>
+    <span class="risk-badge risk-high">HIGH CONCENTRATION</span>
+  </div>
+
+  <!-- A1: Concentration Risk -->
+  <div class="section-subtitle">A1 — Concentration Risk Analysis</div>
+
+  <div style="max-width:700px;">
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">BTC Direct (River+KT+Choice)</span>
+      <div class="alloc-bar" style="width:35.2%;background:#f7931a;"></div>
+      <span class="alloc-bar-pct">35.2%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">BTC ETF (FBTC)</span>
+      <div class="alloc-bar" style="width:17.4%;background:#e68a00;"></div>
+      <span class="alloc-bar-pct">17.4%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">Gravity Fund</span>
+      <div class="alloc-bar" style="width:12.0%;background:#9c27b0;"></div>
+      <span class="alloc-bar-pct">12.0%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">529 College Savings</span>
+      <div class="alloc-bar" style="width:11.1%;background:#4caf50;"></div>
+      <span class="alloc-bar-pct">11.1%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">Cash (Liquid+Earmarked)</span>
+      <div class="alloc-bar" style="width:7.5%;background:#78909c;"></div>
+      <span class="alloc-bar-pct">7.5%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">ETH (FETH)</span>
+      <div class="alloc-bar" style="width:5.8%;background:#627eea;"></div>
+      <span class="alloc-bar-pct">5.8%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">Gold</span>
+      <div class="alloc-bar" style="width:3.6%;background:#FFD700;"></div>
+      <span class="alloc-bar-pct">3.6%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">Crypto Stocks</span>
+      <div class="alloc-bar" style="width:2.8%;background:#00e5ff;"></div>
+      <span class="alloc-bar-pct">2.8%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">HSA</span>
+      <div class="alloc-bar" style="width:1.9%;background:#607d8b;"></div>
+      <span class="alloc-bar-pct">1.9%</span>
+    </div>
+    <div class="alloc-bar-container">
+      <span class="alloc-bar-label">Trad. Equities (401k)</span>
+      <div class="alloc-bar" style="width:1.5%;background:#2196f3;"></div>
+      <span class="alloc-bar-pct">1.5%</span>
+    </div>
+  </div>
+
+  <div class="concentration-warning">
+    ⚠️ <strong>Portfolio is ~62% directly correlated to crypto markets</strong> (BTC + ETH + SOL + XLM + Stocks). Including Gravity Fund crypto positions, effective crypto exposure is ~68%. A 50% BTC drawdown would reduce portfolio by ~$400K. Choice Roth IRA adds significant BTC + gold + altcoin exposure.
+  </div>
+
+  <!-- A2: Thesis Alignment Matrix -->
+  <div class="section-subtitle">A2 — Thesis Alignment Matrix</div>
+  <table>
+    <thead>
+      <tr><th>Thesis Pillar</th><th>Holdings</th><th class="text-center">Alignment</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Monetary Debasement / Hard Money</td><td><span class="ticker">BTC</span> (River+KT+Choice), <span class="ticker">FBTC</span>, <span class="ticker">MSTR</span>, Gold (10oz)</td><td class="text-center thesis-align"><span class="thesis-strong">✅</span> Strong</td></tr>
+      <tr><td>Energy / Mining</td><td><span class="ticker">WULF</span>, <span class="ticker">CIFR</span>, <span class="ticker">IREN</span></td><td class="text-center thesis-align"><span class="thesis-strong">✅</span> Strong</td></tr>
+      <tr><td>AI / L1 Infrastructure</td><td><span class="ticker">FETH</span>, <span class="ticker">SOL</span>, <span class="ticker">COIN</span></td><td class="text-center thesis-align"><span class="thesis-strong">✅</span> Strong</td></tr>
+      <tr><td>Deep Value / Contrarian</td><td><span class="ticker">MU</span> (Micron), <span class="ticker">BKKT</span></td><td class="text-center thesis-align"><span class="thesis-moderate">⚠️</span> Weak</td></tr>
+      <tr><td>Alternative / VC Exposure</td><td>Gravity Fund (crypto VC)</td><td class="text-center thesis-align"><span class="thesis-strong">✅</span> Strong</td></tr>
+      <tr><td>Education / Family Planning</td><td>IDeal 529 (Emma + Luke)</td><td class="text-center thesis-align"><span class="thesis-strong">✅</span> Strong</td></tr>
+      <tr><td>Traditional / Retirement</td><td>T. Rowe Price 401(k)</td><td class="text-center thesis-align"><span class="thesis-moderate">⚠️</span> Moderate</td></tr>
+    </tbody>
+  </table>
+
+  <!-- A3: Board Perspectives -->
+  <div class="section-subtitle">A3 — Board Perspectives on Current Portfolio</div>
+
+  <div class="board-quote">
+    <div class="board-quote-name">Warren Buffett</div>
+    "73% concentration in a single asset class violates every principle of margin of safety. However — if conviction is genuine and the thesis is sound, concentration is how wealth is built, not preserved. The question is whether you can withstand a 60% drawdown without selling."
+  </div>
+  <div class="board-quote">
+    <div class="board-quote-name">Stanley Druckenmiller</div>
+    "The macro setup favors hard assets as M2 expansion resumes. Your BTC positioning is directionally correct. However, the lack of any traditional equity or commodity exposure means you're missing the reflexive rallies in other debasement-beneficiary assets like gold miners and energy producers."
+  </div>
+  <div class="board-quote">
+    <div class="board-quote-name">Lyn Alden</div>
+    "Your portfolio is essentially a leveraged bet on the Bitcoin monetization thesis. FBTC across multiple IRAs gives you tax-advantaged exposure — smart structuring. The FETH position adds L1 diversification. Key risk: if the next liquidity cycle disappoints, you're holding concentrated losses with no uncorrelated hedge."
+  </div>
+  <div class="board-quote">
+    <div class="board-quote-name">Michael Burry</div>
+    "I'd be concerned about BKKT (down 77%) and the Gravity Fund's realized losses. When positions are down this much, the question isn't 'will they recover' — it's 'would you buy them today at this price?' If not, you're holding hope, not a position."
+  </div>
+  <div class="board-quote">
+    <div class="board-quote-name">Paul Tudor Jones</div>
+    "Position sizing matters more than position selection. Your BTC DCA discipline is sound. But with $35K liquid cash supporting a family, you have no dry powder for opportunities. In a crisis, illiquidity forces bad decisions."
+  </div>
+
+  <!-- A4: Key Risks & Watchpoints -->
+  <div class="section-subtitle">A4 — Key Risks &amp; Watchpoints</div>
+
+  <div class="risk-item">🔴 <strong>CRITICAL:</strong> Amber's Trad IRA (...4817) down $117K — largest single account loss. FETH down $73.5K alone.</div>
+  <div class="risk-item">🔴 <strong>CRITICAL:</strong> Liquid cash (~$35.9K incl. Wells Fargo) is low for a family of 4. ~2-3 months of expenses with Gravity Fund capital calls ($62.5K) still outstanding.</div>
+  <div class="risk-item">🟡 <strong>WARNING:</strong> BKKT positions across 2 accounts are down 77% combined. Consider tax-loss harvesting.</div>
+  <div class="risk-item">🟡 <strong>WARNING:</strong> Gravity Fund unfunded commitments total $62.5K — future capital calls will further reduce liquidity.</div>
+  <div class="risk-item">🟡 <strong>WARNING:</strong> Emma's 529 enrollment is 2026/2027 — tuition withdrawals starting soon. Plan distribution timing.</div>
+  <div class="risk-item">🟢 <strong>POSITIVE:</strong> BTC DCA discipline ($50/week) is sound dollar-cost averaging into core thesis.</div>
+  <div class="risk-item">🟢 <strong>POSITIVE:</strong> WULF showing strong gains (+$7.3K unrealized) — thesis working on energy/mining play.</div>
+  <div class="risk-item">🟢 <strong>POSITIVE:</strong> Gold holdings now $47K (10oz across Kingdom Trust + Choice Roth) — meaningful hard asset hedge at 3.6% of portfolio.</div>
+  <div class="risk-item">🟢 <strong>POSITIVE:</strong> T. Rowe 401(k) is the only traditional equity exposure — performing well (+24.7% since inception).</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 10. 📊 HOLDINGS DEEP DIVE (NEW)                            -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>📊 Holdings Deep Dive</h2>
+  </div>
+
+  <!-- BTC River -->
+  <div class="deep-dive-item">
+    <h4>₿ BTC (River — 3.56 BTC)</h4>
+    <div class="dd-meta">
+      <strong>Cost basis:</strong> $308,868 &nbsp;|&nbsp; <strong>Current:</strong> $241,851 &nbsp;|&nbsp; <strong style="color:var(--red);">Unrealized: -$67,017 (-21.7%)</strong><br>
+      <strong>DCA active:</strong> $50/week<br>
+      <strong>Thesis status:</strong> <span style="color:var(--green);">INTACT</span> — monetary debasement thesis, institutional ETF adoption<br>
+      <strong>Cycle position:</strong> Extreme Fear territory, historically precedes major rallies<br>
+      <strong>Risk:</strong> Correlation with risk assets during stagflation scenarios<br>
+      <strong style="color:var(--gold);">Board view:</strong> Lyn Alden ("sound money"), PTJ ("protect capital but stay long"), Burry ("size appropriately")
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:#ffc107;font-weight:700;">🟡 X SENTIMENT: MIXED</span> <span style="color:var(--text-muted);">— "$2T Senate bill vs $45K dump calls"</span></div>
+    <div class="dd-reco dd-reco-hold" style="margin-top:10px;">RECOMMENDATION: HOLD — increase DCA (see Trade 2)</div>
+  </div>
+
+  <!-- FBTC -->
+  <div class="deep-dive-item">
+    <h4><span class="ticker">FBTC</span> — Aggregate ~$231K across 4 IRAs</h4>
+    <div class="dd-meta">
+      Tax-advantaged BTC exposure — smart structuring<br>
+      Consider consolidating to fewer accounts for simplicity<br>
+      No action needed beyond restructuring noted in Priority 1 above
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:#ffc107;font-weight:700;">🟡 X SENTIMENT: MIXED</span> <span style="color:var(--text-muted);">— "$2T Senate bill vs $45K dump calls"</span></div>
+    <div class="dd-reco dd-reco-hold" style="margin-top:10px;">RECOMMENDATION: RESTRUCTURE per Priority 1</div>
+  </div>
+
+  <!-- FETH -->
+  <div class="deep-dive-item" style="border-left: 4px solid var(--red);">
+    <h4><span class="ticker">FETH</span> — $78,151 in Amber's Trad IRA (...4817)</h4>
+    <div class="dd-meta">
+      <strong>Cost basis:</strong> $150,000 &nbsp;|&nbsp; <strong>Current:</strong> $78,151 &nbsp;|&nbsp; <strong style="color:var(--red);">Unrealized: -$71,849 (-48%)</strong><br>
+      <span style="color:var(--red);font-weight:600;">This is the most painful position. Down 49%.</span><br>
+      <strong>Thesis check:</strong> ETH L1 thesis being challenged by Solana's performance. BUT — Ethereum still dominates DeFi TVL and institutional adoption.<br>
+      <strong style="color:var(--gold);">Board view:</strong> Raoul Pal (still bullish long-term), Burry (would question position size relative to loss)
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:var(--green);font-weight:700;">🟢 X SENTIMENT: BULLISH</span> <span style="color:var(--text-muted);">— "$5K-$15K targets, but co-founder selling 79K ETH to Kraken ⚠️"</span></div>
+    <div class="dd-reco dd-reco-hold" style="margin-top:10px;">RECOMMENDATION: HOLD but DO NOT ADD. Cut at -60% ($60K value = ~$18.5 FETH price)</div>
+  </div>
+
+  <!-- MSTR -->
+  <div class="deep-dive-item">
+    <h4><span class="ticker">MSTR</span> — $20,720 across 2 Roth IRAs</h4>
+    <div class="dd-meta">
+      Leveraged BTC play in tax-free accounts — optimal positioning<br>
+      Saylor accumulating aggressively. NAV premium compressed.
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:#ffc107;font-weight:700;">🟡 X SENTIMENT: MIXED</span> <span style="color:var(--text-muted);">— "Saylor buying more, but labeled 'worst trade of 2025'"</span></div>
+    <div class="dd-reco dd-reco-buy" style="margin-top:10px;">RECOMMENDATION: ADD on this weakness (see Trade 3)</div>
+  </div>
+
+  <!-- WULF -->
+  <div class="deep-dive-item">
+    <h4><span class="ticker">WULF</span> — $10,047 across 2 IRAs</h4>
+    <div class="dd-meta">
+      Your best performer. AI pivot thesis working.
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:var(--red);font-weight:700;">🔴 X SENTIMENT: BEARISH</span> <span style="color:var(--text-muted);">— "Not buying until $8, -30% crash prep"</span></div>
+    <div class="dd-reco dd-reco-buy" style="margin-top:10px;">RECOMMENDATION: ADD (see Trade 4). This is a conviction hold.</div>
+  </div>
+
+  <!-- Gold -->
+  <div class="deep-dive-item">
+    <h4 style="color:#FFD700;">🥇 Gold (Kingdom Trust 5oz + Choice Roth 5oz — $51,700)</h4>
+    <div class="dd-meta">
+      <strong>10 oz total across 2 accounts</strong> — Kingdom Trust (Amber): $25,850 + Choice Roth (Gian): $25,850<br>
+      Your ONLY non-crypto/non-equity hedge — now a meaningful 3.6% allocation<br>
+      With Iran escalation and $110+ oil, gold likely to continue strength
+    </div>
+    <div class="dd-reco dd-reco-hold" style="margin-top:10px;">RECOMMENDATION: HOLD. Consider adding if breaking above $2,800/oz.</div>
+  </div>
+
+  <!-- MU -->
+  <div class="deep-dive-item">
+    <h4><span class="ticker">MU</span> — Micron ($2,251 in Gian's Rollover)</h4>
+    <div class="dd-meta">
+      AI memory play. Only traditional tech equity in portfolio.<br>
+      <strong style="color:var(--green);">Up $451 (+25%).</strong> Small position.
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:var(--red);font-weight:700;">🔴 X SENTIMENT: BEARISH</span> <span style="color:var(--text-muted);">— "50-day EMA break, bear flag, weakest in memory group"</span></div>
+    <div class="dd-reco dd-reco-hold" style="margin-top:10px;">RECOMMENDATION: HOLD for diversification value</div>
+  </div>
+
+  <!-- BKKT -->
+  <div class="deep-dive-item" style="border-left: 4px solid var(--red);">
+    <h4><span class="ticker">BKKT</span> — $593 combined — <span style="color:var(--red);">down 77%</span></h4>
+    <div class="dd-meta">
+      Dead money. No recovery thesis.
+    </div>
+    <div class="dd-reco dd-reco-sell" style="margin-top:10px;">RECOMMENDATION: SELL IMMEDIATELY for tax loss harvest</div>
+  </div>
+
+  <!-- CIFR -->
+  <div class="deep-dive-item">
+    <h4><span class="ticker">CIFR</span> — $1,493 combined</h4>
+    <div class="dd-meta">
+      Flat. AI/HPC pivot thesis same as WULF.
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:var(--red);font-weight:700;">🔴 X SENTIMENT: BEARISH</span> <span style="color:var(--text-muted);">— "EMA rejection, not buying until $9"</span></div>
+    <div class="dd-reco dd-reco-hold" style="margin-top:10px;">RECOMMENDATION: HOLD, add BKKT sale proceeds</div>
+  </div>
+
+  <!-- IREN -->
+  <div class="deep-dive-item">
+    <h4><span class="ticker">IREN</span> — $2,936 combined</h4>
+    <div class="dd-meta">
+      Down ~$1K. AI data center pivot.
+    </div>
+    <div style="margin-top:8px;font-size:12px;"><span style="color:var(--red);font-weight:700;">🔴 X SENTIMENT: BEARISH</span> <span style="color:var(--text-muted);">— "$6B ATM dilution, 'fundamentally cooked'"</span></div>
+    <div style="margin-top:10px;background:rgba(255,23,68,0.08);border:1px solid rgba(255,23,68,0.3);border-left:4px solid var(--red);border-radius:6px;padding:12px 16px;font-size:12px;color:var(--red);line-height:1.6;">
+      ⚠️ <strong>IREN dilution risk is REAL</strong> — $6B ATM, 89% dilution since IPO per X analysis. CEO hinting at big things but financials don't support current price. SELL recommendation stands.
+    </div>
+    <div class="dd-reco dd-reco-sell" style="margin-top:10px;">RECOMMENDATION: Sell in Gian's Rollover, keep in Amber's Trad</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 11. GRAVITY FUND I LP — DEEP DIVE                          -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>🏦 Gravity Fund I LP — Deep Dive</h2>
+    <span class="gf-status-badge">ABOVE MEDIAN — J-CURVE TROUGH</span>
+  </div>
+
+  <div class="section-subtitle" style="margin-top:0;">Performance Summary (as of 12/31/2025)</div>
+  <div class="gf-metric-grid">
+    <div class="gf-metric"><div class="gf-metric-label">Vintage</div><div class="gf-metric-value">2022</div></div>
+    <div class="gf-metric"><div class="gf-metric-label">Year</div><div class="gf-metric-value">3–4</div></div>
+    <div class="gf-metric"><div class="gf-metric-label">TVPI</div><div class="gf-metric-value" style="color:var(--green);">1.01x</div></div>
+    <div class="gf-metric"><div class="gf-metric-label">DPI</div><div class="gf-metric-value">0.16x</div></div>
+    <div class="gf-metric"><div class="gf-metric-label">IRR</div><div class="gf-metric-value">0%</div></div>
+    <div class="gf-metric"><div class="gf-metric-label">MOIC</div><div class="gf-metric-value">1.06x</div></div>
+  </div>
+
+  <div style="background:var(--bg-secondary);border-radius:6px;padding:12px;margin-bottom:16px;font-size:12px;">
+    <table style="max-width:500px;">
+      <thead><tr><th>Metric</th><th class="text-right">GF1</th><th class="text-right">Median 2022</th><th class="text-right">Top Decile</th></tr></thead>
+      <tbody>
+        <tr><td>TVPI</td><td class="text-right" style="color:var(--green);">1.01x</td><td class="text-right">0.98x</td><td class="text-right">1.44x</td></tr>
+        <tr><td>DPI</td><td class="text-right" style="color:var(--green);">0.16x</td><td class="text-right">0.00x</td><td class="text-right">0.05x</td></tr>
+        <tr><td>IRR</td><td class="text-right">0%</td><td class="text-right">-1%</td><td class="text-right">19%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-subtitle">Portfolio Breakdown (16 positions)</div>
+  <div class="two-col" style="margin-bottom:16px;">
+    <div>
+      <table>
+        <thead><tr><th>Category</th><th class="text-right">Count</th><th class="text-right">%</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green);">Write-Ups</td><td class="text-right">1</td><td class="text-right">6%</td></tr>
+          <tr><td>Held at Cost</td><td class="text-right">6</td><td class="text-right">38%</td></tr>
+          <tr><td style="color:var(--red);">Write-Downs</td><td class="text-right">8</td><td class="text-right">50%</td></tr>
+          <tr><td style="color:var(--red);">Write-Offs</td><td class="text-right">1</td><td class="text-right">6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;align-items:center;">
+      <div style="width:100%;">
+        <div style="display:flex;height:24px;border-radius:4px;overflow:hidden;margin-bottom:8px;">
+          <div style="width:6%;background:var(--green);" title="Write-Ups 6%"></div>
+          <div style="width:38%;background:var(--gold);" title="Held at Cost 38%"></div>
+          <div style="width:50%;background:var(--red);opacity:0.7;" title="Write-Downs 50%"></div>
+          <div style="width:6%;background:var(--red);" title="Write-Offs 6%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);">
+          <span>🟢 Up</span><span>🟡 Cost</span><span>🔴 Down</span><span>❌ Off</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-subtitle">Star Holdings</div>
+
+  <div class="star-holding">
+    <div class="star-holding-title">⭐ Shadeform — GPU Cloud Platform</div>
+    <div class="star-holding-desc">$20M revenue, 7x YoY growth, NVIDIA partnership (formally integrated into NVIDIA Brev Platform). Held at cost — upcoming raise = significant mark-up. ~2 years cash runway remaining. <strong style="color:var(--gold);">Potential portfolio maker.</strong></div>
+  </div>
+  <div class="star-holding">
+    <div class="star-holding-title">⭐ LiteLLM — AI Developer Tooling</div>
+    <div class="star-holding-desc">Preparing for upcoming financing round. Hiring across multiple roles. Held at cost — potential mark-up catalyst.</div>
+  </div>
+  <div class="star-holding">
+    <div class="star-holding-title">⭐ Abalone Bio — Biotech / Obesity</div>
+    <div class="star-holding-desc">2nd 7-figure pharma deal signed. Lead obesity program showing superior efficacy vs current peptide drugs. Pursuing mid-to-high 8-figure upfront / 9-figure downstream licensing for MASH asset. Upcoming $8–12M raise at attractive valuation.</div>
+  </div>
+  <div class="star-holding" style="border-left:4px solid var(--red);">
+    <div class="star-holding-title">❌ MetaGravity — Winding Down</div>
+    <div class="star-holding-desc" style="color:var(--red);">Board voted to wind down. Marked down 50%. 3 offers received — one could return invested capital but with caveats. Team/people failure acknowledged by GP.</div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+      <div style="flex:1;">
+        <div style="display:flex;height:16px;border-radius:8px;overflow:hidden;background:var(--bg-card);">
+          <div style="width:75%;background:var(--gold);border-radius:8px;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-top:4px;">
+          <span>$187.5K called (75%)</span>
+          <span>$62.5K remaining</span>
+        </div>
+      </div>
+    </div>
+    <div class="risk-item" style="border:none;padding:4px 0;">📅 <strong>Next call:</strong> ~$12.5–25K expected mid-March 2026</div>
+    <div class="risk-item" style="border:none;padding:4px 0;">✅ <strong>Recommendation:</strong> FUND — capital goes to follow-ons in best companies (Shadeform, LiteLLM, Abalone Bio)</div>
+    <div class="risk-item" style="border:none;padding:4px 0;color:var(--red);">⚠️ <strong>Warning:</strong> Defaulting on capital calls risks forfeiture of <em>entire existing position</em></div>
+  </div>
+
+  <div class="section-subtitle">Return Expectations</div>
+  <table>
+    <thead><tr><th>Scenario</th><th class="text-right">MOIC</th><th class="text-right">$250K →</th><th class="text-right">Probability</th></tr></thead>
+    <tbody>
+      <tr><td>🐻 Bear</td><td class="text-right">1.0–1.3x</td><td class="text-right">$250K–$325K</td><td class="text-right">25%</td></tr>
+      <tr><td style="color:var(--gold);font-weight:600;">📊 Base</td><td class="text-right" style="color:var(--gold);">2.0–2.5x</td><td class="text-right" style="color:var(--gold);">$500K–$625K</td><td class="text-right" style="color:var(--gold);">50%</td></tr>
+      <tr><td style="color:var(--green);">🐂 Bull</td><td class="text-right" style="color:var(--green);">3.5–5.0x</td><td class="text-right" style="color:var(--green);">$875K–$1.25M</td><td class="text-right">20%</td></tr>
+      <tr><td style="color:var(--cyan);">🚀 Home Run</td><td class="text-right" style="color:var(--cyan);">7x+</td><td class="text-right" style="color:var(--cyan);">$1.75M+</td><td class="text-right">5%</td></tr>
+      <tr style="border-top:2px solid var(--gold);font-weight:700;">
+        <td>Expected Value</td><td class="text-right" style="color:var(--gold);">~2.2x MOIC</td><td class="text-right" style="color:var(--gold);">~$550K</td><td class="text-right"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 12. 529 COLLEGE SAVINGS                                    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>🎓 529 College Savings</h2>
+    <span style="font-size:12px;color:var(--text-muted);">Combined: $145,727.85</span>
+  </div>
+
+  <div class="five29-account">
+    <div class="five29-header">
+      <div class="five29-name">Emma R. Gieri — Target 2026/2027</div>
+      <span class="five29-status" style="background:rgba(255,193,7,0.12);color:#ffc107;border:1px solid rgba(255,193,7,0.3);">⚠️ ENROLLMENT IMMINENT</span>
+    </div>
+    <div class="five29-meta">
+      <div class="five29-meta-item">Balance<span style="color:var(--gold);">$77,791.14</span></div>
+      <div class="five29-meta-item">Principal<span>$60,352.05</span></div>
+      <div class="five29-meta-item">Earnings<span style="color:var(--green);">$17,439.09</span></div>
+      <div class="five29-meta-item">Monthly Contribution<span>$564.73</span></div>
+      <div class="five29-meta-item">1-Year Return<span>8.14%</span></div>
+      <div class="five29-meta-item">3-Year Return<span>7.48%</span></div>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">ALLOCATION</div>
+      <div style="display:flex;height:16px;border-radius:8px;overflow:hidden;">
+        <div style="width:11%;background:#448aff;" title="Equity 11%"></div>
+        <div style="width:81.6%;background:var(--gold);" title="Bonds 81.6%"></div>
+        <div style="width:7.4%;background:#78909c;" title="Cash 7.4%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px;">
+        <span>Equity 11%</span><span>Bonds 81.6%</span><span>Cash 7.4%</span>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);">✅ Correctly conservative allocation for imminent enrollment — no changes recommended.</div>
+  </div>
+
+  <div class="five29-account">
+    <div class="five29-header">
+      <div class="five29-name">Luke A. Gieri — Target 2030/2031</div>
+      <span class="five29-status" style="background:rgba(0,200,83,0.12);color:var(--green);border:1px solid rgba(0,200,83,0.3);">ON TRACK</span>
+    </div>
+    <div class="five29-meta">
+      <div class="five29-meta-item">Balance<span style="color:var(--gold);">$67,936.71</span></div>
+      <div class="five29-meta-item">Principal<span>$50,271.45</span></div>
+      <div class="five29-meta-item">Earnings<span style="color:var(--green);">$17,665.26</span></div>
+      <div class="five29-meta-item">Monthly Contribution<span>$564.73</span></div>
+      <div class="five29-meta-item">1-Year Return<span>11.90%</span></div>
+      <div class="five29-meta-item">3-Year Return<span>11.26%</span></div>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;">ALLOCATION</div>
+      <div style="display:flex;height:16px;border-radius:8px;overflow:hidden;">
+        <div style="width:34%;background:#448aff;" title="Equity 34%"></div>
+        <div style="width:56%;background:var(--gold);" title="Bonds 56%"></div>
+        <div style="width:10%;background:#78909c;" title="Short-term 10%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px;">
+        <span>Equity 34%</span><span>Bonds 56%</span><span>Short-term 10%</span>
+      </div>
+    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text-secondary);">✅ 4+ years to enrollment — growth-oriented allocation is appropriate.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 13. POSITION CLASSIFICATION                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>Position Classification</h2>
+  </div>
+  <table>
+    <thead><tr><th>Position</th><th>Class</th><th>Thesis</th><th class="text-right">Value</th></tr></thead>
+    <tbody>
+      <tr><td class="ticker">BTC (Direct)</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Sound money / digital gold / monetary debasement hedge</td><td class="text-right">$445,399</td></tr>
+      <tr><td class="ticker">FBTC</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>BTC exposure in tax-advantaged IRAs</td><td class="text-right">$231,263</td></tr>
+      <tr><td class="ticker">FETH</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Ethereum as programmable money / DeFi infrastructure</td><td class="text-right">$78,151</td></tr>
+      <tr><td class="ticker">Gravity Fund LP</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Crypto venture / early-stage thesis exposure</td><td class="text-right">$187,500</td></tr>
+      <tr><td style="color:#FFD700;font-weight:600;">Gold (Physical — 10oz)</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Hard asset hedge / non-crypto store of value</td><td class="text-right">$51,700</td></tr>
+      <tr><td class="ticker">MSTR</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Leveraged BTC treasury / Saylor thesis</td><td class="text-right">$20,720</td></tr>
+      <tr><td class="ticker">WULF</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Bitcoin mining / energy infrastructure</td><td class="text-right">$10,047</td></tr>
+      <tr><td class="ticker">SOL</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>L1 infrastructure / autonomous agent economy</td><td class="text-right">$8,279</td></tr>
+      <tr><td class="ticker">MU</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>AI infrastructure / memory semiconductor cycle</td><td class="text-right">$2,251</td></tr>
+      <tr><td class="ticker">XLM</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Cross-border payments / legacy position</td><td class="text-right">$3,939</td></tr>
+      <tr><td class="ticker">IREN</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Bitcoin mining / AI data center pivot</td><td class="text-right">$2,936</td></tr>
+      <tr><td class="ticker">CIFR</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Bitcoin mining / hash rate exposure</td><td class="text-right">$1,493</td></tr>
+      <tr><td class="ticker">BKKT</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Crypto infrastructure / institutional on-ramp</td><td class="text-right">$593</td></tr>
+      <tr><td class="ticker">COIN</td><td><span class="class-tag class-investment">INVESTMENT</span></td><td>Crypto exchange / regulatory moat</td><td class="text-right">$17</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 14. WEEKLY REVIEW CHECKLIST                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>📋 Weekly Review Checklist</h2>
+  </div>
+  <ol class="action-list">
+    <li><strong>CHECK STOP LOSSES</strong> — Review all active trade stops. Adjust trailing stops if positions have moved significantly in your favor.</li>
+    <li><strong>BTC ON-CHAIN METRICS</strong> — Check MVRV Z-Score, NUPL, and exchange net flows. Confirm cycle positioning aligns with thesis.</li>
+    <li><strong>GRAVITY FUND COMMS</strong> — Review any new emails or portal updates from Gravity. Watch for capital call notices (next expected mid-March 2026).</li>
+    <li><strong>CASH RESERVE STATUS</strong> — Verify cash buffers in checking/savings. Ensure Gravity Fund call obligations can be met without liquidating positions.</li>
+    <li><strong>MACRO CALENDAR</strong> — Check upcoming Fed meetings, CPI/PPI releases, and major earnings. Adjust position sizing around high-volatility events.</li>
+    <li><strong>POSITION SIZING REVIEW</strong> — No single tactical position should exceed 5% of total portfolio. Rebalance if any position has grown disproportionately.</li>
+  </ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 15. INCOME & CAPITAL FLOW MAP                              -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="card">
+  <div class="card-header">
+    <h2>💰 Income &amp; Capital Flow Map</h2>
+  </div>
+
+  <div class="section-subtitle" style="margin-top:0;">Current Income Streams</div>
+  <table>
+    <thead>
+      <tr><th>Source</th><th class="text-right">Monthly</th><th>Type</th><th>Notes</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Intermountain Health</td><td class="text-right" style="color:var(--green);font-weight:600;">$13,128</td><td>W-2 Salary</td><td>Primary — stable base</td></tr>
+      <tr><td>Locums Shifts</td><td class="text-right" style="color:var(--green);">$5,000</td><td>1099 Variable</td><td>~2-3 shifts/month, flexible</td></tr>
+      <tr><td>MWC Holdings</td><td class="text-right" style="color:var(--green);">$3,000</td><td>K-1 Distribution</td><td>Real estate partnership</td></tr>
+      <tr><td>Alliance CFO Solutions</td><td class="text-right" style="color:var(--gold);font-weight:600;">$4,000</td><td>1099 Business</td><td>Growing — target $10K/mo</td></tr>
+      <tr style="border-top:2px solid var(--gold);font-weight:700;">
+        <td>TOTAL</td><td class="text-right" style="color:var(--gold);font-size:15px;">$25,128</td><td colspan="2">~$301K annualized</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--bg-secondary);border:1px solid var(--gold-dim);border-radius:8px;padding:12px;margin:12px 0;font-size:12px;">
+    <strong style="color:var(--gold);">🎯 Income Growth Target:</strong> Alliance CFO $4K → $10K/mo (+$72K/yr). Focus on landing 2-3 more fractional CFO clients. Each client = ~$2-3K/mo recurring.
+  </div>
+
+  <div class="section-subtitle">Monthly Investable Income Deployment Plan</div>
+  <table>
+    <thead>
+      <tr><th>#</th><th>Priority</th><th class="text-right">Amount</th><th>Vehicle</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Cash Reserve Build</td><td class="text-right">$2,000</td><td>High-yield savings → target $15K minimum</td></tr>
+      <tr><td>2</td><td>BTC DCA</td><td class="text-right">$217</td><td>River — $50/week auto-buy</td></tr>
+      <tr><td>3</td><td>Roth IRA Max</td><td class="text-right">$1,167</td><td>$7K/yr each (Gian + Amber) = $14K/yr</td></tr>
+      <tr><td>4</td><td>Tactical Trades</td><td class="text-right">$1,000-2,000</td><td>Board-approved swing trades in IRAs</td></tr>
+      <tr><td>5</td><td>Opportunistic</td><td class="text-right">Variable</td><td>Gravity Fund calls, special situations</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">Windfall Deployment Protocol</div>
+  <table>
+    <thead>
+      <tr><th>Tier</th><th>Amount</th><th>Deployment</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Tier 1</td><td>$5K – $15K</td><td>50% cash reserve, 30% BTC, 20% highest-conviction trade</td></tr>
+      <tr><td>Tier 2</td><td>$15K – $50K</td><td>40% cash reserve, 25% BTC, 20% Roth IRA max, 15% tactical</td></tr>
+      <tr><td>Tier 3</td><td>$50K+</td><td>30% cash, 25% BTC, 20% Roth, 15% Gravity Fund reserve, 10% opportunistic</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-subtitle">Active Recurring Investments</div>
+  <table>
+    <thead>
+      <tr><th>Investment</th><th class="text-right">Amount</th><th>Frequency</th><th>Account</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>BTC DCA</td><td class="text-right">$50</td><td>Weekly</td><td>River (taxable)</td></tr>
+      <tr><td>Fidelity Auto-Invest</td><td class="text-right">$541.66</td><td>Monthly</td><td>Gian's Roth IRA (...7212) → FBTC</td></tr>
+      <tr><td>529 — Emma</td><td class="text-right">$564.73</td><td>Monthly</td><td>IDeal 529 (...4101)</td></tr>
+      <tr><td>529 — Luke</td><td class="text-right">$564.73</td><td>Monthly</td><td>IDeal 529 (...4102)</td></tr>
+      <tr><td>T. Rowe 401(k)</td><td class="text-right">5% salary</td><td>Per paycheck</td><td>T. Rowe Price — Intermountain match</td></tr>
+      <tr><td>Kids Savings — Emma</td><td class="text-right">$100</td><td>Monthly</td><td>Wells Fargo Savings</td></tr>
+      <tr><td>Kids Savings — Luke</td><td class="text-right">$50</td><td>Monthly</td><td>Wells Fargo Savings</td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:var(--bg-secondary);border-radius:6px;padding:12px;margin-top:12px;font-size:12px;color:var(--text-secondary);">
+    <strong>MWC Holdings Note:</strong> $3K/mo distribution is passive income from real estate partnership. Not a recurring investment — it's inbound cash flow. Treat as part of investable income.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- 16. FOOTER                                                 -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div style="text-align:center;padding:30px 0 40px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:30px;">
+  Last updated: March 12, 2026 6:45 AM MDT &nbsp;|&nbsp; Live crypto + March 11 stock closes + Board Commentary &nbsp;|&nbsp; 🔒 Local only
+</div>
+
+</div><!-- /container -->
+
+<script>
+// Dynamic greeting
+(function() {
+  const h = new Date().getHours();
+  const g = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  document.getElementById('welcomeMsg').textContent = 'Good ' + g + ', Gian';
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('welcomeDate').textContent = new Date().toLocaleDateString('en-US', opts);
+})();
+
+// Tab switching
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Period toggle alerts
+function periodAlert(period) {
+  alert('Requires live data feed — ask Axel to refresh with ' + period + ' data');
+}
+function benchmarkPeriodAlert(period) {
+  alert('Requires live data feed — ask Axel to refresh with ' + period + ' data');
+}
+
+// Random quote
+(function() {
+  const quotes = [
+    ['"The big money is not in the buying and the selling, but in the waiting."', 'Charlie Munger'],
+    ['"Risk comes from not knowing what you\'re doing."', 'Warren Buffett'],
+    ['"Competition is for losers."', 'Peter Thiel'],
+    ['"The way to become very wealthy is to concentrate. The way to stay wealthy is to diversify."', 'Stanley Druckenmiller'],
+    ['"Don\'t focus on making money; focus on protecting what you have."', 'Paul Tudor Jones'],
+    ['"Sound money is the foundation of a functioning society."', 'Lyn Alden'],
+    ['"The bond market is the dog. The stock market is the tail."', 'Luke Gromen'],
+    ['"Macro is the biggest asymmetric bet you can make."', 'Raoul Pal'],
+    ['"I try to buy the things that haven\'t been put up on a billboard yet."', 'Michael Burry'],
+  ];
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  const el = document.querySelector('.quote');
+  el.innerHTML = q[0] + ' <span class="quote-author">— ' + q[1] + '</span>';
+})();
+</script>
+
+</body>
+</html>

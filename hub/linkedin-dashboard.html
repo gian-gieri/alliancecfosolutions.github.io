@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkedIn Command Center — Gian Tomassini</title>
+<style>
+:root { --navy: #1B3A5C; --navy-light: #234b73; --navy-dark: #142d48; --gold: #C9963B; --gold-light: #d4a94f; --bg: #0f1923; --card-bg: #162433; --text: #e8e8e8; --text-muted: #8a9bb5; --green: #4ade80; --red: #f87171; --orange: #fb923c; --blue: #60a5fa; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+.top-bar { background: linear-gradient(135deg, var(--navy-dark), var(--navy)); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--gold); }
+.top-bar h1 { font-size: 20px; color: var(--gold); }
+.top-bar h1 span { color: var(--text-muted); font-weight: 400; font-size: 14px; margin-left: 8px; }
+.stats { display: flex; gap: 24px; }
+.stat { text-align: center; }
+.stat-val { font-size: 20px; font-weight: 700; color: var(--gold); }
+.stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px; }
+.card { background: var(--card-bg); border-radius: 10px; border: 1px solid rgba(201,150,59,0.15); overflow: hidden; }
+.card-header { background: var(--navy); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(201,150,59,0.2); }
+.card-header h2 { font-size: 14px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; }
+.card-header button { background: rgba(201,150,59,0.15); color: var(--gold); border: 1px solid rgba(201,150,59,0.3); padding: 4px 12px; border-radius: 5px; cursor: pointer; font-size: 12px; }
+.card-header button:hover { background: rgba(201,150,59,0.3); }
+.card-body { padding: 16px; max-height: 420px; overflow-y: auto; }
+.card-body::-webkit-scrollbar { width: 5px; } .card-body::-webkit-scrollbar-thumb { background: var(--navy-light); border-radius: 3px; }
+
+/* Content Queue */
+.post-item { background: var(--navy-dark); border-radius: 8px; padding: 12px; margin-bottom: 10px; border-left: 3px solid var(--gold); }
+.post-item:last-child { margin-bottom: 0; }
+.post-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.post-date { font-size: 11px; color: var(--gold-light); font-weight: 600; }
+.post-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: rgba(201,150,59,0.15); color: var(--gold); }
+.post-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.post-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px; display: none; }
+.post-item.expanded .post-body { display: block; }
+.post-actions { display: flex; gap: 6px; }
+.post-actions button { font-size: 11px; padding: 4px 10px; border-radius: 5px; border: none; cursor: pointer; }
+.btn-expand { background: rgba(96,165,250,0.15); color: var(--blue); }
+.btn-copy { background: rgba(74,222,128,0.15); color: var(--green); }
+.btn-approved { background: rgba(74,222,128,0.2); color: var(--green); font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+
+/* Performance */
+.perf-item { display: flex; justify-content: space-between; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.perf-item:last-child { border: none; }
+.perf-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.perf-time { font-size: 11px; color: var(--text-muted); }
+.perf-stats { display: flex; gap: 12px; font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.perf-stats span { display: flex; align-items: center; gap: 3px; }
+.breakout { background: rgba(201,150,59,0.08); border-radius: 8px; padding: 10px; border: 1px solid rgba(201,150,59,0.2); }
+.breakout-badge { font-size: 10px; background: var(--gold); color: var(--navy-dark); padding: 1px 6px; border-radius: 8px; font-weight: 700; margin-left: 6px; }
+
+/* Messages */
+.msg-item { background: var(--navy-dark); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+.msg-item:last-child { margin-bottom: 0; }
+.msg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.msg-name { font-weight: 600; font-size: 14px; }
+.msg-priority { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.priority-high { background: rgba(248,113,113,0.2); color: var(--red); }
+.priority-medium { background: rgba(251,146,60,0.2); color: var(--orange); }
+.priority-low { background: rgba(138,155,181,0.15); color: var(--text-muted); }
+.priority-spam { background: rgba(138,155,181,0.1); color: #666; }
+.msg-org { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.msg-context { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 8px; }
+.msg-status { font-size: 11px; font-weight: 600; margin-bottom: 6px; }
+.status-needs-reply { color: var(--red); }
+.status-waiting { color: var(--orange); }
+.status-complete { color: var(--green); }
+.status-action { color: var(--gold); }
+.status-spam { color: #666; }
+.msg-draft { background: rgba(96,165,250,0.08); border: 1px solid rgba(96,165,250,0.2); border-radius: 6px; padding: 8px; font-size: 12px; color: var(--blue); line-height: 1.4; margin-bottom: 8px; }
+.msg-draft-label { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; }
+.msg-replies { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.msg-reply-option { background: rgba(96,165,250,0.06); border: 1px solid rgba(96,165,250,0.15); border-radius: 6px; padding: 8px; }
+.msg-reply-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.msg-reply-tone { font-size: 10px; color: var(--gold-light); text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+.msg-reply-text { font-size: 12px; color: var(--blue); line-height: 1.4; }
+.msg-reply-option .btn-copy { font-size: 10px; padding: 3px 8px; border-radius: 4px; border: none; cursor: pointer; background: rgba(74,222,128,0.15); color: var(--green); white-space: nowrap; }
+.msg-reply-text[contenteditable] { border: 1px solid transparent; border-radius: 4px; padding: 4px; transition: border-color 0.2s, background 0.2s; }
+.msg-reply-text[contenteditable]:hover { border-color: rgba(96,165,250,0.3); }
+.msg-reply-text[contenteditable]:focus { border-color: var(--gold); background: rgba(201,150,59,0.05); outline: none; }
+.btn-approve { font-size: 10px; padding: 3px 10px; border-radius: 4px; border: none; cursor: pointer; background: rgba(201,150,59,0.25); color: var(--gold); font-weight: 600; white-space: nowrap; }
+.btn-approve:hover { background: rgba(201,150,59,0.4); }
+.edit-hint { font-size: 9px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+.msg-actions button { font-size: 11px; padding: 4px 10px; border-radius: 5px; border: none; cursor: pointer; }
+.btn-send { background: rgba(74,222,128,0.15); color: var(--green); }
+
+/* Comments */
+.comment-on { font-size: 10px; color: var(--gold-light); margin-bottom: 4px; font-style: italic; }
+.comment-text { font-size: 12px; color: var(--text); line-height: 1.4; margin-bottom: 8px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 6px; border-left: 2px solid var(--text-muted); }
+
+/* Feed Engagement */
+.feed-post { background: var(--navy-dark); border-radius: 8px; padding: 12px; margin-bottom: 10px; border-left: 3px solid var(--blue); }
+.feed-post:last-child { margin-bottom: 0; }
+.feed-author { font-weight: 600; font-size: 14px; }
+.feed-author-title { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+.feed-snippet { font-size: 12px; color: var(--text); line-height: 1.4; margin-bottom: 6px; background: rgba(255,255,255,0.03); padding: 8px; border-radius: 6px; }
+.feed-stats { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.feed-why { font-size: 10px; color: var(--green); font-style: italic; margin-bottom: 6px; }
+
+/* Connections */
+.connections { margin: 0 16px 16px; }
+.connections .card-body { display: flex; gap: 12px; max-height: none; flex-wrap: wrap; }
+.conn-item { flex: 1; min-width: 200px; background: var(--navy-dark); border-radius: 8px; padding: 14px; text-align: center; }
+.conn-name { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+.conn-title { font-size: 11px; color: var(--text-muted); line-height: 1.3; margin-bottom: 4px; }
+.conn-why { font-size: 10px; color: var(--green); line-height: 1.3; margin-bottom: 6px; font-style: italic; }
+.conn-tag { font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+.tag-high { background: rgba(74,222,128,0.15); color: var(--green); }
+.tag-med { background: rgba(96,165,250,0.15); color: var(--blue); }
+.tag-peer { background: rgba(251,146,60,0.15); color: var(--orange); }
+.conn-btn { margin-top: 8px; background: rgba(201,150,59,0.15); color: var(--gold); border: 1px solid rgba(201,150,59,0.3); padding: 5px 14px; border-radius: 5px; cursor: pointer; font-size: 11px; display: inline-block; }
+.conn-btn:hover { background: rgba(201,150,59,0.3); }
+
+/* Export bar */
+.export-bar { padding: 8px 16px; display: flex; justify-content: flex-end; gap: 8px; }
+.export-bar button { background: rgba(201,150,59,0.1); color: var(--gold); border: 1px solid rgba(201,150,59,0.2); padding: 5px 14px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .connections .card-body { flex-direction: column; } }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>📊 LinkedIn Command Center <span>Gian Gieri — March 12, 2026</span></h1>
+  <div class="stats">
+    <div class="stat"><div class="stat-val">1,711</div><div class="stat-label">Followers</div></div>
+    <div class="stat"><div class="stat-val">7,270</div><div class="stat-label">7-Day Impressions</div></div>
+    <div class="stat"><div class="stat-val">280</div><div class="stat-label">Profile Views</div></div>
+    <div class="stat"><div class="stat-val">—</div><div class="stat-label">Search Appearances</div></div>
+    <div class="stat"><div class="stat-val">1</div><div class="stat-label">Posts Queued</div></div>
+    <div class="stat"><div class="stat-val">2</div><div class="stat-label">New Messages</div></div>
+  </div>
+</div>
+
+<div class="grid">
+  <!-- Q1: Content Queue -->
+  <div class="card">
+    <div class="card-header">
+      <h2>📝 Content Queue</h2>
+      <button onclick="refreshAlert('Content Queue')">⟳ Refresh</button>
+    </div>
+    <div class="card-body">
+      <div class="post-item" id="post0" style="border-left-color:var(--green)">
+        <div class="post-meta">
+          <span class="post-date">Sun 3/8 · Posted manually</span>
+          <span class="post-tag" style="background:rgba(74,222,128,0.2);color:var(--green)">✅ POSTED</span>
+        </div>
+        <div class="post-title">Oil just had its biggest weekly spike since Russia invaded Ukraine</div>
+        <div class="post-actions" style="margin-top:6px">
+          <span style="font-size:11px;color:var(--green)">Posted by Gian — track performance in next refresh</span>
+        </div>
+      </div>
+
+      <div class="post-item" id="post1" style="border-left-color:var(--green)">
+        <div class="post-meta">
+          <span class="post-date">Mon 3/10 · Posted</span>
+          <span class="post-tag" style="background:rgba(74,222,128,0.2);color:var(--green)">✅ POSTED</span>
+        </div>
+        <div class="post-title">5 cash flow mistakes I see in every $3-5M business</div>
+        <div class="post-body">1. Confusing revenue with cash<br>2. No 13-week rolling forecast<br>3. Ignoring accounts receivable aging — the silent killer<br>4. Growing without margin analysis<br>5. No cash reserve policy<br><br>Which one is hitting you right now?<br><br>DM me "CASHFLOW" for a free diagnosis.</div>
+        <div class="post-actions">
+          <button class="btn-expand" onclick="togglePost('post1')">👁 Preview</button>
+          <button class="btn-copy" onclick="copyPost(this, `5 cash flow mistakes I see in every $3-5M business.\n\n(Number 3 is the silent killer.)\n\n𝟭. Confusing revenue with cash\nYou're "profitable" on paper but broke in the bank. Accrual accounting lies to you. Cash flow tells the truth.\n\n𝟮. No 13-week rolling forecast\nIf you can't see 90 days ahead, you're driving at night with no headlights. Every decision you make is a guess.\n\n𝟯. Ignoring accounts receivable aging\nThis is the silent killer. You did the work. You sent the invoice. But the cash isn't in your account — and you're not tracking who owes what or how late they are. Meanwhile, you're funding their float.\n\n𝟰. Growing without margin analysis\nRevenue is up 30%! But is it profitable revenue? I've seen businesses grow themselves into bankruptcy because they never checked if the new revenue actually made money.\n\n𝟱. No cash reserve policy\nWhen the next surprise hits — and it will — you need 60-90 days of operating expenses sitting in a separate account. Not "I think we have some cushion." An actual policy.\n\nThe fix? Financial clarity in 30 days. That's what I build for every client.\n\nIf any of these hit close to home, DM me "CASHFLOW" and I'll give you a free 15-minute diagnosis.`)">📋 Copy Full Post</button>
+        </div>
+      </div>
+
+      <div class="post-item" id="post2" style="border-left-color:var(--green)">
+        <div class="post-meta">
+          <span class="post-date">Wed 3/12 · Posted</span>
+          <span class="post-tag" style="background:rgba(74,222,128,0.2);color:var(--green)">✅ POSTED</span>
+        </div>
+        <div class="post-title">AI won't replace your CFO</div>
+        <div class="post-body">AI tools have completely changed my practice:<br>• Financial models: 8 hrs → 2 hrs<br>• Anomaly detection: automatic<br>• Reporting: 3x faster<br>• Scenario planning: weekly instead of quarterly<br><br>But here's what AI can NOT do:<br>• Tell a founder their business model is broken<br>• Negotiate with a bank<br>• Make the hire/fire or contract judgment call<br>• Build trust with a leadership team<br><br>The future isn't AI replacing humans. It's AI-powered humans.<br><br>What AI tools are you using in your finance stack?</div>
+        <div class="post-actions">
+          <button class="btn-expand" onclick="togglePost('post2')">👁 Preview</button>
+          <button class="btn-copy" onclick="copyPost(this, `AI won't replace your CFO\n\nAI tools have completely changed my practice:\n• Financial models: 8 hrs → 2 hrs\n• Anomaly detection: automatic\n• Reporting: 3x faster\n• Scenario planning: weekly instead of quarterly\n\nBut here's what AI can NOT do:\n• Tell a founder their business model is broken\n• Negotiate with a bank\n• Make the hire/fire or contract judgment call\n• Build trust with a leadership team\n\nThe future isn't AI replacing humans. It's AI-powered humans.\n\nWhat AI tools are you using in your finance stack?`)">📋 Copy</button>
+        </div>
+      </div>
+
+      <div class="post-item" id="post3">
+        <div class="post-meta">
+          <span class="post-date">Fri 3/14 · 8:00 AM MST</span>
+          <span class="post-tag" style="background:rgba(251,146,60,0.2);color:var(--orange)">⏰ NEXT UP — Friday</span>
+          <span class="btn-approved">✓ Approved</span>
+        </div>
+        <div class="post-title">The Fractional CFO Playbook: first 30 days</div>
+        <div class="post-body">Day 1-3: Deep dive into financials, ops, and team<br>Day 4-7: Build 13-week cash flow forecast<br>Day 8-10: Identify top 3 cash leaks<br>Day 11-15: Build KPI dashboard<br>Day 16-20: Establish weekly financial rhythm<br>Day 21-25: Create strategic roadmap<br>Day 26-30: First monthly review with leadership<br><br>Want to see what this looks like for your business?<br><br>Book a free 30-min call → <a href="https://calendly.com/gian-alliancecfosolutions/free-intro-call" target="_blank" style="color:var(--gold)">calendly.com/gian-alliancecfosolutions/free-intro-call</a></div>
+        <div class="post-actions">
+          <button class="btn-expand" onclick="togglePost('post3')">👁 Preview</button>
+          <button class="btn-copy" onclick="copyPost(this, `The Fractional CFO Playbook: first 30 days\n\nDay 1-3: Deep dive into financials, ops, and team\nDay 4-7: Build 13-week cash flow forecast\nDay 8-10: Identify top 3 cash leaks\nDay 11-15: Build KPI dashboard\nDay 16-20: Establish weekly financial rhythm\nDay 21-25: Create strategic roadmap\nDay 26-30: First monthly review with leadership\n\nWant to see what this looks like for your business?\n\nBook a free 30-min call → https://calendly.com/gian-alliancecfosolutions/free-intro-call`)">📋 Copy</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q2: Performance -->
+  <div class="card">
+    <div class="card-header">
+      <h2>📈 Recent Post Performance</h2>
+      <button onclick="refreshAlert('Performance')">⟳ Refresh</button>
+    </div>
+    <div class="card-body">
+      <div class="perf-item">
+        <div><div class="perf-title">"AI won't replace your CFO"</div><div class="perf-time">Mar 11 · 22h ago</div></div>
+        <div class="perf-stats"><span>👁 162</span><span>👍 4</span><span>💬 2</span></div>
+      </div>
+      <div class="perf-item">
+        <div><div class="perf-title">"5 cash flow mistakes I see in every $3-5M business"</div><div class="perf-time">Mar 10 · 1d ago</div></div>
+        <div class="perf-stats"><span>👁 167</span><span>👍 1</span><span>💬 1</span></div>
+      </div>
+      <div class="perf-item">
+        <div><div class="perf-title">"Oil just had its biggest weekly spike since Russia invaded Ukraine"</div><div class="perf-time">Mar 9 · 3d ago</div></div>
+        <div class="perf-stats"><span>👁 103</span><span>👍 4</span><span>💬 0</span></div>
+      </div>
+      <div class="perf-item">
+        <div><div class="perf-title">"Uncertainty is no longer an event. It's the baseline."</div><div class="perf-time">Mar 7 · 5d ago</div></div>
+        <div class="perf-stats"><span>👁 260</span><span>👍 6</span><span>💬 7</span></div>
+      </div>
+      <div class="perf-item">
+        <div><div class="perf-title">"I was 'profitable' and couldn't make payroll." <span style="font-size:10px;color:var(--text-muted)">(carousel)</span></div><div class="perf-time">Mar 6 · 6d ago</div></div>
+        <div class="perf-stats"><span>👁 208</span><span>👍 2</span><span>💬 0</span></div>
+      </div>
+      <div class="perf-item">
+        <div><div class="perf-title">"The advantage you spent years building just became free."</div><div class="perf-time">Mar 5 · 1w ago</div></div>
+        <div class="perf-stats"><span>👁 405</span><span>👍 3</span><span>💬 3</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q3: Comment Replies Needed -->
+  <div class="card">
+    <div class="card-header">
+      <h2>💬 Comment Replies Needed</h2>
+      <button onclick="refreshAlert('Comments')">⟳ Refresh</button>
+    </div>
+    <div class="card-body">
+      <!-- Comment 1: Adan Ansari on "AI won't replace your CFO" -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Adan Ansari</span><span class="msg-priority priority-medium">ENGAGEMENT</span></div>
+        <div class="msg-org">Ghostwriter for CFOs & Finance Leaders | 7+ yrs in Audit, Compliance & Reporting · 3rd+</div>
+        <div class="comment-on">Commented on: "AI won't replace your CFO" (22h ago · 162 imp)</div>
+        <div class="comment-text">"This mirrors my experience exactly. I taught myself Excel VBA automation and it cut days of manual work down to hours. But the moment that actually protected a business was when I caught a ₹50 lakh (5 million) fraud through professional skepticism not a formula. AI accelerates the arithmetic. The judgment call that saves the company still comes from the human across the table. AI-powered humans is the right framing."</div>
+        <div class="msg-replies">
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Validate + Amplify</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437497573642326016/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">That fraud story is the perfect example, Adan. No AI model would have caught that — it takes someone who knows what 'off' looks like in context. The VBA work gets you speed; the skepticism gets you accuracy. Both matter, but only one saves the company.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Personal Experience</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437497573642326016/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">Exactly. I use AI daily for modeling and analysis, but the conversations that actually move the needle — telling a founder their margins are broken, or that they need to let someone go — that's still 100% human. The automation frees me up to spend more time on those moments, not less.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Brief + Connect</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437497573642326016/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">₹50 lakh fraud caught by human judgment, not a formula — that's the whole point right there. Appreciate you sharing that, Adan. The 'AI-powered humans' framing is exactly how I think about it too.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 2: Scott (Mascot AI) on "AI won't replace your CFO" -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Scott (Mascot AI)</span><span class="msg-priority priority-low">ENGAGEMENT</span></div>
+        <div class="msg-org">AI Mascot · 118 followers · Podcast host</div>
+        <div class="comment-on">Commented on: "AI won't replace your CFO" (19h ago)</div>
+        <div class="comment-text">"If AI could negotiate with banks I'd finally stop losing sleep after eating too much pizza. We literally talk about this future on our podcast lol. What's your wildest AI tool wish?"</div>
+        <div class="msg-replies">
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Playful + Substantive</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437497573642326016/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">Ha — if AI could negotiate with banks I'd be out of a job. My wildest wish? An AI that could sit in a room with a founder, read the body language when I say 'your margins are broken,' and help me figure out the right way to deliver the hard truth. The numbers are the easy part — the human side is where the real work lives.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Quick + Funny</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437497573642326016/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">Wildest AI wish: one that could convince business owners to actually look at their cash flow forecast every week 😂 The tech exists — the behavior change is the hard part.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Podcast Angle</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437497573642326016/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">The pizza-induced insomnia is a separate issue 😂 But honestly? I'd love an AI that could automatically flag the gap between a company's P&L and their actual cash position — that disconnect is where most businesses get blindsided. Cool that you're covering this on the podcast.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment 3: Scott (Mascot AI) on "5 cash flow mistakes" -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Scott (Mascot AI)</span><span class="msg-priority priority-low">ENGAGEMENT</span></div>
+        <div class="msg-org">AI Mascot · 118 followers · Podcast invite</div>
+        <div class="comment-on">Commented on: "5 cash flow mistakes" (1d ago · 167 imp)</div>
+        <div class="comment-text">"Revenue's just the flashy cousin. Cash is the quiet genius keeping the lights on. Cash reserve policy is my spirit animal! Want to go head-to-head on these mistakes on our Ai Mascot vs Man podcast?"</div>
+        <div class="msg-replies">
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Accept Invite</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437123849823072256/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">'Cash is the quiet genius keeping the lights on' — stealing that line. And I'd be down to go head-to-head on the podcast. DM me the details and let's set it up.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Engage + Soft Accept</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437123849823072256/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">Love the framing — revenue gets all the attention but cash is the one that actually pays the bills. A podcast debate on cash flow mistakes? Could be fun. Shoot me a DM with the details.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Polite Decline</span><button class="btn-approve" onclick="approveAndReply(this, 'https://www.linkedin.com/feed/update/urn:li:activity:7437123849823072256/')">✅ Approve & Reply</button></div>
+            <div class="msg-reply-text" contenteditable="true">Ha — 'cash reserve policy is my spirit animal' is elite. Appreciate the podcast invite! My schedule is pretty tight right now but I'll keep it in mind. Thanks for engaging, Scott.</div>
+            <div class="edit-hint">✏️ Click to edit before approving</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Already handled -->
+      <div class="msg-item" style="opacity:0.5; border-left: 3px solid var(--green);">
+        <div class="msg-header"><span class="msg-name">Uncertainty Post (5d ago · 260 imp)</span><span class="msg-priority priority-low" style="background:rgba(74,222,128,0.2);color:var(--green)">✅ REPLIED</span></div>
+        <div class="comment-text" style="border:none;">Rajeshwari Sonna — replied ✅ | Mohit Varshney — replied ✅ | Kara Beaman liked your comment ✅ | Remaining comments already engaged.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Q4: Messages -->
+  <div class="card">
+    <div class="card-header">
+      <h2>✉️ Message Manager</h2>
+      <button onclick="refreshAlert('Messages')">⟳ Refresh</button>
+    </div>
+    <div class="card-body">
+      <!-- NEW: Paul Guetan -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Paul Guetan</span><span class="msg-priority priority-low">LOW</span></div>
+        <div class="msg-org">&nbsp;</div>
+        <div class="msg-context">NEW today 2:53 AM — "Gre at to connect, Gian!" Generic connection acknowledgment.</div>
+        <div class="msg-status status-needs-reply">⚠ NEEDS REPLY</div>
+        <div class="msg-replies">
+          <div class="msg-reply-option">
+            <div class="msg-reply-header"><span class="msg-reply-tone">Brief / Warm</span><button class="btn-copy" onclick="copyText(this, `Likewise, Paul! Happy to be connected.`)">📋 Copy</button></div>
+            <div class="msg-reply-text">Likewise, Paul! Happy to be connected.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rajeev Pathak -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Rajeev Pathak</span><span class="msg-priority priority-medium">MEDIUM</span></div>
+        <div class="msg-org">&nbsp;</div>
+        <div class="msg-context">Sent you a message 3 days ago — unread. Check content before replying.</div>
+        <div class="msg-status status-needs-reply">⚠ NEEDS REVIEW</div>
+      </div>
+
+      <!-- WAITING: Robert Vogel -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Robert Vogel</span><span class="msg-priority priority-medium">MEDIUM</span></div>
+        <div class="msg-org">CFO / Consulting experience · Wants into fractional market</div>
+        <div class="msg-context">Mar 7 — YOU REPLIED: "Robert, appreciate you reaching out. It's a great space with lots of demand, especially in the $2-10M range. What market/industry are you focused on?"</div>
+        <div class="msg-status status-waiting">⏳ WAITING — awaiting his reply</div>
+      </div>
+
+      <!-- WAITING: Andrea Redlin -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Andrea Redlin</span><span class="msg-priority priority-high">HIGH</span></div>
+        <div class="msg-org">Colorado Enterprise Fund · Referral partnership target</div>
+        <div class="msg-context">Mar 6 — YOU REPLIED with Calendly link. Awaiting her to book.</div>
+        <div class="msg-status status-waiting">⏳ WAITING — sent Calendly link, awaiting booking</div>
+      </div>
+
+      <!-- ACTION: Timea Parker -->
+      <div class="msg-item" style="border-left: 3px solid var(--gold);">
+        <div class="msg-header"><span class="msg-name">Timea Parker</span><span class="msg-priority priority-high">ACTION NEEDED</span></div>
+        <div class="msg-org">PAS Consulting · $2M+ businesses</div>
+        <div class="msg-context">Mar 6 — YOU REPLIED: "Thank you so much, Timea! I'll reach out to Sian directly. Enjoy the slopes!" <strong style="color:var(--gold)">→ Email Sian at sian@pasconsulting.net to schedule.</strong></div>
+        <div class="msg-status status-action">📧 ACTION — Email Sian at sian@pasconsulting.net</div>
+      </div>
+
+      <!-- WAITING: Issac Hicks -->
+      <div class="msg-item">
+        <div class="msg-header"><span class="msg-name">Issac Hicks</span><span class="msg-priority priority-medium">MEDIUM</span></div>
+        <div class="msg-org">&nbsp;</div>
+        <div class="msg-context">Mar 6 — YOU REPLIED with intro.</div>
+        <div class="msg-status status-waiting">⏳ WAITING — awaiting reply</div>
+      </div>
+
+      <!-- SPAM: Elliott James Perry -->
+      <div class="msg-item" style="opacity: 0.6;">
+        <div class="msg-header"><span class="msg-name">Elliott James Perry</span><span class="msg-priority priority-spam">🚫 SPAM</span></div>
+        <div class="msg-org">&nbsp;</div>
+        <div class="msg-context">Mar 5 — Cold pitch about deductions.</div>
+        <div class="msg-status status-spam">🚫 IGNORE — Low-value cold pitch</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Feed Engagement -->
+<div style="padding: 0 16px 16px;">
+  <div class="card">
+    <div class="card-header">
+      <h2>🎯 Feed Engagement — High-Value Posts</h2>
+      <button onclick="refreshAlert('Feed Engagement')">⟳ Refresh</button>
+    </div>
+    <div class="card-body" style="max-height:none;">
+      <div style="display:flex; flex-direction:column; gap: 12px;">
+
+        <!-- Section: Potential Clients -->
+        <div style="font-size:12px; font-weight:700; color:#f87171; background:rgba(248,113,113,0.12); padding:6px 12px; border-radius:6px; letter-spacing:0.5px;">🎯 POTENTIAL CLIENTS</div>
+
+        <!-- Feed Post 1: Samantha Musser CPA — Budget vs Actual -->
+        <div class="feed-post" style="border-left-color:#f87171;">
+          <div class="feed-author"><a href="https://www.linkedin.com/in/samanthamussercpa" target="_blank" style="color:inherit;text-decoration:none;">Samantha Musser, CPA</a></div>
+          <div class="feed-author-title">Network · CPA</div>
+          <div class="feed-snippet">"Going through a client's budget vs actual for February. $200k of budgeted expenses for the month. Came within $550 of budget. This is a high volume, very cyclical business, food industry. A bunch of expense budgets are based on % of sales. So.... I'm feeling pretty good about my forecasting abilities right now TBH."</div>
+          <div class="feed-stats">Posted 7h ago</div>
+          <div class="feed-why">🎯 RELEVANT — Fellow CPA showing forecasting wins. Great opportunity to engage on forecasting/budgeting topic and build visibility in her network of business owners.</div>
+          <div class="msg-replies">
+            <div class="msg-reply-option">
+              <div class="msg-reply-header"><span class="msg-reply-tone">Validate + Add Value</span><button class="btn-approve" onclick="approveAndComment(this, 'https://www.linkedin.com/in/samanthamussercpa/recent-activity/all/')">✅ Approve & Comment</button></div>
+              <div class="msg-reply-text" contenteditable="true">$550 variance on $200K? That's elite-level forecasting, Samantha. The % of sales method is underrated — especially in cyclical, high-volume businesses where fixed-dollar budgets break down fast. That kind of precision is what separates 'we have a budget' from 'we actually use our budget to make decisions.'</div>
+              <div class="edit-hint">✏️ Click to edit before approving</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Relevant Outsiders -->
+        <div style="font-size:12px; font-weight:700; color:#60a5fa; background:rgba(96,165,250,0.12); padding:6px 12px; border-radius:6px; letter-spacing:0.5px;">🌐 RELEVANT OUTSIDERS</div>
+
+        <!-- Feed Post 2: Jim Emerich — Backbone CFO, Vistage talk -->
+        <div class="feed-post" style="border-left-color:#60a5fa;">
+          <div class="feed-author"><a href="https://www.linkedin.com/in/jamesemerich/" target="_blank" style="color:inherit;text-decoration:none;">Jim Emerich</a></div>
+          <div class="feed-author-title">1st · Backbone CFO, Fractional CFO for Construction & Restoration businesses</div>
+          <div class="feed-snippet">"Had the opportunity to speak with another Vistage group... Founder-led businesses often hit a ceiling when it comes to growth that we label as 'Chaos'. Chaos is not a bad thing... Our Fractional CFO team helps Business Owners fix this by stepping in as an embedded Financial Leader... from Chaos to Control."</div>
+          <div class="feed-stats">👍 2 · 7m ago 🔥</div>
+          <div class="feed-why">🌐 1ST CONNECTION — Fellow fractional CFO speaking at Vistage. Fresh post, early comment = good visibility. His "chaos to control" narrative parallels your work.</div>
+          <div class="msg-replies">
+            <div class="msg-reply-option">
+              <div class="msg-reply-header"><span class="msg-reply-tone">Peer Endorsement</span><button class="btn-approve" onclick="approveAndComment(this, 'https://www.linkedin.com/in/jamesemerich/recent-activity/all/')">✅ Approve & Comment</button></div>
+              <div class="msg-reply-text" contenteditable="true">Love the 'Chaos to Control' framework, Jim. That ceiling you're describing is exactly where the fractional model shines — the business has outgrown gut-feel decisions but doesn't need a $300K full-time CFO. Cash flow forecasting and financial visibility are always the first two things that unlock the next phase. Great stuff with Vistage.</div>
+              <div class="edit-hint">✏️ Click to edit before approving</div>
+            </div>
+            <div class="msg-reply-option">
+              <div class="msg-reply-header"><span class="msg-reply-tone">Quick / Warm</span><button class="btn-approve" onclick="approveAndComment(this, 'https://www.linkedin.com/in/jamesemerich/recent-activity/all/')">✅ Approve & Comment</button></div>
+              <div class="msg-reply-text" contenteditable="true">This resonates. I see the same pattern in the $1-10M space across industries — the chaos isn't the problem, it's actually a sign of growth. The problem is trying to navigate it without financial clarity. Nice work getting in front of Vistage groups.</div>
+              <div class="edit-hint">✏️ Click to edit before approving</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feed Post 3: Leah Miller MBA — Cash flow for PI firms -->
+        <div class="feed-post" style="border-left-color:#60a5fa;">
+          <div class="feed-author"><a href="https://www.linkedin.com/in/leahlnmfinancial/" target="_blank" style="color:inherit;text-decoration:none;">Leah Miller, MBA</a></div>
+          <div class="feed-author-title">1st · Fractional CFO for Law Firms Focused on Growth</div>
+          <div class="feed-snippet">"Most personal injury firms I work with don't have a revenue problem. They have a cash flow strategy problem. And it's expensive. Weak cash flow strategy can cost a firm $200,000–$500,000+ per year..."</div>
+          <div class="feed-stats">👍 21 · 💬 2 · 🔁 1 · 1w ago</div>
+          <div class="feed-why">🌐 1ST CONNECTION — Fractional CFO peer. Her cash flow message mirrors yours perfectly. Good relationship building + shows up in law firm owner feeds.</div>
+          <div class="msg-replies">
+            <div class="msg-reply-option">
+              <div class="msg-reply-header"><span class="msg-reply-tone">Shared Experience</span><button class="btn-approve" onclick="approveAndComment(this, 'https://www.linkedin.com/in/leahlnmfinancial/recent-activity/all/')">✅ Approve & Comment</button></div>
+              <div class="msg-reply-text" contenteditable="true">This is universal, Leah — not just law firms. I see the exact same pattern in service businesses across industries. Revenue is strong, settlements (or invoices) are pending, but the cash isn't flowing to the owner. The fix is always a cash flow system, not more revenue. Well said.</div>
+              <div class="edit-hint">✏️ Click to edit before approving</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: Network Peers -->
+        <div style="font-size:12px; font-weight:700; color:#4ade80; background:rgba(74,222,128,0.12); padding:6px 12px; border-radius:6px; letter-spacing:0.5px;">🤝 NETWORK PEERS</div>
+
+        <!-- Feed Post 4: Logan Graf CPA — Cold email during tax season -->
+        <div class="feed-post" style="border-left-color:#4ade80;">
+          <div class="feed-author"><a href="https://www.linkedin.com/in/logangraf" target="_blank" style="color:inherit;text-decoration:none;">Logan Graf, CPA</a></div>
+          <div class="feed-author-title">Network · CPA</div>
+          <div class="feed-snippet">"'I know it's tax season and you're busy, but...' ...But you're still going to cold email me and think I'm going to convert? You acknowledge that it's the busiest time of year for me, and then proceed to try to sell me something? Bold move..."</div>
+          <div class="feed-stats">11h ago</div>
+          <div class="feed-why">🤝 RELATABLE — Every CPA feels this. Quick, funny engagement builds rapport.</div>
+          <div class="msg-replies">
+            <div class="msg-reply-option">
+              <div class="msg-reply-header"><span class="msg-reply-tone">Quick / Funny</span><button class="btn-approve" onclick="approveAndComment(this, 'https://www.linkedin.com/in/logangraf/recent-activity/all/')">✅ Approve & Comment</button></div>
+              <div class="msg-reply-text" contenteditable="true">The audacity of the "I know you're busy, but..." opener 😂 It's the sales equivalent of "no offense, but..." — you already know what's coming next.</div>
+              <div class="edit-hint">✏️ Click to edit before approving</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Connections / Lead Suggestions -->
+<div class="connections">
+  <div class="card">
+    <div class="card-header">
+      <h2>🤝 Lead Suggestions — Real Data</h2>
+      <button onclick="refreshAlert('Connections')">⟳ Refresh</button>
+    </div>
+    <div class="card-body">
+      <!-- Priority 1: Potential Clients -->
+      <div class="conn-item" style="border: 1px solid #f87171;">
+        <div class="conn-name">Joshua Ordaz</div>
+        <div class="conn-title">Owner at CBO — Accounting & Advisory Services</div>
+        <div class="conn-why">🎯 POTENTIAL CLIENT — Business owner running accounting/advisory firm. Could need fractional CFO support or become referral source for his clients.</div>
+        <span class="conn-tag tag-high">POTENTIAL CLIENT</span>
+        <br><button class="conn-btn" onclick="window.open('https://www.linkedin.com/in/joshua-ordaz-9458b23b3','_blank')">View Profile →</button>
+      </div>
+      <div class="conn-item" style="border: 1px solid #f87171;">
+        <div class="conn-name">Stephanie Horne</div>
+        <div class="conn-title">Bookkeeper — "Bright, organized books that give you clarity, clear decisions, and more time to focus on growing your business"</div>
+        <div class="conn-why">🎯 REFERRAL PARTNER — Bookkeepers are the #1 referral source for fractional CFOs. Her clients outgrow bookkeeping → they need you.</div>
+        <span class="conn-tag tag-high">REFERRAL PARTNER</span>
+        <br><button class="conn-btn" onclick="window.open('https://www.linkedin.com/in/stephanie-horne-1420b93b0','_blank')">View Profile →</button>
+      </div>
+
+      <!-- Priority 2: Well-Connected Referral Partners -->
+      <div class="conn-item">
+        <div class="conn-name">Paul McClure, MBA CPA</div>
+        <div class="conn-title">CFO for growth oriented companies</div>
+        <div class="conn-why">🤝 PEER — Fellow CFO for growth companies. Potential referral partner for overflow or different niches. Connect + engage.</div>
+        <span class="conn-tag tag-med">PEER / CONNECT</span>
+        <br><button class="conn-btn" onclick="window.open('https://www.linkedin.com/in/paul-mcclure-mba-cpa-55038928','_blank')">View Profile →</button>
+      </div>
+      <div class="conn-item">
+        <div class="conn-name">Derek Meiss, CPA</div>
+        <div class="conn-title">Fractional CFO</div>
+        <div class="conn-why">🤝 PEER — Direct fractional CFO peer. Geographic/niche overlap could create referral opportunities for mismatched clients.</div>
+        <span class="conn-tag tag-med">PEER / CONNECT</span>
+        <br><button class="conn-btn" onclick="window.open('https://www.linkedin.com/in/derek-meiss-cpa-51750465','_blank')">View Profile →</button>
+      </div>
+
+      <!-- Priority 3: High Engagement -->
+      <div class="conn-item">
+        <div class="conn-name">Andrew V</div>
+        <div class="conn-title">Fractional SaaS CFO | Modern finance stacks, AI enabled FP&A, and scale ready SaaS</div>
+        <div class="conn-why">📈 HIGH-VALUE PEER — AI-enabled FP&A aligns with your AI+CFO positioning. Different niche (SaaS) = no competition, potential cross-referrals.</div>
+        <span class="conn-tag tag-peer">PEER / AI ANGLE</span>
+        <br><button class="conn-btn" onclick="window.open('https://www.linkedin.com/in/expertly','_blank')">View Profile →</button>
+      </div>
+
+      <!-- From feed/notifications -->
+      <div class="conn-item" style="border: 1px solid var(--gold);">
+        <div class="conn-name">Adan Ansari</div>
+        <div class="conn-title">Ghostwriter for CFOs & Finance Leaders | 7+ yrs in Audit, Compliance & Reporting</div>
+        <div class="conn-why">💡 ENGAGED — Commented thoughtfully on your AI post. Ghostwriter for CFOs = potential service provider OR content collaborator. Already interacting with your content.</div>
+        <span class="conn-tag tag-high">WARM LEAD</span>
+        <br><button class="conn-btn" onclick="window.open('https://www.linkedin.com/in/adan-ansari-excel-accounting-ghostwriting-copywriting','_blank')">View Profile →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Export -->
+<div class="export-bar">
+  <button onclick="exportActions()">📥 Export Approved Actions</button>
+</div>
+
+<script>
+function togglePost(id) {
+  document.getElementById(id).classList.toggle('expanded');
+}
+function copyPost(btn, text) {
+  navigator.clipboard.writeText(text).then(() => { btn.textContent = '✅ Copied!'; setTimeout(() => btn.textContent = '📋 Copy', 2000); });
+}
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => { btn.textContent = '✅ Copied!'; setTimeout(() => btn.textContent = '📋 Copy', 2000); });
+}
+function approveAndReply(btn, postUrl) {
+  var replyEl = btn.closest('.msg-reply-option').querySelector('.msg-reply-text');
+  var text = replyEl.innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✅ Copied — Opening LinkedIn...';
+    btn.style.background = 'rgba(74,222,128,0.3)';
+    btn.style.color = 'var(--green)';
+    setTimeout(function() { window.open(postUrl, '_blank'); }, 400);
+    setTimeout(function() {
+      btn.textContent = '✅ Approve & Reply';
+      btn.style.background = '';
+      btn.style.color = '';
+      var item = btn.closest('.msg-item');
+      if (item) { item.style.opacity = '0.5'; item.style.borderLeft = '3px solid var(--green)'; }
+    }, 3000);
+  });
+}
+function approveAndComment(btn, postUrl) {
+  var replyEl = btn.closest('.feed-reply-option, .msg-reply-option').querySelector('.msg-reply-text, .feed-reply-text');
+  var text = replyEl.innerText;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✅ Copied — Opening post...';
+    btn.style.background = 'rgba(74,222,128,0.3)';
+    btn.style.color = 'var(--green)';
+    setTimeout(function() { window.open(postUrl, '_blank'); }, 400);
+    setTimeout(function() {
+      btn.textContent = '✅ Approve & Comment';
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 3000);
+  });
+}
+function refreshAlert(section) {
+  alert(`${section} refresh requires Browser Relay connection.\n\nTo enable live data:\n1. Open LinkedIn in Chrome\n2. Click the OpenClaw Browser Relay toolbar icon\n3. Attach the tab, then retry.`);
+}
+function exportActions() {
+  const actions = [
+    '=== LINKEDIN COMMAND CENTER — APPROVED ACTIONS ===',
+    'Generated: March 8, 2026',
+    'Stats: 1,692 followers | 24,664 7-day impressions | 262 profile views | 89 search appearances\n',
+    '--- CONTENT QUEUE ---',
+    'Sun 3/8 8AM: "Oil just had its biggest weekly spike..." [APPROVED - TIMELY]',
+    'Mon 3/9 8AM: "5 cash flow mistakes I see in every $3-5M business" [APPROVED]',
+    'Wed 3/11 8AM: "AI won\'t replace your CFO" [APPROVED]',
+    'Fri 3/13 8AM: "The Fractional CFO Playbook: first 30 days" [APPROVED]\n',
+    '--- COMMENT REPLIES NEEDED (Uncertainty post — 218 imp, 5 reactions, 3 comments) ---',
+    'Rajeshwari Sonna: "Precision and premium that survives the chaos like a boss"',
+    'Mohit Varshney: "Volatility kills via blind spots, not chaos; insight is your leverage"',
+    'Tempel Regan-Watson: "Knowledge IS power."\n',
+    '--- FEED ENGAGEMENT TARGETS (Priority Ordered) ---',
+    '🎯 POTENTIAL CLIENTS:',
+    '  Brian Augsburger — CEO at ProBooks & Urbity, $500K invoiced but $90K owner pay (2 reactions, 2d ago) — WARM LEAD',
+    '  Dan Maher — Health insurance cost savings for SMBs (0 reactions, 22min ago) — CLIENT AUDIENCE',
+    '🌐 RELEVANT OUTSIDERS:',
+    '  Martin Mellor — Fractional Finance Director UK, "all hassle none of the joy" (2 reactions, 3h ago)',
+    '🤝 NETWORK PEERS:',
+    '  David McIlwaine — EOS Implementer, Colorado (6 reactions, 5d ago) — REFERRAL PARTNER',
+    '  Roshaan Jain — CFO as CEO Co-Pilot (22 reactions, 1d ago) — INDUSTRY PEER\n',
+    '--- MESSAGES ---',
+    'Aastha Jain (LOW): NEEDS REPLY — "Hi Gian, thanks for connecting!" — Senior Accountant',
+    'Dipti Prajapati (LOW): NEEDS REPLY — "Hello Gian, how is it going"',
+    'Jay Obrey: SPAM — ignore',
+    'Robert Vogel (MEDIUM): WAITING — you replied Mar 7',
+    'Andrea Redlin (HIGH): WAITING — sent Calendly link',
+    'Timea Parker (HIGH): ACTION — Email Sian at sian@pasconsulting.net to schedule',
+    'Issac Hicks (MEDIUM): WAITING — you replied Mar 6',
+    'Elliott James Perry: SPAM — ignore\n',
+    '--- LEAD SUGGESTIONS ---',
+    'David McIlwaine — EOS Implementer, Colorado (REFERRAL PARTNER)',
+    'Jim Emerich — "Backbone CFO" for Construction (PEER/NETWORKING)',
+    'Michael King — Civil CFO, $10-70M Contractors (PEER REFERRAL)',
+    'Derek Meiss, CPA — Fractional CFO (PEER NETWORKING)',
+  ].join('\n');
+  navigator.clipboard.writeText(actions).then(() => alert('Approved actions copied to clipboard!'));
+}
+</script>
+</body>
+</html>

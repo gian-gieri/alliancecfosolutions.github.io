@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance CFO — Command Center</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --navy: #1B3A5C;
+  --navy-dark: #132942;
+  --gold: #C9963B;
+  --gold-light: #D4A94E;
+  --white: #FFFFFF;
+  --off-white: #F8F7F4;
+  --gray: #E8E6E1;
+  --gray-text: #5A5A5A;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--off-white);
+  color: #2A2A2A;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.header {
+  background: var(--navy);
+  padding: 32px 24px;
+  text-align: center;
+}
+.header h1 {
+  font-family: Georgia, serif;
+  color: var(--white);
+  font-size: 1.8rem;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.header p {
+  color: var(--gold);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+.section-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--gold);
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.card {
+  background: var(--white);
+  border-radius: 10px;
+  padding: 24px;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--gray);
+  transition: all 0.2s;
+  display: block;
+}
+.card:hover {
+  border-color: var(--gold);
+  box-shadow: 0 4px 16px rgba(27,58,92,0.1);
+  transform: translateY(-2px);
+}
+.card .icon {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+}
+.card h3 {
+  font-family: Georgia, serif;
+  color: var(--navy);
+  font-size: 1.05rem;
+  margin-bottom: 6px;
+}
+.card p {
+  font-size: 0.85rem;
+  color: var(--gray-text);
+  line-height: 1.5;
+}
+.card .tag {
+  display: inline-block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-top: 12px;
+  font-weight: 600;
+}
+.tag-live { background: #E8F5E9; color: #2E7D32; }
+.tag-tool { background: #E3F2FD; color: #1565C0; }
+.tag-guide { background: #FFF8E1; color: #F57F17; }
+.tag-brand { background: #F3E5F5; color: #7B1FA2; }
+.divider {
+  height: 1px;
+  background: var(--gray);
+  margin: 40px 0;
+}
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--gray-text);
+  font-size: 0.8rem;
+}
+.add-note {
+  background: var(--white);
+  border: 2px dashed var(--gray);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  color: var(--gray-text);
+  font-size: 0.85rem;
+  margin-bottom: 40px;
+}
+.add-note strong { color: var(--navy); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>ALLIANCE CFO — COMMAND CENTER</h1>
+  <p>Your firm's tools, guides, and dashboards — all in one place</p>
+</div>
+
+<div class="container">
+
+  <div class="add-note">
+    💡 <strong>Bookmark this page.</strong> When Axel builds new tools, they'll appear here automatically.<br>
+    Just say: <em>"Add this to my HTML links"</em> and it gets added to this hub.
+  </div>
+
+  <div class="section-label">🌐 Live Website</div>
+  <div class="card-grid">
+    <a class="card" href="https://alliancecfosolutions.com" target="_blank">
+      <div class="icon">🌐</div>
+      <h3>Alliance CFO Solutions</h3>
+      <p>Your live website — hosted on GitHub Pages. Free forever.</p>
+      <span class="tag tag-live">LIVE SITE</span>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">📊 Dashboards</div>
+  <div class="card-grid">
+    <a class="card" href="/hub/linkedin-dashboard.html">
+      <div class="icon">💼</div>
+      <h3>LinkedIn Command Center</h3>
+      <p>Stats, engagement, content queue, comment replies. Your daily LinkedIn driver.</p>
+      <span class="tag tag-tool">DASHBOARD</span>
+    </a>
+    <a class="card" href="/hub/portfolio-dashboard.html">
+      <div class="icon">📈</div>
+      <h3>Portfolio & Markets</h3>
+      <p>BTC, gold, equities, board commentary, trade ideas. Refreshed on open.</p>
+      <span class="tag tag-tool">DASHBOARD</span>
+    </a>
+    <a class="card" href="/hub/firm-guide.html">
+      <div class="icon">🏗️</div>
+      <h3>Firm Operating Guide</h3>
+      <p>Complete owner's manual — client journey, tiers, systems, file directory.</p>
+      <span class="tag tag-guide">GUIDE</span>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">🔧 Client Systems</div>
+  <div class="card-grid">
+    <a class="card" href="/hub/calendly-best-practices.html">
+      <div class="icon">📅</div>
+      <h3>Calendly Best Practices</h3>
+      <p>When to send which link, how to use each meeting type efficiently.</p>
+      <span class="tag tag-guide">GUIDE</span>
+    </a>
+    <a class="card" href="/hub/operating-system.html">
+      <div class="icon">📋</div>
+      <h3>Operating System Playbook</h3>
+      <p>The full firm operating system — brand, sales, delivery, pricing, marketing.</p>
+      <span class="tag tag-guide">GUIDE</span>
+    </a>
+    <a class="card" href="/hub/build-sprint.html">
+      <div class="icon">🔨</div>
+      <h3>Build Sprint — March 12</h3>
+      <p>Today's build tracker — website, systems, CRM, everything built today.</p>
+      <span class="tag tag-tool">TRACKER</span>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">🎨 Brand Assets</div>
+  <div class="card-grid">
+    <a class="card" href="/hub/logo-preview.html">
+      <div class="icon">🎨</div>
+      <h3>Logo & Brand Preview</h3>
+      <p>Logo, favicon, color palette, email signature mockup.</p>
+      <span class="tag tag-brand">BRAND</span>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section-label">📚 Reference</div>
+  <div class="card-grid">
+    <a class="card" href="/hub/connections-60.html">
+      <div class="icon">🎯</div>
+      <h3>60 LinkedIn Connections</h3>
+      <p>Targeted prospect and referral partner list with warm intro messages.</p>
+      <span class="tag tag-tool">LIST</span>
+    </a>
+  </div>
+
+</div>
+
+<div class="footer">
+  Alliance CFO Solutions — Command Center<br>
+  Built by Axel · Last updated <span id="date"></span>
+</div>
+
+<script>
+document.getElementById('date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+</script>
+
+</body>
+</html>
