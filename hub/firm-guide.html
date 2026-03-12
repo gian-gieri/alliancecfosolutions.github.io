@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance CFO Solutions — Firm Operating Guide</title>
+<style>
+:root{--navy:#1B3A5C;--gold:#C9963B;--gold-light:#f5ecd9;--white:#ffffff;--gray-50:#f8f9fa;--gray-100:#f1f3f5;--gray-200:#e9ecef;--gray-300:#dee2e6;--gray-500:#868e96;--gray-700:#495057;--gray-900:#212529;--sidebar-w:280px;--transition:0.3s ease}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;color:var(--gray-900);background:var(--gray-50);line-height:1.6;font-size:15px}
+h1,h2,h3,h4,h5{font-family:Georgia,'Times New Roman',serif;color:var(--navy);line-height:1.3}
+h1{font-size:2rem}h2{font-size:1.6rem}h3{font-size:1.25rem}h4{font-size:1.1rem}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:var(--navy);color:var(--white);display:flex;flex-direction:column;z-index:100;transition:transform var(--transition)}
+.sidebar-logo{padding:28px 24px 20px;border-bottom:1px solid rgba(255,255,255,.12)}
+.sidebar-logo svg{width:180px;height:auto}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 0}
+.sidebar-nav a{display:flex;align-items:center;gap:10px;padding:11px 24px;color:rgba(255,255,255,.75);text-decoration:none;font-size:14px;font-weight:500;transition:all .2s;border-left:3px solid transparent}
+.sidebar-nav a:hover,.sidebar-nav a.active{color:var(--white);background:rgba(255,255,255,.08);border-left-color:var(--gold)}
+.sidebar-nav a .icon{font-size:16px;width:22px;text-align:center}
+.sidebar-footer{padding:16px 24px;border-top:1px solid rgba(255,255,255,.12);font-size:12px;color:rgba(255,255,255,.4)}
+
+/* HAMBURGER */
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--navy);border:none;color:var(--white);width:42px;height:42px;border-radius:8px;font-size:22px;cursor:pointer;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90}
+
+/* MAIN */
+.main{margin-left:var(--sidebar-w);min-height:100vh}
+.section{display:none;padding:48px 48px 64px;max-width:1100px;margin:0 auto}
+.section.active{display:block}
+
+/* CARDS */
+.card{background:var(--white);border-radius:12px;padding:28px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--gray-200)}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:24px 0}
+.stat-card{text-align:center;padding:24px 16px;background:var(--white);border-radius:10px;border:1px solid var(--gray-200)}
+.stat-card .num{font-size:2.4rem;font-weight:700;color:var(--navy);font-family:Georgia,serif}
+.stat-card .label{font-size:13px;color:var(--gray-500);margin-top:4px}
+.badge{display:inline-block;background:var(--gold-light);color:var(--gold);font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px}
+.badge-navy{background:var(--navy);color:var(--white)}
+
+/* JOURNEY */
+.journey-stage{position:relative;padding-left:48px;margin-bottom:36px}
+.journey-stage::before{content:'';position:absolute;left:18px;top:40px;bottom:-36px;width:2px;background:var(--gray-200)}
+.journey-stage:last-child::before{display:none}
+.stage-num{position:absolute;left:0;top:0;width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;font-family:Georgia,serif}
+.stage-card{background:var(--white);border-radius:12px;border:1px solid var(--gray-200);padding:24px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.stage-card h3{margin-bottom:4px}
+.stage-card h3 span{color:var(--gold);font-style:italic;font-weight:400;font-size:.85em;margin-left:6px}
+.stage-items{margin:12px 0;padding-left:4px}
+.stage-items li{padding:4px 0;list-style:none;position:relative;padding-left:20px;font-size:14px}
+.stage-items li::before{content:'→';position:absolute;left:0;color:var(--gold);font-weight:700}
+.stage-files{margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-100);display:flex;flex-wrap:wrap;gap:6px}
+.stage-files code{font-size:11px;background:var(--gray-100);padding:2px 8px;border-radius:4px;color:var(--gray-700)}
+
+/* PRICING CARDS */
+.tier-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin:24px 0}
+.tier-card{background:var(--white);border-radius:12px;border:1px solid var(--gray-200);padding:28px;position:relative;transition:transform .2s}
+.tier-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.tier-card.recommended{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold)}
+.tier-card.recommended::after{content:'RECOMMENDED';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--white);font-size:11px;font-weight:700;padding:3px 14px;border-radius:20px;letter-spacing:1px}
+.tier-price{font-size:1.8rem;font-weight:700;color:var(--navy);font-family:Georgia,serif}
+.tier-price span{font-size:.5em;color:var(--gray-500);font-weight:400}
+.tier-card h3{margin-bottom:4px}
+.tier-list{list-style:none;margin:16px 0;font-size:14px}
+.tier-list li{padding:5px 0;padding-left:22px;position:relative}
+.tier-list li::before{content:'✓';position:absolute;left:0;color:var(--gold);font-weight:700}
+.tier-list li.excluded::before{content:'✗';color:var(--gray-300)}
+.tier-list li.excluded{color:var(--gray-500)}
+
+/* MEETING CARDS */
+.meeting-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin:24px 0}
+.meeting-card{background:var(--white);border-radius:10px;border:1px solid var(--gray-200);padding:20px}
+.meeting-card h4{display:flex;align-items:center;gap:8px}
+.meeting-meta{display:flex;gap:12px;margin:8px 0;font-size:13px;color:var(--gray-500)}
+.meeting-link{display:inline-block;margin-top:8px;font-size:13px;color:var(--gold);word-break:break-all}
+
+/* PIPELINE */
+.pipeline{display:flex;gap:2px;margin:20px 0;flex-wrap:wrap}
+.pipeline-stage{flex:1;min-width:100px;background:var(--navy);color:var(--white);padding:10px 8px;text-align:center;font-size:12px;font-weight:600;position:relative}
+.pipeline-stage:first-child{border-radius:8px 0 0 8px}
+.pipeline-stage:last-child{border-radius:0 8px 8px 0}
+.pipeline-stage:nth-child(even){background:rgba(27,58,92,.85)}
+.pipeline-stage .stage-n{font-size:18px;font-family:Georgia,serif;color:var(--gold);display:block;margin-bottom:2px}
+
+/* CADENCE */
+.week-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:20px 0}
+.week-card{background:var(--white);border-radius:10px;border:1px solid var(--gray-200);padding:20px;text-align:center}
+.week-card .wk{font-size:12px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1px}
+.week-card h4{margin:6px 0}
+.week-card p{font-size:13px;color:var(--gray-700)}
+
+/* FILE TREE */
+.file-tree{font-family:'SF Mono',Monaco,Consolas,monospace;font-size:13px;line-height:1.9;background:var(--white);border-radius:12px;padding:24px 28px;border:1px solid var(--gray-200)}
+.file-tree .dir{color:var(--navy);font-weight:700}
+.file-tree .file{color:var(--gray-700)}
+.file-tree .desc{color:var(--gray-500);font-style:italic}
+.file-tree .tree-line{color:var(--gray-300)}
+
+/* CHECKLIST */
+.checklist{list-style:none}
+.checklist li{padding:10px 0;border-bottom:1px solid var(--gray-100);display:flex;align-items:flex-start;gap:10px;font-size:14px}
+.checklist li::before{content:'☐';font-size:18px;color:var(--gold);flex-shrink:0;margin-top:-1px}
+
+/* BRAND COLORS */
+.color-swatches{display:flex;gap:16px;margin:16px 0;flex-wrap:wrap}
+.swatch{width:100px;height:80px;border-radius:10px;display:flex;align-items:flex-end;padding:8px;font-size:11px;font-weight:600;color:var(--white)}
+.swatch.light{color:var(--navy);border:1px solid var(--gray-200)}
+
+/* KPI BADGES */
+.kpi-list{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.kpi-badge{background:var(--gray-100);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:500;color:var(--navy)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .hamburger{display:flex}
+  .overlay.open{display:block}
+  .main{margin-left:0}
+  .section{padding:24px 16px 48px;padding-top:68px}
+  .week-grid{grid-template-columns:1fr 1fr}
+  .pipeline{flex-direction:column}
+  .pipeline-stage{border-radius:6px!important}
+  .tier-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+<div class="overlay" onclick="toggleSidebar()"></div>
+
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="28,68 48,12 68,68" fill="none" stroke="#ffffff" stroke-width="5" stroke-linejoin="round"/>
+      <line x1="35" y1="48" x2="61" y2="48" stroke="#C9963B" stroke-width="4" stroke-linecap="round"/>
+      <text x="88" y="42" font-family="Georgia,serif" font-size="26" font-weight="bold" fill="#ffffff" letter-spacing="3">ALLIANCE</text>
+      <text x="88" y="66" font-family="-apple-system,sans-serif" font-size="13" fill="#C9963B" letter-spacing="6" font-weight="500">CFO SOLUTIONS</text>
+    </svg>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" data-section="welcome" class="active"><span class="icon">◈</span> Welcome</a>
+    <a href="#" data-section="journey"><span class="icon">⟶</span> Client Journey</a>
+    <a href="#" data-section="tiers"><span class="icon">◆</span> Service Tiers</a>
+    <a href="#" data-section="calendly"><span class="icon">◷</span> Calendly System</a>
+    <a href="#" data-section="crm"><span class="icon">◉</span> CRM & Pipeline</a>
+    <a href="#" data-section="delivery"><span class="icon">◫</span> Monthly Delivery</a>
+    <a href="#" data-section="brand"><span class="icon">◐</span> Brand & Website</a>
+    <a href="#" data-section="files"><span class="icon">▤</span> File Directory</a>
+    <a href="#" data-section="next"><span class="icon">▶</span> What's Next</a>
+  </nav>
+  <div class="sidebar-footer">Firm Operating Guide v1.0<br>Built March 12, 2026</div>
+</aside>
+
+<main class="main">
+
+<!-- ==================== WELCOME ==================== -->
+<div class="section active" id="welcome">
+  <div style="margin-bottom:8px"><span class="badge">FIRM OPERATING GUIDE</span></div>
+  <h1>Alliance CFO Solutions is Built.</h1>
+  <p style="font-size:17px;color:var(--gray-700);margin:8px 0 24px;max-width:640px">Here's everything you have — your complete firm operating system, from first touch to monthly delivery. This is your owner's manual.</p>
+
+  <div class="stat-grid">
+    <div class="stat-card"><div class="num">38+</div><div class="label">Files Built</div></div>
+    <div class="stat-card"><div class="num">5</div><div class="label">Directories</div></div>
+    <div class="stat-card"><div class="num">4</div><div class="label">Service Tiers</div></div>
+    <div class="stat-card"><div class="num">5</div><div class="label">Calendly Meeting Types</div></div>
+    <div class="stat-card"><div class="num">5</div><div class="label">Industry KPI Templates</div></div>
+    <div class="stat-card"><div class="num">1</div><div class="label">Complete CRM System</div></div>
+  </div>
+
+  <div class="card" style="margin-top:24px;text-align:center;background:var(--navy);color:var(--white);border:none">
+    <p style="font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-weight:600">Date Completed</p>
+    <p style="font-size:1.6rem;font-family:Georgia,serif;margin-top:4px">March 12, 2026</p>
+    <p style="color:rgba(255,255,255,.6);margin-top:4px">Built in one day.</p>
+  </div>
+
+  <div style="margin-top:32px">
+    <h3>What's Inside This Guide</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:16px">
+      <div class="card" style="padding:16px;cursor:pointer" onclick="showSection('journey')"><strong>The Client Journey</strong><br><small style="color:var(--gray-500)">7-stage lifecycle from attract to grow</small></div>
+      <div class="card" style="padding:16px;cursor:pointer" onclick="showSection('tiers')"><strong>Service Tiers</strong><br><small style="color:var(--gray-500)">4 tiers, $1,500–$10K/month</small></div>
+      <div class="card" style="padding:16px;cursor:pointer" onclick="showSection('calendly')"><strong>Calendly System</strong><br><small style="color:var(--gray-500)">5 meeting types, all configured</small></div>
+      <div class="card" style="padding:16px;cursor:pointer" onclick="showSection('crm')"><strong>CRM & Pipeline</strong><br><small style="color:var(--gray-500)">9-stage pipeline + lead scoring</small></div>
+      <div class="card" style="padding:16px;cursor:pointer" onclick="showSection('delivery')"><strong>Monthly Delivery</strong><br><small style="color:var(--gray-500)">Week-by-week cadence system</small></div>
+      <div class="card" style="padding:16px;cursor:pointer" onclick="showSection('files')"><strong>File Directory</strong><br><small style="color:var(--gray-500)">Complete file tree + descriptions</small></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CLIENT JOURNEY ==================== -->
+<div class="section" id="journey">
+  <div style="margin-bottom:8px"><span class="badge">MOST IMPORTANT</span></div>
+  <h1>The Client Journey</h1>
+  <p style="color:var(--gray-700);margin:8px 0 32px;max-width:640px">The complete lifecycle — from a stranger finding you on LinkedIn to a client sending you referrals. Seven stages, fully systematized.</p>
+
+  <div class="journey-stage">
+    <div class="stage-num">1</div>
+    <div class="stage-card">
+      <h3>ATTRACT <span>Get on their radar</span></h3>
+      <ul class="stage-items">
+        <li>LinkedIn content (3×/week) drives profile visits</li>
+        <li>Website (alliancecfosolutions.com) converts visitors to calls</li>
+        <li>Referral partners send warm leads</li>
+        <li>60-person connection list for targeted outreach</li>
+      </ul>
+      <div class="stage-files">
+        <code>linkedin/content-calendar.md</code>
+        <code>linkedin/dashboard-v2.html</code>
+        <code>alliance-cfo/website/index.html</code>
+        <code>linkedin/sales-navigator-60-connections.md</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-stage">
+    <div class="stage-num">2</div>
+    <div class="stage-card">
+      <h3>CONNECT <span>First conversation</span></h3>
+      <ul class="stage-items">
+        <li>Prospect books Free Intro Call (20 min) via Calendly</li>
+        <li>You assess fit in 20 minutes using intro call framework</li>
+        <li>If fit → send Discovery Session link</li>
+        <li>If not fit → graceful pass, refer out</li>
+      </ul>
+      <div class="stage-files">
+        <code>client-systems/calendly-best-practices.md</code>
+        <code>client-systems/calendly-links.md</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-stage">
+    <div class="stage-num">3</div>
+    <div class="stage-card">
+      <h3>DISCOVER <span>Deep diagnostic</span></h3>
+      <ul class="stage-items">
+        <li>Discovery Session (45 min) — follow the script</li>
+        <li>Ask the 7 core questions, listen for pain, diagnose</li>
+        <li>Within 24 hours: send proposal</li>
+      </ul>
+      <div class="stage-files">
+        <code>client-systems/discovery-call-script.md</code>
+        <code>client-systems/follow-up-emails.md</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-stage">
+    <div class="stage-num">4</div>
+    <div class="stage-card">
+      <h3>PROPOSE <span>Present the solution</span></h3>
+      <ul class="stage-items">
+        <li>One-page proposal using template (customized per tier)</li>
+        <li>Follow-up cadence: Day 3, Day 7, Day 14</li>
+        <li>If they say yes → engagement letter</li>
+      </ul>
+      <div class="stage-files">
+        <code>client-systems/proposal-template.md</code>
+        <code>client-systems/follow-up-emails.md</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-stage">
+    <div class="stage-num">5</div>
+    <div class="stage-card">
+      <h3>ONBOARD <span>Set the foundation</span></h3>
+      <ul class="stage-items">
+        <li>Signed engagement letter (Diagnostic / Essential / Growth / Strategic)</li>
+        <li>Welcome email sent with onboarding checklist</li>
+        <li>Collect: QBO access, bank statements, tax returns, org chart, debt schedule</li>
+        <li>Create client folder using standard structure</li>
+        <li>Week 1–4 onboarding timeline</li>
+      </ul>
+      <div class="stage-files">
+        <code>client-systems/engagement-letter-*.md</code>
+        <code>client-systems/welcome-email.md</code>
+        <code>client-systems/onboarding-checklist.md</code>
+        <code>client-systems/client-folder-template.md</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-stage">
+    <div class="stage-num">6</div>
+    <div class="stage-card">
+      <h3>DELIVER <span>Monthly rhythm</span></h3>
+      <ul class="stage-items">
+        <li><strong>Week 1:</strong> Books close, reconciliation</li>
+        <li><strong>Week 2:</strong> Review, build financial package, update forecast + KPIs</li>
+        <li><strong>Week 3:</strong> Deliver package to client 48hrs before call</li>
+        <li><strong>Week 4:</strong> Strategy call → summary email → action items</li>
+        <li>Repeat every month</li>
+      </ul>
+      <div class="stage-files">
+        <code>monthly-delivery/monthly-review-checklist.md</code>
+        <code>monthly-delivery/financial-package-template.md</code>
+        <code>monthly-delivery/strategy-call-agenda.md</code>
+        <code>monthly-delivery/call-summary-email.md</code>
+        <code>monthly-delivery/cash-flow-forecast-guide.md</code>
+        <code>monthly-delivery/week-by-week-cadence.md</code>
+      </div>
+    </div>
+  </div>
+
+  <div class="journey-stage">
+    <div class="stage-num">7</div>
+    <div class="stage-card">
+      <h3>GROW <span>Expand & multiply</span></h3>
+      <ul class="stage-items">
+        <li>Quarterly Business Reviews every 90 days</li>
+        <li>Watch for upsell triggers (client needs more)</li>
+        <li>Ask for referrals and testimonials</li>
+        <li>Client becomes referral source</li>
+      </ul>
+      <div class="stage-files">
+        <code>monthly-delivery/quarterly-business-review.md</code>
+        <code>client-systems/pricing-reference.md</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SERVICE TIERS ==================== -->
+<div class="section" id="tiers">
+  <h1>Service Tiers</h1>
+  <p style="color:var(--gray-700);margin:8px 0 24px">Four tiers designed to meet clients where they are — and grow with them.</p>
+
+  <div class="tier-grid">
+    <div class="tier-card">
+      <h3>Diagnostic</h3>
+      <div class="tier-price">$1,500<span>/mo</span></div>
+      <p style="font-size:13px;color:var(--gray-500);margin:4px 0 12px">60-day engagement</p>
+      <ul class="tier-list">
+        <li>Financial assessment & cleanup</li>
+        <li>Cash flow snapshot</li>
+        <li>Strategic roadmap delivery</li>
+        <li>2 strategy calls</li>
+        <li class="excluded">Ongoing monthly support</li>
+        <li class="excluded">KPI dashboard</li>
+      </ul>
+      <p style="font-size:13px;margin-top:12px"><strong>Ideal client:</strong> Not sure what they need yet. Wants clarity before committing.</p>
+      <p style="font-size:12px;color:var(--gold);margin-top:8px">↑ Upsell trigger: "I want this every month"</p>
+    </div>
+
+    <div class="tier-card">
+      <h3>Essential</h3>
+      <div class="tier-price">$2,500<span>/mo</span></div>
+      <p style="font-size:13px;color:var(--gray-500);margin:4px 0 12px">Ongoing engagement</p>
+      <ul class="tier-list">
+        <li>Monthly close & reconciliation</li>
+        <li>Financial package delivery</li>
+        <li>1 strategy call/month</li>
+        <li>Email support</li>
+        <li class="excluded">Cash flow forecasting</li>
+        <li class="excluded">KPI tracking</li>
+      </ul>
+      <p style="font-size:13px;margin-top:12px"><strong>Ideal client:</strong> $1–3M revenue, needs financial clarity and a monthly rhythm.</p>
+      <p style="font-size:12px;color:var(--gold);margin-top:8px">↑ Upsell trigger: "I need help forecasting cash"</p>
+    </div>
+
+    <div class="tier-card recommended">
+      <h3>Growth</h3>
+      <div class="tier-price">$5,000<span>/mo</span></div>
+      <p style="font-size:13px;color:var(--gray-500);margin:4px 0 12px">Ongoing engagement</p>
+      <ul class="tier-list">
+        <li>Everything in Essential</li>
+        <li>13-month cash flow forecast</li>
+        <li>KPI dashboard (industry-specific)</li>
+        <li>2 strategy calls/month</li>
+        <li>Quarterly Business Reviews</li>
+        <li class="excluded">Full strategic advisory</li>
+      </ul>
+      <p style="font-size:13px;margin-top:12px"><strong>Ideal client:</strong> $3–10M revenue, scaling, needs a financial co-pilot.</p>
+      <p style="font-size:12px;color:var(--gold);margin-top:8px">↑ Upsell trigger: "I need you in our leadership meetings"</p>
+    </div>
+
+    <div class="tier-card">
+      <h3>Strategic</h3>
+      <div class="tier-price">$7,500–10K<span>/mo</span></div>
+      <p style="font-size:13px;color:var(--gray-500);margin:4px 0 12px">Ongoing engagement</p>
+      <ul class="tier-list">
+        <li>Everything in Growth</li>
+        <li>Full fractional CFO</li>
+        <li>Board/investor reporting</li>
+        <li>M&A / fundraising support</li>
+        <li>Weekly strategy calls</li>
+        <li>Leadership team participation</li>
+      </ul>
+      <p style="font-size:13px;margin-top:12px"><strong>Ideal client:</strong> $10M+ revenue, complex operations, needs a true CFO partner.</p>
+      <p style="font-size:12px;color:var(--gold);margin-top:8px">This is the top tier — full partnership.</p>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--gray-500);margin-top:8px">Reference: <code>client-systems/pricing-reference.md</code></p>
+</div>
+
+<!-- ==================== CALENDLY ==================== -->
+<div class="section" id="calendly">
+  <h1>Calendly System</h1>
+  <p style="color:var(--gray-700);margin:8px 0 24px">Five meeting types — one public, four secret. All use Google Meet, M–F 10am–5pm MST, 24hr minimum notice, 15min buffer.</p>
+
+  <div class="meeting-grid">
+    <div class="meeting-card">
+      <h4>🟢 Free Intro Call</h4>
+      <div class="meeting-meta"><span>20 min</span><span class="badge">PUBLIC</span></div>
+      <p style="font-size:14px">First touch. Assess fit, understand their situation, decide if Discovery is warranted.</p>
+      <p style="font-size:13px;margin-top:8px"><strong>When to send:</strong> Website CTA, LinkedIn DMs, referral partners</p>
+      <a class="meeting-link" href="https://calendly.com/gian-alliancecfosolutions/free-intro-call" target="_blank">calendly.com/gian-alliancecfosolutions/free-intro-call</a>
+    </div>
+    <div class="meeting-card">
+      <h4>🔵 Discovery Session</h4>
+      <div class="meeting-meta"><span>45 min</span><span class="badge badge-navy">SECRET</span></div>
+      <p style="font-size:14px">Deep dive. Use the discovery script, ask 7 core questions, diagnose and scope.</p>
+      <p style="font-size:13px;margin-top:8px"><strong>When to send:</strong> After a qualified intro call — never publicly</p>
+      <a class="meeting-link" href="https://calendly.com/gian-alliancecfosolutions/discovery-session" target="_blank">calendly.com/gian-alliancecfosolutions/discovery-session</a>
+    </div>
+    <div class="meeting-card">
+      <h4>🔵 Client Strategy Call</h4>
+      <div class="meeting-meta"><span>45 min</span><span class="badge badge-navy">SECRET</span></div>
+      <p style="font-size:14px">Recurring monthly call. Review financials, KPIs, forecast. Discuss strategy.</p>
+      <p style="font-size:13px;margin-top:8px"><strong>When to send:</strong> Active clients only, Week 4 of each month</p>
+      <a class="meeting-link" href="https://calendly.com/gian-alliancecfosolutions/client-strategy-call" target="_blank">calendly.com/gian-alliancecfosolutions/client-strategy-call</a>
+    </div>
+    <div class="meeting-card">
+      <h4>🔵 Quick Check-in</h4>
+      <div class="meeting-meta"><span>15 min</span><span class="badge badge-navy">SECRET</span></div>
+      <p style="font-size:14px">Fast follow-ups: questions, urgent items, quick decisions.</p>
+      <p style="font-size:13px;margin-top:8px"><strong>When to send:</strong> Active clients who need a quick touch</p>
+      <a class="meeting-link" href="https://calendly.com/gian-alliancecfosolutions/quick-check-in" target="_blank">calendly.com/gian-alliancecfosolutions/quick-check-in</a>
+    </div>
+    <div class="meeting-card">
+      <h4>🔵 Referral Partner Coffee</h4>
+      <div class="meeting-meta"><span>30 min</span><span class="badge badge-navy">SECRET</span></div>
+      <p style="font-size:14px">Build referral relationships. CPAs, attorneys, bankers, business coaches.</p>
+      <p style="font-size:13px;margin-top:8px"><strong>When to send:</strong> Networking follow-ups, LinkedIn connections in complementary services</p>
+      <a class="meeting-link" href="https://calendly.com/gian-alliancecfosolutions/referral-partner-coffee" target="_blank">calendly.com/gian-alliancecfosolutions/referral-partner-coffee</a>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CRM ==================== -->
+<div class="section" id="crm">
+  <h1>CRM & Pipeline</h1>
+  <p style="color:var(--gray-700);margin:8px 0 24px">Nine pipeline stages from first touch to closed. Every lead is scored, every follow-up is templated.</p>
+
+  <h3>Pipeline Stages</h3>
+  <div class="pipeline">
+    <div class="pipeline-stage"><span class="stage-n">1</span>Lead In</div>
+    <div class="pipeline-stage"><span class="stage-n">2</span>Contacted</div>
+    <div class="pipeline-stage"><span class="stage-n">3</span>Intro Scheduled</div>
+    <div class="pipeline-stage"><span class="stage-n">4</span>Intro Complete</div>
+    <div class="pipeline-stage"><span class="stage-n">5</span>Discovery Scheduled</div>
+    <div class="pipeline-stage"><span class="stage-n">6</span>Discovery Complete</div>
+    <div class="pipeline-stage"><span class="stage-n">7</span>Proposal Sent</div>
+    <div class="pipeline-stage"><span class="stage-n">8</span>Negotiating</div>
+    <div class="pipeline-stage" style="background:var(--gold)"><span class="stage-n" style="color:var(--white)">9</span>Won / Lost</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px">
+    <div class="card">
+      <h3>Lead Scoring</h3>
+      <table style="width:100%;margin-top:12px;font-size:14px;border-collapse:collapse">
+        <tr style="border-bottom:1px solid var(--gray-200)"><td style="padding:8px 0"><strong style="color:var(--gold);font-size:18px">A</strong></td><td>Revenue $1M+, expressed pain, decision-maker, ready to act</td></tr>
+        <tr style="border-bottom:1px solid var(--gray-200)"><td style="padding:8px 0"><strong style="color:var(--navy);font-size:18px">B</strong></td><td>Right profile, some interest, needs nurturing, 30–60 day timeline</td></tr>
+        <tr><td style="padding:8px 0"><strong style="color:var(--gray-500);font-size:18px">C</strong></td><td>Early stage, unclear fit, low urgency — track but don't chase</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Weekly Pipeline Review</h3>
+      <p style="font-size:14px;margin-top:8px;color:var(--gray-700)">Every Monday morning, 5 minutes:</p>
+      <ol style="font-size:14px;margin-top:8px;padding-left:20px;color:var(--gray-700)">
+        <li>Review all active deals</li>
+        <li>Move stale deals forward or out</li>
+        <li>Identify follow-ups due this week</li>
+        <li>Check referral partner touchpoints</li>
+        <li>Update lead scores</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Follow-Up Cadence</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:12px">
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><strong style="color:var(--gold)">Day 1</strong><br><small>Send proposal</small></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><strong style="color:var(--gold)">Day 3</strong><br><small>"Just checking in"</small></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><strong style="color:var(--gold)">Day 7</strong><br><small>Add value / insight</small></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><strong style="color:var(--gold)">Day 14</strong><br><small>Final follow-up</small></div>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--gray-500);margin-top:16px">Files: <code>crm/pipeline-tracker.md</code> · <code>crm/follow-up-cadence.md</code> · <code>crm/lead-scoring-guide.md</code> · <code>crm/weekly-pipeline-review.md</code> · <code>crm/referral-partner-tracker.md</code> · <code>crm/networking-event-playbook.md</code> · <code>crm/email-newsletter-template.md</code></p>
+</div>
+
+<!-- ==================== MONTHLY DELIVERY ==================== -->
+<div class="section" id="delivery">
+  <h1>Monthly Delivery System</h1>
+  <p style="color:var(--gray-700);margin:8px 0 24px">Every month follows the same four-week rhythm. Predictable for you, impressive for clients.</p>
+
+  <div class="week-grid">
+    <div class="week-card">
+      <div class="wk">Week 1</div>
+      <h4>Close</h4>
+      <p>Books close, reconciliation, clean up transactions in QBO</p>
+    </div>
+    <div class="week-card">
+      <div class="wk">Week 2</div>
+      <h4>Build</h4>
+      <p>Review financials, build package, update forecast & KPIs</p>
+    </div>
+    <div class="week-card">
+      <div class="wk">Week 3</div>
+      <h4>Deliver</h4>
+      <p>Send financial package to client 48hrs before strategy call</p>
+    </div>
+    <div class="week-card">
+      <div class="wk">Week 4</div>
+      <h4>Strategize</h4>
+      <p>Strategy call → summary email → action items → repeat</p>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>What the Client Receives Each Month</h3>
+    <ul style="font-size:14px;margin-top:12px;padding-left:20px;color:var(--gray-700)">
+      <li>Financial package (P&L, Balance Sheet, Cash Flow, AR/AP aging)</li>
+      <li>13-month rolling cash flow forecast (Growth+)</li>
+      <li>Industry-specific KPI dashboard (Growth+)</li>
+      <li>Strategy call with agenda sent in advance</li>
+      <li>Post-call summary email with action items</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>KPI Templates Available</h3>
+    <div class="kpi-list">
+      <div class="kpi-badge">📊 Service Business</div>
+      <div class="kpi-badge">🏗️ Construction</div>
+      <div class="kpi-badge">🏥 Medical / Dental</div>
+      <div class="kpi-badge">👥 Staffing</div>
+      <div class="kpi-badge">🏪 Franchise</div>
+    </div>
+    <p style="font-size:13px;color:var(--gray-500);margin-top:8px">Each template includes 8–12 industry-specific KPIs with benchmarks and tracking guidance.</p>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Quarterly Business Review (QBR)</h3>
+    <p style="font-size:14px;color:var(--gray-700);margin-top:8px">Every 90 days for Growth and Strategic clients. Covers: quarter performance vs. goals, trend analysis, strategic recommendations, next-quarter priorities, and upsell/referral conversations.</p>
+  </div>
+
+  <p style="font-size:13px;color:var(--gray-500);margin-top:16px">Files in: <code>monthly-delivery/</code> (8 files) + <code>monthly-delivery/kpi-templates/</code> (5 files)</p>
+</div>
+
+<!-- ==================== BRAND ==================== -->
+<div class="section" id="brand">
+  <h1>Brand & Website</h1>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Logo</h3>
+    <div style="padding:24px;text-align:center;background:var(--gray-50);border-radius:8px;margin-top:12px">
+      <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg" style="width:280px">
+        <polygon points="28,68 48,12 68,68" fill="none" stroke="#1B3A5C" stroke-width="5" stroke-linejoin="round"/>
+        <line x1="35" y1="48" x2="61" y2="48" stroke="#C9963B" stroke-width="4" stroke-linecap="round"/>
+        <text x="88" y="42" font-family="Georgia,serif" font-size="26" font-weight="bold" fill="#1B3A5C" letter-spacing="3">ALLIANCE</text>
+        <text x="88" y="66" font-family="-apple-system,sans-serif" font-size="13" fill="#C9963B" letter-spacing="6" font-weight="500">CFO SOLUTIONS</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Brand Colors</h3>
+    <div class="color-swatches">
+      <div class="swatch" style="background:var(--navy)">#1B3A5C<br>Navy</div>
+      <div class="swatch" style="background:var(--gold)">#C9963B<br>Gold</div>
+      <div class="swatch light" style="background:var(--white)">#FFFFFF<br>White</div>
+    </div>
+    <p style="font-size:14px;margin-top:8px;color:var(--gray-700)"><strong>Typography:</strong> Georgia (headings) · System sans-serif (body)</p>
+  </div>
+
+  <div class="card" style="margin-top:20px">
+    <h3>Website</h3>
+    <table style="font-size:14px;border-collapse:collapse;width:100%">
+      <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 0;font-weight:600;width:140px">URL</td><td><a href="https://alliancecfosolutions.com" target="_blank" style="color:var(--gold)">alliancecfosolutions.com</a></td></tr>
+      <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 0;font-weight:600">Hosting</td><td>GitHub Pages (free)</td></tr>
+      <tr style="border-bottom:1px solid var(--gray-100)"><td style="padding:8px 0;font-weight:600">Domain</td><td>Squarespace Domains (~$12/yr)</td></tr>
+      <tr><td style="padding:8px 0;font-weight:600">Files</td><td><code>website/index.html</code> · <code>website/copy.md</code></td></tr>
+    </table>
+  </div>
+
+  <p style="font-size:13px;color:var(--gray-500);margin-top:16px">Brand files: <code>brand/logo.svg</code> · <code>brand/favicon.svg</code> · <code>brand/logo-preview.html</code></p>
+</div>
+
+<!-- ==================== FILE DIRECTORY ==================== -->
+<div class="section" id="files">
+  <h1>File Directory</h1>
+  <p style="color:var(--gray-700);margin:8px 0 24px">Every file in the operating system, with descriptions.</p>
+
+  <div class="file-tree"><span class="dir">alliance-cfo/</span>
+<span class="tree-line">├── </span><span class="dir">website/</span>
+<span class="tree-line">│   ├── </span><span class="file">index.html</span> <span class="desc">— Live website (deployed to GitHub Pages)</span>
+<span class="tree-line">│   └── </span><span class="file">copy.md</span> <span class="desc">— Raw website copy for reference</span>
+<span class="tree-line">├── </span><span class="dir">brand/</span>
+<span class="tree-line">│   ├── </span><span class="file">logo.svg</span> <span class="desc">— Full logo (monogram + wordmark)</span>
+<span class="tree-line">│   ├── </span><span class="file">favicon.svg</span> <span class="desc">— Browser tab icon</span>
+<span class="tree-line">│   └── </span><span class="file">logo-preview.html</span> <span class="desc">— Brand asset preview page</span>
+<span class="tree-line">├── </span><span class="dir">client-systems/</span>
+<span class="tree-line">│   ├── </span><span class="file">discovery-call-script.md</span> <span class="desc">— 45-min call framework with 7 core questions</span>
+<span class="tree-line">│   ├── </span><span class="file">proposal-template.md</span> <span class="desc">— One-page proposal (all 4 tiers)</span>
+<span class="tree-line">│   ├── </span><span class="file">engagement-letter-diagnostic.md</span> <span class="desc">— $1,500/mo, 60-day</span>
+<span class="tree-line">│   ├── </span><span class="file">engagement-letter-essential.md</span> <span class="desc">— $2,500/mo, ongoing</span>
+<span class="tree-line">│   ├── </span><span class="file">engagement-letter-growth.md</span> <span class="desc">— $5,000/mo, ongoing</span>
+<span class="tree-line">│   ├── </span><span class="file">engagement-letter-strategic.md</span> <span class="desc">— $7,500-10K/mo, ongoing</span>
+<span class="tree-line">│   ├── </span><span class="file">onboarding-checklist.md</span> <span class="desc">— 14-item checklist + 4-week timeline</span>
+<span class="tree-line">│   ├── </span><span class="file">welcome-email.md</span> <span class="desc">— Post-signing email template</span>
+<span class="tree-line">│   ├── </span><span class="file">follow-up-emails.md</span> <span class="desc">— Hot/warm/pass + Day 3/7/14 chase</span>
+<span class="tree-line">│   ├── </span><span class="file">client-folder-template.md</span> <span class="desc">— Standardized folder structure</span>
+<span class="tree-line">│   ├── </span><span class="file">pricing-reference.md</span> <span class="desc">— Internal pricing card + upsell triggers</span>
+<span class="tree-line">│   ├── </span><span class="file">calendly-links.md</span> <span class="desc">— Quick reference for all 5 meeting types</span>
+<span class="tree-line">│   └── </span><span class="file">calendly-best-practices.md</span> <span class="desc">— When/how to use each meeting type</span>
+<span class="tree-line">├── </span><span class="dir">monthly-delivery/</span>
+<span class="tree-line">│   ├── </span><span class="file">monthly-review-checklist.md</span> <span class="desc">— Step-by-step financial review</span>
+<span class="tree-line">│   ├── </span><span class="file">financial-package-template.md</span> <span class="desc">— Client-facing monthly deliverable</span>
+<span class="tree-line">│   ├── </span><span class="file">strategy-call-agenda.md</span> <span class="desc">— 45-min recurring call structure</span>
+<span class="tree-line">│   ├── </span><span class="file">call-summary-email.md</span> <span class="desc">— Post-call follow-up template</span>
+<span class="tree-line">│   ├── </span><span class="file">cash-flow-forecast-guide.md</span> <span class="desc">— 13-month rolling forecast how-to</span>
+<span class="tree-line">│   ├── </span><span class="file">quarterly-business-review.md</span> <span class="desc">— 90-day QBR template</span>
+<span class="tree-line">│   ├── </span><span class="file">week-by-week-cadence.md</span> <span class="desc">— Monthly workflow + scaling guide</span>
+<span class="tree-line">│   └── </span><span class="dir">kpi-templates/</span>
+<span class="tree-line">│       ├── </span><span class="file">kpi-service-business.md</span>
+<span class="tree-line">│       ├── </span><span class="file">kpi-construction.md</span>
+<span class="tree-line">│       ├── </span><span class="file">kpi-medical-dental.md</span>
+<span class="tree-line">│       ├── </span><span class="file">kpi-staffing.md</span>
+<span class="tree-line">│       └── </span><span class="file">kpi-franchise.md</span>
+<span class="tree-line">├── </span><span class="dir">crm/</span>
+<span class="tree-line">│   ├── </span><span class="file">pipeline-tracker.md</span> <span class="desc">— Full CRM with 9 pipeline stages</span>
+<span class="tree-line">│   ├── </span><span class="file">follow-up-cadence.md</span> <span class="desc">— Message templates for every touchpoint</span>
+<span class="tree-line">│   ├── </span><span class="file">referral-partner-tracker.md</span> <span class="desc">— Track referral relationships</span>
+<span class="tree-line">│   ├── </span><span class="file">weekly-pipeline-review.md</span> <span class="desc">— 5-min Monday morning routine</span>
+<span class="tree-line">│   ├── </span><span class="file">lead-scoring-guide.md</span> <span class="desc">— A/B/C lead prioritization</span>
+<span class="tree-line">│   ├── </span><span class="file">networking-event-playbook.md</span> <span class="desc">— BNI/Chamber/EO playbook</span>
+<span class="tree-line">│   └── </span><span class="file">email-newsletter-template.md</span> <span class="desc">— Monthly "CFO Insight" template</span>
+<span class="tree-line">└── </span><span class="file" style="color:var(--gold);font-weight:600">firm-guide.html</span> <span class="desc">— THIS FILE (you are here)</span>
+
+<br><span class="desc">Also referenced:</span>
+<span class="file">plans/alliance-cfo-operating-system.md</span> <span class="desc">— Master operating system document</span>
+<span class="file">plans/today-build-sprint-2026-03-12.md</span> <span class="desc">— Today's build sprint tracker</span>
+<span class="file">linkedin/sales-navigator-60-connections.md</span> <span class="desc">— 60 LinkedIn connection targets</span></div>
+</div>
+
+<!-- ==================== WHAT'S NEXT ==================== -->
+<div class="section" id="next">
+  <h1>What's Next</h1>
+  <p style="color:var(--gray-700);margin:8px 0 24px">The system is built. Here's what to do with it.</p>
+
+  <div class="card">
+    <h3>Action Items</h3>
+    <ul class="checklist">
+      <li>Get professional headshot → add to website hero section</li>
+      <li>Hire business attorney → finalize engagement letters ($500–$1,500)</li>
+      <li>Evaluate Fathom for automated financial reporting</li>
+      <li>Set up HubSpot CRM (free) to replace markdown tracker</li>
+      <li>Continue LinkedIn connection outreach (5–10/day from the 60 list)</li>
+      <li>First BNI chapter visit — find your local chapter</li>
+      <li>First referral partner coffee — use the Calendly link</li>
+      <li>First discovery call with a real prospect</li>
+      <li>At $8–10K/month recurring → hire a VA</li>
+    </ul>
+  </div>
+
+  <div class="card" style="margin-top:24px;background:var(--navy);color:var(--white);border:none;text-align:center;padding:40px">
+    <p style="font-size:13px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-weight:600">The Foundation is Set</p>
+    <h2 style="color:var(--white);margin-top:8px">Now go get your first client.</h2>
+    <p style="color:rgba(255,255,255,.6);margin-top:8px;max-width:480px;margin-left:auto;margin-right:auto">You have every system, template, and process you need. The only thing left is execution.</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.sidebar-nav a').forEach(a=>{
+    a.classList.toggle('active',a.dataset.section===id);
+  });
+  // Close mobile sidebar
+  document.querySelector('.sidebar').classList.remove('open');
+  document.querySelector('.overlay').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+document.querySelectorAll('.sidebar-nav a').forEach(a=>{
+  a.addEventListener('click',e=>{
+    e.preventDefault();
+    showSection(a.dataset.section);
+  });
+});
+
+function toggleSidebar(){
+  document.querySelector('.sidebar').classList.toggle('open');
+  document.querySelector('.overlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>
