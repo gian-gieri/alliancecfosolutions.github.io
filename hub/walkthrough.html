@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance CFO — Complete File Walkthrough</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root { --navy: #1B3A5C; --gold: #C9963B; --off-white: #F8F7F4; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--off-white); color: #2A2A2A; line-height: 1.7; }
+.header { background: var(--navy); padding: 32px 24px; text-align: center; }
+.header h1 { font-family: Georgia, serif; color: white; font-size: 1.6rem; letter-spacing: 2px; margin-bottom: 4px; }
+.header p { color: var(--gold); font-size: 0.85rem; letter-spacing: 1px; }
+.container { max-width: 800px; margin: 0 auto; padding: 32px 24px; }
+.folder { margin-bottom: 48px; }
+.folder-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--gold); }
+.folder-header h2 { font-family: Georgia, serif; color: var(--navy); font-size: 1.3rem; }
+.folder-header .emoji { font-size: 1.5rem; }
+.file { background: white; border-radius: 8px; padding: 20px 24px; margin-bottom: 12px; border-left: 4px solid var(--gold); }
+.file h3 { color: var(--navy); font-size: 1rem; margin-bottom: 6px; font-family: Georgia, serif; }
+.file .when { font-size: 0.8rem; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.file p { font-size: 0.9rem; color: #555; }
+.file ul { font-size: 0.9rem; color: #555; margin-top: 8px; padding-left: 20px; }
+.file li { margin-bottom: 4px; }
+.section-note { background: #E8F0F8; border-radius: 8px; padding: 16px 20px; margin-bottom: 24px; font-size: 0.9rem; color: var(--navy); }
+.journey { background: var(--navy); color: white; border-radius: 12px; padding: 32px; margin-bottom: 48px; }
+.journey h2 { font-family: Georgia, serif; color: var(--gold); margin-bottom: 16px; }
+.journey ol { padding-left: 20px; }
+.journey li { margin-bottom: 12px; line-height: 1.6; }
+.journey strong { color: var(--gold); }
+.back { display: inline-block; margin-bottom: 24px; color: var(--gold); text-decoration: none; font-size: 0.85rem; }
+.back:hover { color: var(--navy); }
+.toc { background: white; border-radius: 8px; padding: 24px; margin-bottom: 32px; }
+.toc h3 { font-family: Georgia, serif; color: var(--navy); margin-bottom: 12px; }
+.toc a { display: block; color: var(--navy); text-decoration: none; padding: 4px 0; font-size: 0.9rem; }
+.toc a:hover { color: var(--gold); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>COMPLETE FILE WALKTHROUGH</h1>
+  <p>54 files · Built March 12, 2026 · What each one does and when to use it</p>
+</div>
+
+<div class="container">
+
+<a href="/hub/" class="back">← Back to Hub</a>
+
+<div class="journey">
+  <h2>The Big Picture — When You Use What</h2>
+  <ol>
+    <li><strong>Someone finds you</strong> (LinkedIn, website, referral) → They book a <strong>Free Intro Call</strong> via Calendly</li>
+    <li><strong>Intro call goes well</strong> → You use the <strong>Discovery Call Script</strong>, then send them the Discovery Session link</li>
+    <li><strong>Discovery call confirms fit</strong> → You fill out the <strong>Proposal Template</strong> (Word) and send it</li>
+    <li><strong>They say yes</strong> → You send the <strong>Engagement Letter</strong> (Word) for their tier</li>
+    <li><strong>They sign</strong> → You send the <strong>Welcome Email</strong> and the <strong>Onboarding Checklist</strong></li>
+    <li><strong>Onboarding complete</strong> → You create their <strong>Client Folder</strong>, pull QBO data into the <strong>Cash Flow Forecast</strong> and <strong>KPI Dashboard</strong> (Excel)</li>
+    <li><strong>Every month</strong> → You use the <strong>Monthly Review Checklist</strong>, build the <strong>Financial Package</strong> (Excel), write the <strong>Cover Memo</strong> (Word), present with the <strong>Monthly Review Deck</strong> (PowerPoint)</li>
+    <li><strong>Every quarter</strong> → You run the <strong>QBR</strong> using the report (Word) and deck (PowerPoint)</li>
+    <li><strong>Always</strong> → Track leads in the <strong>Pipeline Tracker</strong> (Excel), follow up using the <strong>Follow-Up Cadence</strong>, nurture referral partners</li>
+  </ol>
+</div>
+
+<div class="toc">
+  <h3>Jump To:</h3>
+  <a href="#client-systems">📋 Client Systems (15 files)</a>
+  <a href="#monthly-delivery">📦 Monthly Delivery (13 files)</a>
+  <a href="#crm">📈 CRM & Pipeline (8 files)</a>
+  <a href="#excel">📊 Excel Templates (5 files)</a>
+  <a href="#word">📄 Word Templates (4 files)</a>
+  <a href="#powerpoint">🖥️ PowerPoint Decks (3 files)</a>
+  <a href="#brand">🎨 Brand Assets (3 files)</a>
+  <a href="#guides">📚 Guides (4 files)</a>
+</div>
+
+<!-- CLIENT SYSTEMS -->
+<div class="folder" id="client-systems">
+  <div class="folder-header">
+    <span class="emoji">📋</span>
+    <h2>Client Systems — Getting Clients From "Hello" to "Signed"</h2>
+  </div>
+
+  <div class="section-note">These files cover everything from the first phone call to the signed engagement letter. This is your sales infrastructure.</div>
+
+  <div class="file">
+    <h3>discovery-call-script.md</h3>
+    <div class="when">Use: Every discovery call</div>
+    <p>Your 45-minute conversation framework. Not a script you read from — a structure that keeps you on track. Includes:</p>
+    <ul>
+      <li>Pre-call prep checklist (what to look up about them)</li>
+      <li>Opening line that establishes credibility without pitching</li>
+      <li>7 core questions that uncover their real pain</li>
+      <li>How to transition from diagnosis to solution</li>
+      <li>Closing language that moves to proposal</li>
+      <li>Red flags that tell you they're NOT your client</li>
+    </ul>
+  </div>
+
+  <div class="file">
+    <h3>proposal-template.md</h3>
+    <div class="when">Use: Within 24 hours after every discovery call</div>
+    <p>One-page proposal with fill-in-the-blank sections. Four versions (one per tier). Structure: The Situation (reflect their pain) → What I'll Do (specific deliverables) → How It Works (retainer details) → Investment (monthly fee) → Next Step. Designed to feel like you listened, not like a template.</p>
+  </div>
+
+  <div class="file">
+    <h3>engagement-letter-diagnostic.md</h3>
+    <div class="when">Use: When a new client signs at the $1,500/mo tier</div>
+    <p>60-day diagnostic engagement. Scope: financial assessment, gap analysis, cash flow snapshot, 2 strategy calls, written roadmap. Includes what's NOT included, payment terms (ACH auto-pay), scope creep clause ($250/hr for extras), confidentiality, and 30-day termination. <strong>Have your attorney review before first use.</strong></p>
+  </div>
+
+  <div class="file">
+    <h3>engagement-letter-essential.md</h3>
+    <div class="when">Use: $2,500/mo tier</div>
+    <p>Same legal structure as Diagnostic but scoped for ongoing Essential engagement — monthly close review, financial package, 1 strategy call/month, 48hr email SLA.</p>
+  </div>
+
+  <div class="file">
+    <h3>engagement-letter-growth.md</h3>
+    <div class="when">Use: $5,000/mo tier</div>
+    <p>Everything in Essential plus 13-month rolling forecast, KPI dashboard, 2 calls/month, ad hoc access.</p>
+  </div>
+
+  <div class="file">
+    <h3>engagement-letter-strategic.md</h3>
+    <div class="when">Use: $7,500–$10,000/mo tier</div>
+    <p>Full fractional CFO — weekly check-ins, cash flow modeling, lender/investor prep, same-day response.</p>
+  </div>
+
+  <div class="file">
+    <h3>onboarding-checklist.md</h3>
+    <div class="when">Use: Immediately after engagement letter is signed</div>
+    <p>14 items you need from every new client: QBO access, 12 months bank statements, 2 years tax returns, current financials, AR/AP aging, debt schedule, org chart, insurance summary, entity docs, top 3 financial goals, bookkeeper contact, key contracts. Plus a 4-week onboarding timeline (Week 1: collect → Week 2: assess → Week 3: first deliverable → Week 4: first strategy call).</p>
+  </div>
+
+  <div class="file">
+    <h3>welcome-email.md</h3>
+    <div class="when">Use: Same day the engagement letter is signed</div>
+    <p>Warm, professional email that sets expectations for the first 30 days. Confirms their tier, outlines what happens next, links to onboarding checklist, includes Calendly link for first strategy call, sets communication expectations.</p>
+  </div>
+
+  <div class="file">
+    <h3>follow-up-emails.md</h3>
+    <div class="when">Use: After every discovery call and proposal</div>
+    <p>Three email templates by temperature: Hot Lead (excited, send proposal, clear CTA), Warm Lead (lighter touch, no pressure), Not a Fit (graceful pass, offer referral). Plus the chase sequence: Day 3 check-in, Day 7 gentle nudge, Day 14 final follow-up. Each one sounds human, not templated.</p>
+  </div>
+
+  <div class="file">
+    <h3>client-folder-template.md</h3>
+    <div class="when">Use: When onboarding a new client — create this folder structure</div>
+    <p>Standardized folder structure for every client: 01-Onboarding, 02-Financial-Statements (Monthly/Annual), 03-Cash-Flow, 04-KPI-Dashboard, 05-Strategy-Calls/Notes, 06-Tax-Planning, 07-Correspondence, 08-Reports-Deliverables. Same structure every time = nothing gets lost.</p>
+  </div>
+
+  <div class="file">
+    <h3>pricing-reference.md</h3>
+    <div class="when">Use: Internal only — before every pricing conversation</div>
+    <p>Quick reference card with all 4 tiers, deliverables, ideal client for each, upsell triggers (when to suggest moving up), discount policy (don't — but annual prepay = 1 month free if forced), scope creep response scripts (exact phrases), and competitor pricing context.</p>
+  </div>
+
+  <div class="file">
+    <h3>calendly-links.md</h3>
+    <div class="when">Use: Quick reference anytime you need a booking link</div>
+    <p>All 5 Calendly meeting types with direct links. Free Intro Call (public), Discovery Session, Client Strategy Call, Quick Check-in, Referral Partner Coffee (all private/secret).</p>
+  </div>
+
+  <div class="file">
+    <h3>calendly-best-practices.md</h3>
+    <div class="when">Use: Reference doc — how to use each meeting type efficiently</div>
+    <p>When to send which link, how to batch calls, how to protect your time, upsell signals (client booking too many check-ins = needs higher tier), and the golden rule: no scheduling outside Calendly.</p>
+  </div>
+</div>
+
+<!-- MONTHLY DELIVERY -->
+<div class="folder" id="monthly-delivery">
+  <div class="folder-header">
+    <span class="emoji">📦</span>
+    <h2>Monthly Delivery — What Clients GET Each Month</h2>
+  </div>
+
+  <div class="section-note">This is your product. If this is dialed, clients stay forever and refer others. Every file here is something you use every single month for every single client.</div>
+
+  <div class="file">
+    <h3>monthly-review-checklist.md</h3>
+    <div class="when">Use: Week 2 of every month, for every client</div>
+    <p>Step-by-step checklist for reviewing a client's financials: verify reconciliation, review P&L (trends, margins, expenses), compare to prior month/year/budget, review balance sheet (cash, AR, AP, debt), check cash flow, calculate key ratios, update forecast, update KPI dashboard, prep talking points, flag urgent items.</p>
+  </div>
+
+  <div class="file">
+    <h3>financial-package-template.md</h3>
+    <div class="when">Use: Week 3 — this is what the client receives</div>
+    <p>The monthly deliverable structure: Cover memo (1 paragraph on what the numbers say), Executive Summary (3-5 bullets), P&L with commentary (not just numbers — what they MEAN), Balance Sheet highlights, Cash Flow snapshot, KPI scorecard vs targets, Cash flow forecast update, Action Items (specific, prioritized), Questions for the call.</p>
+  </div>
+
+  <div class="file">
+    <h3>strategy-call-agenda.md</h3>
+    <div class="when">Use: Week 4 — every strategy call follows this structure</div>
+    <p>45-minute agenda: Check-in (5 min), Financial review together (15 min), Deep dive on one strategic topic (15 min — examples: pricing, hiring, debt, expansion), Action items (5 min), Parking lot (5 min). Includes pre-call prep and post-call tasks.</p>
+  </div>
+
+  <div class="file">
+    <h3>call-summary-email.md</h3>
+    <div class="when">Use: Within 24 hours after every strategy call</div>
+    <p>Template: Date, key discussion points (3-5 bullets), decisions made, action items with owners and due dates, next call date. Quick to fill out, huge for client trust.</p>
+  </div>
+
+  <div class="file">
+    <h3>cash-flow-forecast-guide.md</h3>
+    <div class="when">Use: Reference — how to build and maintain the 13-month forecast</div>
+    <p>Complete guide for the rolling forecast: structure (months as columns, categories as rows), revenue by stream, COGS, fixed vs variable expenses, debt service, capex, distributions. How to update monthly (replace forecast with actuals, extend one month). Scenario toggles (best/base/worst). Red flag triggers.</p>
+  </div>
+
+  <div class="file">
+    <h3>quarterly-business-review.md</h3>
+    <div class="when">Use: Every 90 days — deeper strategic conversation</div>
+    <p>QBR template: Financial performance (quarter vs prior quarter vs prior year), progress against annual goals, cash flow trajectory, KPI trends (3-month view), strategic wins, areas of concern with recommended actions, next quarter priorities (top 3), 12-month outlook.</p>
+  </div>
+
+  <div class="file">
+    <h3>week-by-week-cadence.md</h3>
+    <div class="when">Use: Reference — your monthly rhythm for each client</div>
+    <p>Week 1: Books close, reconciliation. Week 2: You review, build package, update forecast. Week 3: Deliver package 48hrs before call. Week 4: Strategy call, summary email, action items. Includes notes on scaling with multiple clients (stagger close dates).</p>
+  </div>
+
+  <div class="file">
+    <h3>kpi-templates/ (5 files)</h3>
+    <div class="when">Use: When onboarding a client — pick the template for their industry</div>
+    <p>Industry-specific KPI scorecards with definitions, formulas, and benchmarks:</p>
+    <ul>
+      <li><strong>Service Business:</strong> Revenue per employee, gross margin, CAC, LTV, utilization, churn</li>
+      <li><strong>Construction:</strong> Backlog, margin by job, bid-to-win, WIP vs billing, overhead rate</li>
+      <li><strong>Medical/Dental:</strong> Revenue per provider, collections rate, visit volume, overhead ratio, AR by payer</li>
+      <li><strong>Staffing:</strong> Gross margin per placement, fill rate, spread, time to fill, client concentration</li>
+      <li><strong>Franchise:</strong> Revenue per location, same-store growth, labor %, four-wall EBITDA, royalty burden</li>
+    </ul>
+  </div>
+</div>
+
+<!-- CRM -->
+<div class="folder" id="crm">
+  <div class="folder-header">
+    <span class="emoji">📈</span>
+    <h2>CRM & Pipeline — Track Every Lead, Never Drop a Ball</h2>
+  </div>
+
+  <div class="section-note">This is how you stay organized without a complex CRM. When you hit 15+ leads, migrate to HubSpot (free). Until then, this works.</div>
+
+  <div class="file">
+    <h3>pipeline-tracker.md</h3>
+    <div class="when">Use: Daily — update as leads move through stages</div>
+    <p>9 pipeline stages from Lead In to Won/Lost. Active pipeline table with columns: Name, Company, Industry, Revenue Est., Source, Stage, Last Contact, Next Action, Notes. Plus a Lost/Passed tracker with reasons.</p>
+  </div>
+
+  <div class="file">
+    <h3>follow-up-cadence.md</h3>
+    <div class="when">Use: Every time you need to follow up with anyone</div>
+    <p>Exact messages for every stage: after connection accepted (Day 0), Day 3 value-add, Day 7-14 soft engagement, Day 21-30 soft ask for call. Post-proposal: Day 3, 7, 14 chase. Post-lost: graceful exit + 90-day revisit. Each touchpoint has 2-3 message variations so you don't sound robotic.</p>
+  </div>
+
+  <div class="file">
+    <h3>referral-partner-tracker.md</h3>
+    <div class="when">Use: Weekly — track referral relationships</div>
+    <p>Tracking table: Name, Company, Type (Attorney/Banker/Coach/CPA/Bookkeeper/Insurance/EOS), Last Contact, Referrals Sent, Referrals Received, Relationship Temperature, Next Action. Plus nurture cadence: monthly LinkedIn engagement, quarterly coffee, thank-you notes on wins.</p>
+  </div>
+
+  <div class="file">
+    <h3>weekly-pipeline-review.md</h3>
+    <div class="when">Use: Every Monday morning — 5 minutes</div>
+    <p>Quick checklist: How many leads came in? Where are deals stuck? Outstanding proposals over 7 days? Did I reach out to 2 referral partners? Pipeline value? Weekly goal setting.</p>
+  </div>
+
+  <div class="file">
+    <h3>lead-scoring-guide.md</h3>
+    <div class="when">Use: When evaluating any new lead</div>
+    <p>A-Leads (pursue immediately): $1-10M service business, CO-based, owner-operated, has bookkeeper, expressed pain, came from referral. B-Leads (nurture): right size wrong timing or geography. C-Leads (pass): pre-revenue, hourly only, price-shopping, red flags.</p>
+  </div>
+
+  <div class="file">
+    <h3>networking-event-playbook.md</h3>
+    <div class="when">Use: Before every BNI, Chamber, or networking event</div>
+    <p>Before: research attendees, prep 3 conversation starters. Your 10-second intro. Questions to ask others. After: same-day LinkedIn connect, 48-hour follow-up email, 1-week coffee invite for top connections. What NOT to do: don't pitch, don't hand out cards unprompted, listen 80%.</p>
+  </div>
+
+  <div class="file">
+    <h3>email-newsletter-template.md</h3>
+    <div class="when">Use: When ready to launch monthly newsletter (not urgent)</div>
+    <p>Monthly "CFO Insight" template: one insight (2-3 paragraphs), one client story (anonymized), one question to think about, CTA to book a call. Subject line formulas, tone guide, and launch checklist. Start with ConvertKit or Mailchimp free tier.</p>
+  </div>
+</div>
+
+<!-- EXCEL -->
+<div class="folder" id="excel">
+  <div class="folder-header">
+    <span class="emoji">📊</span>
+    <h2>Excel Templates — QBO Data In, Analysis Out</h2>
+  </div>
+
+  <div class="section-note">Every Excel file has 3 types of tabs: INSTRUCTIONS (which QBO report to export), DATA_INPUT (paste here), and OUTPUT tabs (formatted analysis with formulas). Paste QBO data → everything calculates automatically.</div>
+
+  <div class="file">
+    <h3>cash-flow-forecast.xlsx</h3>
+    <div class="when">Use: Monthly for every Growth+ client — and during Diagnostic assessments</div>
+    <p>13-month rolling cash flow forecast. Paste QBO P&L by month into DATA_INPUT. FORECAST tab auto-builds: Revenue → COGS → Gross Profit → OpEx → Net Income → Cash Adjustments (AR/AP changes, debt, distributions, capex) → Net Cash Flow → Running Cash Balance. Month 13 forecasts using trailing 3-month average. Conditional formatting turns red if cash goes negative. Includes Best/Base/Worst scenario section.</p>
+  </div>
+
+  <div class="file">
+    <h3>monthly-financial-package.xlsx</h3>
+    <div class="when">Use: Monthly for every client — this is the core deliverable</div>
+    <p>Paste QBO P&L and Balance Sheet into input tabs. Auto-generates: Executive Summary (revenue, margin, net income, cash — all with MoM and YoY comparisons + conditional formatting), full P&L Analysis (10 columns: current, prior month, $ variance, % variance, prior year, YoY variance, YTD, budget, budget variance), Balance Sheet Analysis, and KPI Scorecard (10 metrics with status indicators).</p>
+  </div>
+
+  <div class="file">
+    <h3>kpi-dashboard.xlsx</h3>
+    <div class="when">Use: Monthly — maintain for Growth+ clients</div>
+    <p>Multi-industry KPI dashboard. Paste QBO data (P&L, BS, AR/AP aging). SETTINGS tab lets you set industry, employee count, and RAG thresholds. DASHBOARD auto-calculates 11 KPIs with Red/Amber/Green status: Revenue Growth, Gross Margin %, Net Margin %, OpEx Ratio, Current Ratio, Quick Ratio, AR Days, AP Days, Cash Conversion Cycle, Revenue per Employee, Overhead Rate.</p>
+  </div>
+
+  <div class="file">
+    <h3>pipeline-tracker.xlsx</h3>
+    <div class="when">Use: Daily — your CRM until you set up HubSpot</div>
+    <p>PIPELINE tab with dropdown data validation for Stage (9 options), Source (8 options), Industry. Conditional formatting by stage. DASHBOARD tab with COUNTIFS/SUMIFS: pipeline by stage, by source, conversion rates, won/lost this month, average deal size. REFERRAL_PARTNERS tab for tracking referral relationships.</p>
+  </div>
+
+  <div class="file">
+    <h3>pricing-calculator.xlsx</h3>
+    <div class="when">Use: Before sending any proposal — sanity check your pricing</div>
+    <p>Input estimated hours by activity (close review, package prep, calls, forecasting, KPIs, ad hoc, lender prep). Auto-calculates: total hours, effective hourly rate at each tier, recommended tier (IF formula), profitability analysis (revenue minus hours × your internal rate). COMPARISON tab shows all 4 tiers side-by-side with break-even analysis.</p>
+  </div>
+</div>
+
+<!-- WORD -->
+<div class="folder" id="word">
+  <div class="folder-header">
+    <span class="emoji">📄</span>
+    <h2>Word Templates — Client-Facing Documents</h2>
+  </div>
+
+  <div class="section-note">All branded navy+gold. Fill in the [brackets], save with client name, send. These are the documents that make you look like a firm, not a freelancer.</div>
+
+  <div class="file">
+    <h3>proposal-template.docx</h3>
+    <div class="when">Use: Within 24 hours after every discovery call</div>
+    <p>One-page branded proposal. Fill in: client name, date, situation summary (2-3 sentences reflecting their pain), specific deliverables, tier and pricing, next step. Designed to fit on one page and feel premium.</p>
+  </div>
+
+  <div class="file">
+    <h3>engagement-letter.docx</h3>
+    <div class="when">Use: When a client says yes to your proposal</div>
+    <p>Full legal engagement letter with 7 sections: Scope of Services (all 4 tier versions included — delete the ones you don't need), Services NOT Included, Fees and Payment (ACH auto-pay), Scope Changes ($250/hr for extras), Confidentiality, Term and Termination (30-day notice), Limitation of Liability. Signature blocks for both parties. <strong>Attorney review required before first use.</strong></p>
+  </div>
+
+  <div class="file">
+    <h3>monthly-cover-memo.docx</h3>
+    <div class="when">Use: Monthly — send with the financial package</div>
+    <p>Narrative cover letter: "What Your Numbers Are Telling Us" (2-3 paragraphs), Key Highlights (revenue, margin, income, cash, AR with directional indicators), Action Items (specific with owners and deadlines), Looking Ahead (what's coming next month). This is what makes your deliverable feel human, not just a spreadsheet dump.</p>
+  </div>
+
+  <div class="file">
+    <h3>qbr-report.docx</h3>
+    <div class="when">Use: Every 90 days — accompanies the QBR presentation</div>
+    <p>Written quarterly report: Executive Summary, Financial Performance table (quarter vs prior quarter vs prior year), Progress Against Annual Goals table, Cash Flow Trajectory narrative, KPI Trends, Strategic Wins, Areas of Concern with recommended actions, Next Quarter Priorities, 12-Month Outlook.</p>
+  </div>
+</div>
+
+<!-- POWERPOINT -->
+<div class="folder" id="powerpoint">
+  <div class="folder-header">
+    <span class="emoji">🖥️</span>
+    <h2>PowerPoint Decks — Present Like a CFO</h2>
+  </div>
+
+  <div class="section-note">Navy+gold branded slides. Fill in the data, present on the strategy call or in person. Clients see polished slides = they feel like they're getting $10K/month value.</div>
+
+  <div class="file">
+    <h3>monthly-review-deck.pptx</h3>
+    <div class="when">Use: Monthly strategy calls (especially Growth+ clients)</div>
+    <p>9 slides: Title → Executive Summary (4 metric boxes) → Revenue Trend → P&L Summary → Cash Flow → KPI Scorecard → Key Observations → Action Items → Q&A. Fill in the numbers, present on the call. Takes 15 minutes of the 45-minute strategy call.</p>
+  </div>
+
+  <div class="file">
+    <h3>qbr-deck.pptx</h3>
+    <div class="when">Use: Every 90 days</div>
+    <p>13 slides: Title → Quarter at a Glance (6 metrics) → Financial Performance → Revenue Trend → Profitability → Cash Flow → KPI Dashboard → Goals Progress → Wins → Concerns → Next Quarter Priorities → 12-Month Outlook → Q&A. The quarterly "wow" moment for your clients.</p>
+  </div>
+
+  <div class="file">
+    <h3>firm-overview-deck.pptx</h3>
+    <div class="when">Use: Discovery calls, referral partner meetings, networking events</div>
+    <p>9 slides: Title → The Problem (flying blind on financials) → The Solution (fractional CFO who's also an operator) → Why Alliance CFO (your differentiator) → Who We Serve → What You Get (4 tiers) → How It Works (3 steps) → Testimonial (Zach, Nexeris) → Let's Talk (CTA with Calendly link). This is your pitch deck — use it on screen during discovery calls or send it to referral partners.</p>
+  </div>
+</div>
+
+<!-- BRAND -->
+<div class="folder" id="brand">
+  <div class="folder-header">
+    <span class="emoji">🎨</span>
+    <h2>Brand Assets</h2>
+  </div>
+
+  <div class="file">
+    <h3>logo.svg</h3>
+    <div class="when">Use: Website header, email signature, proposals, LinkedIn banner</div>
+    <p>Full logo — "A" monogram (navy triangle + gold crossbar) with "ALLIANCE" wordmark and "CFO SOLUTIONS" beneath. Scalable vector, looks sharp at any size.</p>
+  </div>
+
+  <div class="file">
+    <h3>favicon.svg</h3>
+    <div class="when">Use: Browser tab icon</div>
+    <p>Navy rounded square with white "A" and gold crossbar. Already embedded in your live website.</p>
+  </div>
+
+  <div class="file">
+    <h3>logo-preview.html</h3>
+    <div class="when">Use: Reference — see all brand assets in one view</div>
+    <p>Preview page showing logo on light/dark backgrounds, favicon at multiple sizes, email signature mockup, and color swatches.</p>
+  </div>
+</div>
+
+<!-- GUIDES -->
+<div class="folder" id="guides">
+  <div class="folder-header">
+    <span class="emoji">📚</span>
+    <h2>Guides & Reference</h2>
+  </div>
+
+  <div class="file">
+    <h3>alliance-cfo-operating-system.md</h3>
+    <div class="when">Use: Your master strategy document — review monthly</div>
+    <p>The full firm operating system: brand identity, platform consistency, website spec, CRM setup, scheduling, legal infrastructure, sales playbook, client boundaries, marketing plan, tech stack, VA scaling milestone, implementation checklist with revenue milestones.</p>
+  </div>
+
+  <div class="file">
+    <h3>firm-guide.html</h3>
+    <div class="when">Use: Interactive overview of your entire firm — the "owner's manual"</div>
+    <p>Visual guide with client journey flowchart, pricing cards, pipeline visualization, file directory, and next-steps checklist. Open it anytime you need to orient yourself.</p>
+  </div>
+
+  <div class="file">
+    <h3>sales-navigator-60-connections.md</h3>
+    <div class="when">Use: This week — send 5-10 connection requests per day</div>
+    <p>60 LinkedIn targets with profiles and warm intro messages. 27 potential clients (HVAC, construction, staffing, property management, franchise, vet practices), 19 referral partners (EOS implementers, Vistage chairs, coaches, advisors), 14 high-visibility peers.</p>
+  </div>
+
+  <div class="file">
+    <h3>calendly-best-practices.html</h3>
+    <div class="when">Use: Reference — how to run your calendar efficiently</div>
+    <p>Full playbook for all 5 meeting types with when/how to use each, calendar rules, and the "when to send which link" quick reference table.</p>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
