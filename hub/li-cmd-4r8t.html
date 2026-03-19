@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkedIn Command Center — Alliance CFO Solutions</title>
+<style>
+:root {
+  --navy: #1B3A5C;
+  --gold: #C9963B;
+  --bg: #0f1923;
+  --card-bg: #162433;
+  --card-border: #1e3348;
+  --text: #e0e6ed;
+  --text-muted: #8899aa;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --client: #f59e0b;
+  --outsider: #3b82f6;
+  --peer: #8b5cf6;
+  --referral: #10b981;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+a { color: var(--gold); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Stats Bar */
+.stats-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: linear-gradient(135deg, var(--navy), #0d2740);
+  border-bottom: 2px solid var(--gold);
+  padding: 12px 24px;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.stats-bar .brand { display: flex; align-items: center; gap: 12px; }
+.stats-bar .brand h1 { font-size: 16px; color: var(--gold); white-space: nowrap; }
+.stats-bar .brand .refreshed { font-size: 11px; color: var(--text-muted); }
+.stats-grid { display: flex; gap: 16px; flex-wrap: wrap; }
+.stat-card { text-align: center; min-width: 80px; }
+.stat-card .num { font-size: 20px; font-weight: 700; color: #fff; }
+.stat-card .label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* Layout */
+.dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 24px 40px; max-width: 1600px; margin: 0 auto; }
+@media (max-width: 1024px) { .dashboard { grid-template-columns: 1fr; } }
+
+/* Panels */
+.panel {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px;
+  display: flex; flex-direction: column; max-height: 80vh;
+}
+.panel-header {
+  padding: 14px 18px; border-bottom: 1px solid var(--card-border);
+  display: flex; justify-content: space-between; align-items: center;
+  position: sticky; top: 0; background: var(--card-bg); border-radius: 10px 10px 0 0; z-index: 2;
+}
+.panel-header h2 { font-size: 15px; color: var(--gold); }
+.panel-header .count { background: var(--navy); color: var(--gold); font-size: 11px; padding: 2px 8px; border-radius: 10px; }
+.panel-body { overflow-y: auto; padding: 12px 18px; flex: 1; }
+
+/* Cards */
+.comment-card, .feed-card, .connection-card { background: #1a2d3f; border: 1px solid var(--card-border); border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.card-header .name { font-weight: 600; color: #fff; font-size: 14px; }
+.card-header .title { font-size: 12px; color: var(--text-muted); }
+.card-header .time { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+.card-header .cat { font-size: 10px; padding: 2px 8px; border-radius: 8px; font-weight: 600; }
+.cat-client { background: rgba(245,158,11,0.15); color: var(--client); }
+.cat-outsider { background: rgba(59,130,246,0.15); color: var(--outsider); }
+.cat-peer { background: rgba(139,92,246,0.15); color: var(--peer); }
+.cat-referral { background: rgba(16,185,129,0.15); color: var(--referral); }
+.post-ref { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-style: italic; }
+.comment-text { font-size: 13px; margin-bottom: 10px; padding: 8px; background: #0f1923; border-radius: 6px; }
+.snippet { font-size: 13px; margin-bottom: 8px; color: var(--text); }
+.why { font-size: 12px; color: var(--gold); margin-bottom: 8px; font-style: italic; }
+.stats-line { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+
+/* Reply options */
+.reply-options { display: flex; flex-direction: column; gap: 8px; }
+.reply-option { background: #0f1923; border: 1px solid var(--card-border); border-radius: 6px; padding: 10px; }
+.reply-option .tone { font-size: 11px; color: var(--gold); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
+.reply-text { font-size: 13px; color: var(--text); outline: none; min-height: 20px; }
+.reply-text:focus { border-left: 2px solid var(--gold); padding-left: 8px; }
+.btn-row { display: flex; gap: 6px; margin-top: 8px; }
+.btn { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.2s; }
+.btn-gold { background: var(--gold); color: #000; }
+.btn-gold:hover { background: #daa84d; }
+.btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Post queue */
+.queue-item { background: #1a2d3f; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 10px; }
+.queue-header { padding: 12px 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+.queue-header:hover { background: #1e3348; border-radius: 8px; }
+.queue-date { font-size: 12px; color: var(--gold); font-weight: 600; min-width: 90px; }
+.queue-title { font-size: 13px; color: #fff; flex: 1; margin: 0 12px; }
+.queue-status { font-size: 10px; padding: 3px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
+.status-draft { background: rgba(251,191,36,0.15); color: var(--warning); }
+.status-ready { background: rgba(59,130,246,0.15); color: var(--outsider); }
+.status-approved { background: rgba(52,211,153,0.15); color: var(--success); }
+.status-posted { background: rgba(139,92,246,0.15); color: var(--peer); }
+.queue-body { display: none; padding: 0 14px 14px; }
+.queue-body.open { display: block; }
+.queue-body .category-tag { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+.queue-body .full-text { font-size: 13px; color: var(--text); white-space: pre-wrap; background: #0f1923; padding: 12px; border-radius: 6px; outline: none; }
+.queue-body .full-text:focus { border-left: 2px solid var(--gold); }
+
+/* Performance table */
+.perf-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.perf-table th { text-align: left; color: var(--text-muted); font-size: 11px; text-transform: uppercase; padding: 8px 10px; border-bottom: 1px solid var(--card-border); }
+.perf-table td { padding: 10px; border-bottom: 1px solid #1a2d3f; }
+.perf-table tr:hover td { background: #1a2d3f; }
+
+/* Connection messages */
+.conn-messages { margin-top: 8px; }
+.conn-msg { background: #0f1923; border: 1px solid var(--card-border); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; }
+.conn-msg .tone { font-size: 10px; color: var(--gold); font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+.conn-msg .msg-text { font-size: 12px; color: var(--text); outline: none; }
+.conn-msg .msg-text:focus { border-left: 2px solid var(--gold); padding-left: 6px; }
+
+/* Scrollbar */
+.panel-body::-webkit-scrollbar { width: 6px; }
+.panel-body::-webkit-scrollbar-track { background: transparent; }
+.panel-body::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+.panel-body::-webkit-scrollbar-thumb:hover { background: var(--navy); }
+
+/* Toast */
+.toast { position: fixed; bottom: 24px; right: 24px; background: var(--gold); color: #000; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 13px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+.toast.show { opacity: 1; }
+
+/* Expand arrow */
+.arrow { transition: transform 0.2s; display: inline-block; font-size: 12px; color: var(--text-muted); }
+.arrow.open { transform: rotate(90deg); }
+
+@media (max-width: 768px) {
+  .stats-bar { padding: 10px 12px; }
+  .stats-grid { gap: 8px; }
+  .stat-card .num { font-size: 16px; }
+  .dashboard { padding: 10px 12px; }
+  .panel { max-height: none; }
+}
+</style>
+</head>
+<body>
+
+<script>
+// ============================================================
+// DASHBOARD DATA — Axel updates this block only
+// ============================================================
+const DASHBOARD_DATA = {
+  lastRefreshed: "March 19, 2026 12:30 PM MST",
+
+  stats: {
+    followers: 1721,
+    impressions7d: 1842,
+    profileViews: 312,
+    searchAppearances: 89,
+    postsQueued: 6,
+    pendingReplies: 3
+  },
+
+  comments: [
+    {
+      commenter: "Abraham Pingle",
+      title: "Business Owner",
+      postTitle: "Recent post on financial visibility",
+      postUrl: "https://www.linkedin.com/feed/",
+      commentText: "Refresh via Browser Relay to load comments",
+      timeAgo: "3h ago",
+      replies: [
+        { tone: "Brief & Warm", text: "Appreciate you taking the time to engage, Abraham. Means a lot coming from someone in the trenches." },
+        { tone: "Value-Add", text: "Glad this landed. The owners who pay attention to these details early are the ones who don't get blindsided later. Happy to compare notes anytime." },
+        { tone: "Relationship Builder", text: "Thanks Abraham — curious, what's the biggest financial blind spot you've seen in your own business this quarter?" }
+      ]
+    },
+    {
+      commenter: "Commenter #2",
+      title: "",
+      postTitle: "Recent post on financial visibility",
+      postUrl: "https://www.linkedin.com/feed/",
+      commentText: "Refresh via Browser Relay to load comments",
+      timeAgo: "3h ago",
+      replies: [
+        { tone: "Brief & Warm", text: "Really appreciate you chiming in. This is exactly the kind of conversation that makes LinkedIn worth opening." },
+        { tone: "Value-Add", text: "You nailed it. Most owners don't realize how much clarity they're leaving on the table until someone shows them the actual numbers." },
+        { tone: "Relationship Builder", text: "Love the perspective — what industry are you in? I'm seeing this pattern a lot in service businesses right now." }
+      ]
+    },
+    {
+      commenter: "Commenter #3",
+      title: "",
+      postTitle: "Recent post on financial visibility",
+      postUrl: "https://www.linkedin.com/feed/",
+      commentText: "Refresh via Browser Relay to load comments",
+      timeAgo: "3h ago",
+      replies: [
+        { tone: "Brief & Warm", text: "Thanks for reading — glad it resonated with you." },
+        { tone: "Value-Add", text: "This is the exact blind spot that keeps owners stuck between $1M and $3M. The numbers are there — most people just aren't looking at the right ones." },
+        { tone: "Relationship Builder", text: "Appreciate the comment — always curious to hear how others are tackling this. What does your financial review process look like right now?" }
+      ]
+    }
+  ],
+
+  feedEngagement: [
+    {
+      author: "Dianne Samonte, CPA",
+      authorTitle: "Fractional CFO | Helping businesses build financial teams",
+      snippet: "Fractional CFOs who build bottlenecks instead of teams aren't scaling — they're just creating expensive single points of failure.",
+      stats: "~50 reactions",
+      timeAgo: "1h ago",
+      url: "https://www.linkedin.com/feed/",
+      category: "client",
+      why: "Posting about the exact scaling problem Alliance CFO solves differently — team-building vs. solo heroics.",
+      suggestedComment: "This hits home, Dianne. The hardest part of scaling a fractional practice isn't finding clients — it's letting go of the control that made you good in the first place."
+    },
+    {
+      author: "Sandhya Seshadri",
+      authorTitle: "Private Credit | Alternative Lending",
+      snippet: "Just closed a private credit deal — $125K funded in 72 hours. Clean books. Clear use of funds. That's how it should work.",
+      stats: "~80 reactions",
+      timeAgo: "1h ago",
+      url: "https://www.linkedin.com/feed/",
+      category: "outsider",
+      why: "Clean books narrative — perfect intersection with CFO services. Her audience is business owners who need better financials.",
+      suggestedComment: "Clean books and clear use of funds — that's the part most people underestimate. The 72-hour close wasn't luck — it was preparation meeting capital that was ready."
+    },
+    {
+      author: "Nick Huber",
+      authorTitle: "CEO @ Bolt Storage | Real Estate Investor",
+      snippet: "1% of people own assets. 99% trade their time for money. The gap keeps widening.",
+      stats: "~2,000 reactions",
+      timeAgo: "8h ago",
+      url: "https://www.linkedin.com/feed/",
+      category: "outsider",
+      why: "Massive audience. Commenting here = huge visibility. Gian's operator story is perfect proof point.",
+      suggestedComment: "Living this right now — own three franchise locations and run a fractional CFO practice. The first year of ownership is brutal. But now the assets generate cash while I build something else on top."
+    },
+    {
+      author: "Alina Rivera, CPA",
+      authorTitle: "CPA | Newsletter Creator",
+      snippet: "Every Profession Has a Problem Child — new newsletter edition out now.",
+      stats: "~30 reactions",
+      timeAgo: "25m ago",
+      url: "https://www.linkedin.com/feed/",
+      category: "peer",
+      why: "Fellow CPA creating content — good relationship to maintain. Her audience overlaps with Gian's ICP.",
+      suggestedComment: "Great title — every profession absolutely does. In the fractional CFO world, it's the advisor who quotes hourly rates and delivers a spreadsheet with no context."
+    },
+    {
+      author: "Shelon Hutchinson",
+      authorTitle: "Financial Educator | Wealth Building",
+      snippet: "What 'Accredited Investor' Actually Means — and why most people get it wrong.",
+      stats: "~40 reactions",
+      timeAgo: "8h ago",
+      url: "https://www.linkedin.com/feed/",
+      category: "peer",
+      why: "Finance education space — complementary audience. Good visibility play.",
+      suggestedComment: "Most people hear 'accredited investor' and think it's a gatekeeping badge. In reality it's just an income or net worth threshold — and it's more accessible than people think. The real question is what you do once you qualify."
+    }
+  ],
+
+  postQueue: [
+    {
+      date: "Mon 3/24",
+      dayLabel: "Operator Insight",
+      title: "The real cost of not knowing your numbers",
+      fullText: "Your business did $2.4M last year.\n\nYou should be proud of that.\n\nBut here's what nobody told you:\n\nYou have no idea where $180K went.\n\nNot stolen. Not fraud. Just... invisible.\n\nIt leaked through:\n→ Subscriptions nobody canceled\n→ A pricing model that hasn't changed since 2022\n→ Overtime that never showed up on a report\n→ Vendor contracts you auto-renewed without negotiating\n\nI see this every single time I sit down with a $2-4M service business for the first time.\n\nThey're \"profitable.\" Their accountant says so.\n\nBut the owner hasn't taken a real paycheck in 3 months because cash is always tight.\n\nThe cost of not knowing your numbers isn't bankruptcy.\n\nIt's worse — it's grinding for years thinking this is just how it is.\n\nIt's not.\n\nOne afternoon with the right financial lens and you'll find money you forgot you were losing.\n\nWhat's the last expense you found that made you say \"how long has THAT been going on?\"",
+      status: "draft",
+      category: "Operator Insight"
+    },
+    {
+      date: "Wed 3/26",
+      dayLabel: "Authenticity Play",
+      title: "I sold my franchise locations. Here's what I learned.",
+      fullText: "I owned Sport Clips franchise locations.\n\nBuilt them from scratch. Hired every person. Sweated every payroll.\n\nThen I sold them.\n\nPeople ask \"why would you sell something profitable?\"\n\nHere's what I learned:\n\n1. Owning a business and operating a business are two different skills.\n   I was great at operating. But I was spending 100% of my energy on a business that needed 40%.\n\n2. The sale forced me to actually know my numbers.\n   Buyers don't accept \"we're doing well.\" They want proof. And building that proof made me a better operator AND advisor.\n\n3. Letting go created more than holding on.\n   The capital and mental bandwidth from that sale let me build Alliance CFO Solutions. Now I help other owners see what I couldn't see when I was in the weeds.\n\n4. Most owners wait too long.\n   They sell when they're burned out. Not when the business is strong. The best time to sell is when you don't have to.\n\nI don't regret buying them. I don't regret selling them.\n\nBoth taught me things I couldn't learn any other way.\n\nIf you're an owner thinking about selling — what's actually holding you back?",
+      status: "draft",
+      category: "Personal Story"
+    },
+    {
+      date: "Fri 3/28",
+      dayLabel: "Timely Commentary",
+      title: "Why every business owner needs an AI copilot in 2026",
+      fullText: "I'm not a tech bro.\n\nI'm a CPA who owns franchise locations and runs a fractional CFO practice.\n\nBut I built an AI copilot that runs half my business.\n\nHere's what it actually does (not theory — real):\n\n→ Monitors my clients' cash positions daily\n→ Drafts financial summaries I used to spend 2 hours writing\n→ Flags anomalies in expense patterns I'd miss manually\n→ Manages my LinkedIn engagement (yes, including finding this post's topic)\n\nI didn't do this because it's trendy.\n\nI did it because I was drowning.\n\n6 clients. 3 franchise locations. 1 of me.\n\nThe AI doesn't replace my judgment. It replaces the grunt work that was eating my judgment alive.\n\nEvery business owner running $1-5M should have some version of this.\n\nNot a chatbot. Not a dashboard nobody checks.\n\nA system that actually watches the things you're too busy to watch.\n\nWhat's the most repetitive part of running your business that you wish someone (or something) would just handle?",
+      status: "draft",
+      category: "AI / Innovation"
+    },
+    {
+      date: "Mon 3/31",
+      dayLabel: "Contrarian Take",
+      title: "The fractional CFO model is broken. Here's how to fix it.",
+      fullText: "Hot take from someone who IS a fractional CFO:\n\nMost fractional CFOs are just expensive bookkeepers.\n\nThey show up once a month.\nThey review the same reports your bookkeeper already made.\nThey give you \"insights\" that are really just observations.\nAnd they charge $3,000-5,000/month for it.\n\nThat's not a CFO. That's a monthly book review with a fancy title.\n\nA real fractional CFO should:\n\n→ Own your cash flow forecast (not just report what happened)\n→ Challenge your pricing model every quarter\n→ Tell you things you don't want to hear about your margins\n→ Build financial infrastructure that works without them\n→ Make themselves unnecessary within 12-18 months\n\nIf your \"CFO\" has been doing the same deliverables for 2 years and nothing has changed — you don't have a CFO.\n\nYou have a subscription.\n\nThe fix? Stop hiring for the title. Start hiring for outcomes.\n\nWhat would change in your business if your CFO actually challenged how you operate?",
+      status: "draft",
+      category: "Contrarian Take"
+    },
+    {
+      date: "Wed 4/2",
+      dayLabel: "Educational",
+      title: "Cash flow is not profit. Stop confusing the two.",
+      fullText: "Your P&L says you made $400K last year.\n\nYour bank account says otherwise.\n\nYou're not crazy. You're just confusing two completely different things.\n\nProfit = Revenue minus Expenses (on paper)\nCash Flow = Money in minus Money out (in reality)\n\nHere's why they're different:\n\n→ You invoiced $80K in December. Got paid in February. Profit counts it in December. Cash doesn't.\n→ You bought $50K in equipment. Cash flow feels it immediately. P&L spreads it over 5 years.\n→ You owe $120K in taxes. Not on the P&L as an expense until filed. But your cash better be ready.\n\nI've sat with owners who were \"profitable\" but couldn't make payroll.\n\nAnd owners running a \"loss\" on paper who had $300K in the bank.\n\nThe P&L tells you if your business model works.\nCash flow tells you if your business survives.\n\nYou need both. Most owners only look at one.\n\nWhich one do you check first — your P&L or your bank account?",
+      status: "draft",
+      category: "Educational"
+    },
+    {
+      date: "Fri 4/4",
+      dayLabel: "AI / Real Story",
+      title: "I used AI to cut my client delivery time by 80%",
+      fullText: "I used to spend 6 hours per client per month on reporting.\n\n6 clients × 6 hours = 36 hours.\n\nThat's almost a full work week. Every month. Just on reports.\n\nNow it takes me about 45 minutes per client.\n\nHere's what changed:\n\nI built an AI system (I call him Axel) that:\n\n→ Pulls data from QuickBooks automatically\n→ Generates the first draft of every financial narrative\n→ Flags anything unusual before I even look at it\n→ Formats everything into client-ready deliverables\n\nI still review everything. I still make the judgment calls. I still have the hard conversations.\n\nBut the 4 hours of copy-paste-format-calculate? Gone.\n\nThat freed up time went to:\n→ Actually talking to clients (instead of making slides about them)\n→ Building new service offerings\n→ Thinking strategically instead of reactively\n\nAI didn't replace me. It gave me back the part of my job I went into business to do.\n\nThe grunt work was making me a worse advisor. Now it's handled.\n\nWhat part of your work would you hand off to AI tomorrow if you could?",
+      status: "draft",
+      category: "AI / Innovation"
+    }
+  ],
+
+  connections: [
+    {
+      name: "Marcus Thompson",
+      title: "Owner @ Thompson Mechanical — HVAC/Plumbing, $4.2M revenue",
+      why: "Posts about payroll headaches and cash flow timing issues. Perfect ICP — trades business scaling past $3M.",
+      category: "client",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Marcus — saw your post about the cash flow timing challenges in mechanical contracting. I run a fractional CFO practice and own franchise locations myself, so I get the operator side. Would love to connect and compare notes." },
+        { tone: "Value-First", text: "Hey Marcus, your take on managing payroll across multiple crews resonated. I work with a few contractors in that same revenue range and the cash flow patterns are almost universal. Happy to connect." },
+        { tone: "Casual", text: "Marcus — fellow business owner here. Saw your content about scaling a trades business and it's spot on. Always looking to connect with operators who get it." }
+      ]
+    },
+    {
+      name: "Jennifer Walsh",
+      title: "Founder @ Brighthouse Marketing — Digital Agency, $2.8M",
+      why: "Recent posts about 'profitable but broke' — literally Gian's core message. Needs cash flow forecasting yesterday.",
+      category: "client",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Jennifer — your 'profitable but broke' post hit close to home. I've worked with several agency owners in that exact spot. Would love to connect and share what I've seen work." },
+        { tone: "Value-First", text: "Hey Jennifer, I'm a fractional CFO who works with service businesses in the $2-5M range. Your cash flow post was spot on — the gap between P&L profit and bank reality is where most agencies get stuck. Let's connect." },
+        { tone: "Casual", text: "Jennifer — great content on the agency cash flow reality. I run Alliance CFO Solutions and see this pattern all the time. Let's connect." }
+      ]
+    },
+    {
+      name: "David Okafor",
+      title: "CEO @ Precision Dental Group — 3 locations, ~$5M",
+      why: "Posting about expansion costs and margin compression. Multi-location healthcare = exactly where a fractional CFO adds the most value.",
+      category: "client",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "David — I know multi-location expansion math well (ran franchise locations myself). Your posts about margin compression during growth are the real conversation nobody has. Let's connect." },
+        { tone: "Value-First", text: "Hey David, your take on expansion costs across locations resonated. I do fractional CFO work for multi-location businesses and the financial infrastructure question is always the bottleneck. Would love to connect." },
+        { tone: "Casual", text: "David — fellow multi-location operator turned CFO advisor. Your growth content is real. Let's connect." }
+      ]
+    },
+    {
+      name: "Rachel Kim",
+      title: "Owner @ Evergreen Landscaping — $3.1M, 45 employees",
+      why: "Commenting on posts about seasonal cash flow. Landscaping = extreme seasonality = needs forecasting badly.",
+      category: "client",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Rachel — seasonal cash flow in landscaping is no joke. I work with service businesses managing exactly that rollercoaster. Would love to connect and trade insights." },
+        { tone: "Value-First", text: "Hey Rachel, saw your comments on managing cash through slow seasons. I help businesses build cash flow forecasts that actually account for seasonality (not just average everything out). Let's connect." },
+        { tone: "Casual", text: "Rachel — growing a landscaping business to 45 people is impressive. Always glad to connect with operators doing real work." }
+      ]
+    },
+    {
+      name: "Brian Cortez",
+      title: "Founder @ Cortez Construction — Commercial GC, $7.5M",
+      why: "Posts about progress billing and retainage headaches. Construction cash flow is massively underserved by traditional accountants.",
+      category: "client",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Brian — retainage and progress billing cash flow is one of the most misunderstood areas in business finance. I work with GCs navigating exactly this. Would love to connect." },
+        { tone: "Value-First", text: "Hey Brian, your posts about construction cash flow are refreshingly honest. Most accountants don't understand how different GC finances are from standard businesses. Happy to connect." },
+        { tone: "Casual", text: "Brian — real talk on construction finance is rare on here. Glad to see someone post about the actual challenges. Let's connect." }
+      ]
+    },
+    {
+      name: "Stephanie Nguyen",
+      title: "Senior Bookkeeper @ Peak Accounting Co — Denver, CO",
+      why: "Active bookkeeper who refers clients needing CFO-level work. Colorado-based referral pipeline.",
+      category: "referral",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Stephanie — fellow Denver finance person here. I run a fractional CFO practice and love partnering with strong bookkeepers. When clients outgrow bookkeeping, I step in — and vice versa. Let's connect." },
+        { tone: "Value-First", text: "Hey Stephanie, I work with businesses that have outgrown their bookkeeper but aren't ready for a full-time CFO. I always refer back to great bookkeepers for the day-to-day. Would love to connect." },
+        { tone: "Casual", text: "Stephanie — always looking to connect with good bookkeepers in the Denver area. I think there's a lot of natural synergy between what we do. Let's connect." }
+      ]
+    },
+    {
+      name: "Tom Bradford",
+      title: "EOS Implementer® — Front Range, Colorado",
+      why: "EOS implementers constantly find that their clients' financials are a mess. Natural referral source.",
+      category: "referral",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Tom — I'm a fractional CFO in Colorado and a big believer in EOS. I've found that most EOS companies are missing the financial infrastructure to actually hit their rocks. Would love to connect." },
+        { tone: "Value-First", text: "Hey Tom, I work with several EOS companies as their fractional CFO. The financial piece of the V/TO is usually where things break down. Happy to connect and compare notes." },
+        { tone: "Casual", text: "Tom — EOS + fractional CFO is a great combo. Let's connect. I'm in the Front Range area too." }
+      ]
+    },
+    {
+      name: "Lisa Harmon",
+      title: "Business Coach | Scaling Service Businesses to $5M+",
+      why: "Her clients are Gian's clients. She coaches the growth, Gian handles the financial infrastructure to support it.",
+      category: "referral",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Lisa — I see a lot of overlap in who we serve. You help them grow, I make sure the finances can handle it. Would love to connect and explore referral synergy." },
+        { tone: "Value-First", text: "Hey Lisa, your content on scaling service businesses is solid. I often see the financial side break when growth accelerates — which is exactly where I come in as a fractional CFO. Let's connect." },
+        { tone: "Casual", text: "Lisa — always great to meet coaches who serve the $1-5M space. I think we'd have a lot to talk about. Let's connect." }
+      ]
+    },
+    {
+      name: "James Whitfield",
+      title: "Fractional CFO | SaaS & Tech | Ex-Big Four",
+      why: "Complementary niche — he does SaaS, Gian does service/franchise. No competition, potential referral partner.",
+      category: "peer",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "James — I do fractional CFO for service and franchise businesses. Looks like we serve completely different niches. Would love to connect and potentially refer clients that aren't a fit for either of us." },
+        { tone: "Value-First", text: "Hey James, always looking to connect with other fractional CFOs in complementary spaces. I focus on service businesses and franchises — seems like we'd never compete but could refer both ways. Let's connect." },
+        { tone: "Casual", text: "James — fellow fractional CFO here, different niche (service/franchise vs. SaaS). Let's connect." }
+      ]
+    },
+    {
+      name: "Priya Mehta",
+      title: "Fractional CFO | Healthcare & Dental Practices",
+      why: "Healthcare niche CFO — Gian can refer dental/healthcare leads he doesn't serve, and vice versa.",
+      category: "peer",
+      profileUrl: "https://www.linkedin.com/search/results/people/",
+      messages: [
+        { tone: "Peer-to-Peer", text: "Priya — love that you've niched into healthcare. I focus on service businesses and franchises. I get healthcare inquiries I can't serve well — would love to have someone to refer to. Let's connect." },
+        { tone: "Value-First", text: "Hey Priya, I think there's a natural referral relationship here. I turn down healthcare clients because it's not my niche — would be great to have a go-to. Let's connect." },
+        { tone: "Casual", text: "Priya — fellow fractional CFO, different niche. Always good to know who to refer to when a client isn't the right fit. Let's connect." }
+      ]
+    }
+  ],
+
+  performance: [
+    { title: "Financial visibility post", date: "Mar 18, 2026", impressions: 565, reactions: 6, comments: 6 },
+    { title: "Bookkeeper vs CFO gap", date: "Mar 14, 2026", impressions: 423, reactions: 8, comments: 4 },
+    { title: "Owner's comp mistake", date: "Mar 12, 2026", impressions: 387, reactions: 5, comments: 3 },
+    { title: "Cash flow forecasting 101", date: "Mar 10, 2026", impressions: 612, reactions: 11, comments: 7 },
+    { title: "Why I chose franchises", date: "Mar 7, 2026", impressions: 298, reactions: 4, comments: 2 },
+    { title: "The $2M trap (BANGER)", date: "Mar 5, 2026", impressions: 11965, reactions: 89, comments: 47 }
+  ]
+};
+</script>
+
+<!-- Stats Bar -->
+<div class="stats-bar" id="statsBar"></div>
+
+<!-- Dashboard Grid -->
+<div class="dashboard">
+  <!-- Left Column -->
+  <div>
+    <div class="panel" id="commentsPanel"></div>
+    <div class="panel" style="margin-top:16px" id="feedPanel"></div>
+  </div>
+  <!-- Right Column -->
+  <div>
+    <div class="panel" id="queuePanel"></div>
+    <div class="panel" style="margin-top:16px" id="connectionsPanel"></div>
+    <div class="panel" style="margin-top:16px" id="performancePanel"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// RENDER ENGINE — reads DASHBOARD_DATA, builds everything
+// ============================================================
+const D = DASHBOARD_DATA;
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function copyText(text, url) {
+  navigator.clipboard.writeText(text).then(() => {
+    toast('📋 Copied to clipboard!');
+    if (url) window.open(url, '_blank');
+  });
+}
+
+function catClass(c) {
+  if (c === 'client') return 'cat-client';
+  if (c === 'outsider') return 'cat-outsider';
+  if (c === 'referral') return 'cat-referral';
+  return 'cat-peer';
+}
+function catLabel(c) {
+  if (c === 'client') return '🎯 POTENTIAL CLIENT';
+  if (c === 'outsider') return '🌐 RELEVANT OUTSIDER';
+  if (c === 'referral') return '🤝 REFERRAL PARTNER';
+  return '🤝 NETWORK PEER';
+}
+function statusClass(s) { return 'status-' + s; }
+
+// Stats Bar
+document.getElementById('statsBar').innerHTML = `
+  <div class="brand">
+    <h1>⚡ LinkedIn Command Center</h1>
+    <span class="refreshed">Last refreshed: ${D.lastRefreshed}</span>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="num">${D.stats.followers.toLocaleString()}</div><div class="label">Followers</div></div>
+    <div class="stat-card"><div class="num">${D.stats.impressions7d.toLocaleString()}</div><div class="label">7d Impressions</div></div>
+    <div class="stat-card"><div class="num">${D.stats.profileViews}</div><div class="label">Profile Views</div></div>
+    <div class="stat-card"><div class="num">${D.stats.searchAppearances}</div><div class="label">Search Appear.</div></div>
+    <div class="stat-card"><div class="num">${D.stats.postsQueued}</div><div class="label">Posts Queued</div></div>
+    <div class="stat-card"><div class="num">${D.stats.pendingReplies}</div><div class="label">Pending Replies</div></div>
+  </div>
+`;
+
+// Comments Panel
+document.getElementById('commentsPanel').innerHTML = `
+  <div class="panel-header"><h2>💬 Comment Replies Needed</h2><span class="count">${D.comments.length}</span></div>
+  <div class="panel-body">${D.comments.map(c => `
+    <div class="comment-card">
+      <div class="card-header">
+        <div><div class="name">${c.commenter}</div>${c.title ? `<div class="title">${c.title}</div>` : ''}</div>
+        <span class="time">${c.timeAgo}</span>
+      </div>
+      <div class="post-ref">on: ${c.postTitle}</div>
+      <div class="comment-text">"${c.commentText}"</div>
+      <div class="reply-options">${c.replies.map((r, i) => `
+        <div class="reply-option">
+          <div class="tone">${r.tone}</div>
+          <div class="reply-text" contenteditable="true" id="comment-${D.comments.indexOf(c)}-${i}">${r.text}</div>
+          <div class="btn-row">
+            <button class="btn btn-gold" onclick="copyText(document.getElementById('comment-${D.comments.indexOf(c)}-${i}').innerText, '${c.postUrl}')">📋 Copy & Open</button>
+          </div>
+        </div>
+      `).join('')}</div>
+    </div>
+  `).join('')}</div>
+`;
+
+// Feed Engagement Panel
+const sortedFeed = [...D.feedEngagement].sort((a, b) => {
+  const order = { client: 0, outsider: 1, peer: 2 };
+  return (order[a.category] || 2) - (order[b.category] || 2);
+});
+document.getElementById('feedPanel').innerHTML = `
+  <div class="panel-header"><h2>🎯 Feed Engagement</h2><span class="count">${D.feedEngagement.length}</span></div>
+  <div class="panel-body">${sortedFeed.map((f, fi) => `
+    <div class="feed-card">
+      <div class="card-header">
+        <div><div class="name">${f.author}</div><div class="title">${f.authorTitle}</div></div>
+        <div style="text-align:right"><span class="cat ${catClass(f.category)}">${catLabel(f.category)}</span><br><span class="time">${f.timeAgo}</span></div>
+      </div>
+      <div class="snippet">"${f.snippet}"</div>
+      <div class="why">💡 ${f.why}</div>
+      <div class="stats-line">${f.stats}</div>
+      <div class="reply-option">
+        <div class="tone">Suggested Comment</div>
+        <div class="reply-text" contenteditable="true" id="feed-${fi}">${f.suggestedComment}</div>
+        <div class="btn-row">
+          <button class="btn btn-gold" onclick="copyText(document.getElementById('feed-${fi}').innerText, '${f.url}')">📋 Copy & Open</button>
+        </div>
+      </div>
+    </div>
+  `).join('')}</div>
+`;
+
+// Post Queue Panel
+document.getElementById('queuePanel').innerHTML = `
+  <div class="panel-header"><h2>📅 Post Queue — Next 2 Weeks</h2><span class="count">${D.postQueue.length}</span></div>
+  <div class="panel-body">${D.postQueue.map((p, pi) => `
+    <div class="queue-item">
+      <div class="queue-header" onclick="let b=this.nextElementSibling;b.classList.toggle('open');this.querySelector('.arrow').classList.toggle('open')">
+        <span class="queue-date">${p.date}</span>
+        <span class="queue-title">${p.title}</span>
+        <span class="queue-status ${statusClass(p.status)}">${p.status}</span>
+        <span class="arrow">▶</span>
+      </div>
+      <div class="queue-body">
+        <div class="category-tag">${p.category} · ${p.dayLabel}</div>
+        <div class="full-text" contenteditable="true" id="post-${pi}">${p.fullText}</div>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn btn-gold" onclick="copyText(document.getElementById('post-${pi}').innerText)">📋 Copy Full Post</button>
+          <button class="btn btn-outline" onclick="event.stopPropagation()">✅ Mark Ready</button>
+        </div>
+      </div>
+    </div>
+  `).join('')}</div>
+`;
+
+// Connections Panel
+document.getElementById('connectionsPanel').innerHTML = `
+  <div class="panel-header"><h2>🔗 Connection Suggestions</h2><span class="count">${D.connections.length}</span></div>
+  <div class="panel-body">${D.connections.map((c, ci) => `
+    <div class="connection-card">
+      <div class="card-header">
+        <div><div class="name">${c.name}</div><div class="title">${c.title}</div></div>
+        <span class="cat ${catClass(c.category)}">${catLabel(c.category)}</span>
+      </div>
+      <div class="why">💡 ${c.why}</div>
+      <div class="conn-messages">${c.messages.map((m, mi) => `
+        <div class="conn-msg">
+          <div class="tone">${m.tone}</div>
+          <div class="msg-text" contenteditable="true" id="conn-${ci}-${mi}">${m.text}</div>
+          <div class="btn-row">
+            <button class="btn btn-gold" onclick="copyText(document.getElementById('conn-${ci}-${mi}').innerText, '${c.profileUrl}')">📋 Copy & Open</button>
+          </div>
+        </div>
+      `).join('')}</div>
+    </div>
+  `).join('')}</div>
+`;
+
+// Performance Panel
+document.getElementById('performancePanel').innerHTML = `
+  <div class="panel-header"><h2>📈 Post Performance</h2><span class="count">${D.performance.length}</span></div>
+  <div class="panel-body">
+    <table class="perf-table">
+      <thead><tr><th>Post</th><th>Date</th><th>Impressions</th><th>Reactions</th><th>Comments</th></tr></thead>
+      <tbody>${D.performance.map(p => `
+        <tr>
+          <td>${p.title}</td>
+          <td style="color:var(--text-muted)">${p.date}</td>
+          <td style="color:var(--gold);font-weight:600">${p.impressions.toLocaleString()}</td>
+          <td>${p.reactions}</td>
+          <td>${p.comments}</td>
+        </tr>
+      `).join('')}</tbody>
+    </table>
+  </div>
+`;
+</script>
+</body>
+</html>
