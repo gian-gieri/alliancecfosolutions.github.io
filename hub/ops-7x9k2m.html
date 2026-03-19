@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alliance CFO Solutions — Firm Playbook</title>
+<style>
+:root {
+  --navy: #1B3A5C;
+  --gold: #C9963B;
+  --bg: #0f1923;
+  --card-bg: #162433;
+  --card-border: #1e3348;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-bright: #f8fafc;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --sidebar-w: 280px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--card-bg);
+  border-right: 1px solid var(--card-border);
+  overflow-y: auto; z-index: 100;
+  padding: 24px 0;
+  transition: transform .3s;
+}
+.sidebar-brand {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 12px;
+}
+.sidebar-brand h2 { color: var(--gold); font-size: 16px; letter-spacing: 1px; text-transform: uppercase; }
+.sidebar-brand p { color: var(--text-muted); font-size: 12px; margin-top: 4px; }
+.sidebar nav a {
+  display: block; padding: 10px 20px;
+  color: var(--text-muted); text-decoration: none;
+  font-size: 13px; border-left: 3px solid transparent;
+  transition: all .2s;
+}
+.sidebar nav a:hover, .sidebar nav a.active {
+  color: var(--gold); background: rgba(201,150,59,.06);
+  border-left-color: var(--gold);
+}
+.sidebar nav a .nav-num { color: var(--gold); font-weight: 700; margin-right: 6px; font-size: 11px; }
+
+/* ── MAIN ── */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 32px 40px 80px; max-width: 960px; }
+
+/* ── HEADER ── */
+.page-header { margin-bottom: 32px; }
+.page-header h1 { font-size: 28px; color: var(--text-bright); }
+.page-header h1 span { color: var(--gold); }
+.page-header p { color: var(--text-muted); margin-top: 6px; font-size: 14px; }
+.controls { display: flex; gap: 10px; margin-top: 16px; }
+.controls button {
+  background: transparent; border: 1px solid var(--gold); color: var(--gold);
+  padding: 6px 16px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  transition: all .2s;
+}
+.controls button:hover { background: var(--gold); color: var(--bg); }
+
+/* ── SECTIONS ── */
+.section { margin-bottom: 16px; border: 1px solid var(--card-border); border-radius: 10px; background: var(--card-bg); overflow: hidden; }
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; cursor: pointer; user-select: none;
+  transition: background .2s;
+}
+.section-header:hover { background: rgba(201,150,59,.05); }
+.section-header .num {
+  background: var(--gold); color: var(--bg); font-weight: 800;
+  width: 30px; height: 30px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0;
+}
+.section-header h2 { font-size: 16px; color: var(--text-bright); flex: 1; }
+.section-header .chevron {
+  color: var(--gold); font-size: 18px; transition: transform .3s;
+}
+.section.open .section-header .chevron { transform: rotate(90deg); }
+.section-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .4s ease;
+}
+.section.open .section-body { max-height: 20000px; }
+.section-content { padding: 0 20px 24px 62px; }
+.section-content h3 { color: var(--gold); font-size: 15px; margin: 20px 0 8px; }
+.section-content h4 { color: var(--text-bright); font-size: 14px; margin: 16px 0 6px; }
+.section-content p, .section-content li { font-size: 14px; color: var(--text); }
+.section-content ul, .section-content ol { padding-left: 20px; margin: 6px 0 12px; }
+.section-content li { margin-bottom: 4px; }
+.section-content strong { color: var(--text-bright); }
+.section-content em { color: var(--gold); font-style: normal; }
+
+/* ── CARDS / TABLES ── */
+.tier-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 12px 0; }
+.tier-card {
+  border: 1px solid var(--card-border); border-radius: 8px;
+  padding: 16px; background: rgba(15,25,35,.6);
+}
+.tier-card.highlight { border-color: var(--gold); }
+.tier-card h4 { color: var(--gold); margin: 0 0 4px; font-size: 14px; }
+.tier-card .price { font-size: 22px; font-weight: 800; color: var(--text-bright); }
+.tier-card .price span { font-size: 13px; font-weight: 400; color: var(--text-muted); }
+.tier-card ul { font-size: 13px; margin-top: 10px; }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+th { text-align: left; color: var(--gold); padding: 8px 10px; border-bottom: 1px solid var(--card-border); font-weight: 600; }
+td { padding: 8px 10px; border-bottom: 1px solid rgba(30,51,72,.5); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+
+.callout {
+  border-left: 3px solid var(--gold); background: rgba(201,150,59,.06);
+  padding: 12px 16px; border-radius: 0 6px 6px 0; margin: 12px 0; font-size: 13px;
+}
+.callout.warning { border-left-color: var(--warning); background: rgba(251,191,36,.06); }
+.callout.success { border-left-color: var(--success); background: rgba(74,222,128,.06); }
+.callout.danger { border-left-color: var(--danger); background: rgba(248,113,113,.06); }
+
+.template-block {
+  background: rgba(15,25,35,.8); border: 1px solid var(--card-border);
+  border-radius: 6px; padding: 14px 16px; margin: 10px 0;
+  font-size: 13px; white-space: pre-wrap; font-family: inherit;
+}
+
+.checklist { list-style: none; padding-left: 0 !important; }
+.checklist li::before { content: '☐ '; color: var(--gold); font-weight: 700; }
+.checklist li.done::before { content: '☑ '; color: var(--success); }
+
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 4px; }
+.tag-axel { background: rgba(99,102,241,.2); color: #818cf8; }
+.tag-gian { background: rgba(201,150,59,.2); color: var(--gold); }
+
+.week-block { border: 1px solid var(--card-border); border-radius: 8px; padding: 14px 16px; margin: 10px 0; background: rgba(15,25,35,.5); }
+.week-block h4 { margin: 0 0 6px; font-size: 14px; color: var(--gold); }
+
+/* ── MOBILE ── */
+.menu-toggle { display: none; position: fixed; top: 12px; left: 12px; z-index: 200; background: var(--gold); color: var(--bg); border: none; width: 40px; height: 40px; border-radius: 8px; font-size: 20px; cursor: pointer; }
+@media (max-width: 800px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; }
+  .main { margin-left: 0; padding: 60px 16px 60px; }
+  .section-content { padding-left: 20px; }
+  .tier-grid { grid-template-columns: 1fr; }
+}
+
+/* ── PRINT ── */
+@media print {
+  .sidebar, .menu-toggle, .controls { display: none !important; }
+  .main { margin-left: 0; padding: 0; max-width: 100%; }
+  .section-body { max-height: none !important; }
+  .section { break-inside: avoid; border: 1px solid #ccc; }
+  body { background: #fff; color: #222; }
+  .section-content h3 { color: #1B3A5C; }
+}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.toggle('open')">☰</button>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <h2>Alliance CFO</h2>
+    <p>Firm Playbook · v1.0</p>
+  </div>
+  <nav id="nav"></nav>
+</aside>
+
+<main class="main">
+  <div class="page-header">
+    <h1>Alliance CFO Solutions — <span>Firm Playbook</span></h1>
+    <p>The complete operating manual. One brand, multiple revenue streams, AI-augmented efficiency.</p>
+    <div class="controls">
+      <button onclick="toggleAll(true)">▸ Expand All</button>
+      <button onclick="toggleAll(false)">▾ Collapse All</button>
+      <button onclick="window.print()">🖨 Print</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 1 ═══════════════════ -->
+  <div class="section open" id="s1">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">1</div>
+      <h2>Firm Overview</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>Mission</h3>
+      <p><strong>Financial clarity for business owners who want to stop guessing.</strong></p>
+      <p>Alliance CFO Solutions exists to give $1–10M service business owners the same financial intelligence that Fortune 500 companies take for granted — without the six-figure salary. Gian Gieri isn't a corporate-finance-refugee playing advisor. He's a CPA who makes payroll, operates franchises, and understands what it's like when a decision has your name on the line.</p>
+
+      <h3>Positioning</h3>
+      <p>Three concentric circles, one brand:</p>
+      <table>
+        <tr><th>Ring</th><th>Offering</th><th>Revenue Model</th></tr>
+        <tr><td><strong>Core</strong></td><td>Fractional CFO Advisory</td><td>$2,500–$10K/mo retainers</td></tr>
+        <tr><td><strong>Complementary</strong></td><td>AI Agent Setup Service</td><td>$2–5K setup + $500–1K/mo</td></tr>
+        <tr><td><strong>Marketing Engine</strong></td><td>AI Newsletter + SEO Audit Lead Gen</td><td>Boosts, sponsorships, remediation packages, inbound leads</td></tr>
+      </table>
+      <p>Everything feeds the core. The newsletter builds authority and captures leads. SEO audits generate warm outbound leads. AI agent setups create sticky upsell relationships. All roads lead back to advisory.</p>
+
+      <h3>Target Market</h3>
+      <ul>
+        <li><strong>Revenue:</strong> $1M–$10M (sweet spot: $2M–$7M)</li>
+        <li><strong>Type:</strong> Service businesses — property management, dental/medical practices, law firms, HVAC, construction, franchise operators, agencies</li>
+        <li><strong>Geography:</strong> Colorado-based preferred, remote-friendly nationally</li>
+        <li><strong>Trigger:</strong> Outgrown their bookkeeper, can't afford (or don't need) a full-time CFO</li>
+        <li><strong>Pain:</strong> Making gut-level decisions on hiring, pricing, expansion without real financial data</li>
+      </ul>
+
+      <h3>Pricing Tiers</h3>
+      <div class="tier-grid">
+        <div class="tier-card">
+          <h4>Essential</h4>
+          <div class="price">$2,500<span>/mo</span></div>
+          <ul>
+            <li>Monthly close review & financials</li>
+            <li>13-week cash flow forecast</li>
+            <li>1 strategy call/month (60 min)</li>
+            <li>Email support (48-hr SLA)</li>
+            <li>Basic KPI tracking</li>
+          </ul>
+        </div>
+        <div class="tier-card highlight">
+          <h4>Growth</h4>
+          <div class="price">$5,000<span>/mo</span></div>
+          <ul>
+            <li>Everything in Essential</li>
+            <li>13-month rolling forecast</li>
+            <li>Full KPI dashboard</li>
+            <li>2 strategy calls/month</li>
+            <li>Ad-hoc Slack/text access</li>
+            <li>Quarterly board-ready reports</li>
+          </ul>
+        </div>
+        <div class="tier-card">
+          <h4>Strategic</h4>
+          <div class="price">$7,500–10K<span>/mo</span></div>
+          <ul>
+            <li>Everything in Growth</li>
+            <li>Weekly check-ins</li>
+            <li>M&A / investor / debt support</li>
+            <li>Scenario modeling on demand</li>
+            <li>Same-day response SLA</li>
+            <li>Board/investor meeting prep</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout danger">
+        <strong>NEVER quote hourly.</strong> If they push, explain: "The retainer effectively works out to $150–250/hr — but I'm selling you outcomes and access, not time. You don't pay your lawyer by the minute for a quick text."
+      </div>
+
+      <h3>Brand Voice</h3>
+      <ul>
+        <li><strong>Direct,</strong> not corporate</li>
+        <li><strong>Experienced,</strong> not theoretical — "I came from making payroll"</li>
+        <li><strong>Confident,</strong> not salesy</li>
+        <li><strong>Warm,</strong> not stiff</li>
+      </ul>
+      <p><strong>Tagline:</strong> "Financial clarity for business owners who want to stop guessing."</p>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 2 ═══════════════════ -->
+  <div class="section" id="s2">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">2</div>
+      <h2>Client Onboarding System</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>Overview: Discovery Call → First Monthly Review</h3>
+      <table>
+        <tr><th>Day</th><th>Milestone</th><th>Owner</th></tr>
+        <tr><td>0</td><td>Client says "yes" on discovery call</td><td>Gian</td></tr>
+        <tr><td>0–1</td><td>Send welcome email + engagement letter (PandaDoc) + payment setup link</td><td>Gian / Axel draft</td></tr>
+        <tr><td>1–3</td><td>Engagement letter signed, first payment processed (ACH auto-pay on 1st)</td><td>Client</td></tr>
+        <tr><td>1–3</td><td>Send Document Request Checklist</td><td>Axel drafts, Gian sends</td></tr>
+        <tr><td>3–7</td><td>Documents received; Axel begins preliminary financial review</td><td>Axel + Client</td></tr>
+        <tr><td>5–7</td><td>Google Drive folder structure created and shared</td><td>Axel</td></tr>
+        <tr><td>7–10</td><td>Kickoff Call (60 min) — agenda below</td><td>Gian</td></tr>
+        <tr><td>10–20</td><td>First deliverables: cash flow snapshot, initial KPI baseline, financial health assessment</td><td>Axel builds / Gian reviews</td></tr>
+        <tr><td>25–30</td><td>First Monthly Financial Review Call</td><td>Gian</td></tr>
+      </table>
+
+      <h3>Welcome Email Template</h3>
+      <div class="template-block">Subject: Welcome to Alliance CFO Solutions — Let's Get Started
+
+Hi [Name],
+
+I'm excited to work together. Here's what happens next:
+
+1. <strong>Sign the engagement letter</strong> — I've sent it via PandaDoc. It covers scope, deliverables, and expectations so we're both clear from day one.
+
+2. <strong>Set up payment</strong> — Monthly retainer of [$X] via ACH on the 1st. Link to set up auto-pay: [link]
+
+3. <strong>Send me your documents</strong> — I've attached a checklist of what I need. Most of this your bookkeeper or accountant can pull in 15 minutes. Don't stress about formatting — I'll work with whatever you have.
+
+4. <strong>Kickoff call</strong> — Once I have your documents, we'll schedule a 60-minute kickoff. I'll come prepared with initial observations and we'll align on priorities.
+
+My goal for the first 30 days: get my arms fully around your financial picture and deliver a cash flow forecast, KPI baseline, and initial recommendations you can act on immediately.
+
+Questions before we kick off? Just reply here or text me at [number].
+
+Talk soon,
+Gian Gieri, CPA
+Alliance CFO Solutions</div>
+
+      <h3>Document Request Checklist</h3>
+      <p>Send this as a simple list. Don't overwhelm — note which items are "must have now" vs "nice to have."</p>
+      <h4>Must Have (Before Kickoff Call)</h4>
+      <ul class="checklist">
+        <li>Last 12 months of Profit & Loss statements (monthly)</li>
+        <li>Most recent Balance Sheet</li>
+        <li>Last 3 months of bank statements (all business accounts)</li>
+        <li>Accounts Receivable aging report</li>
+        <li>Accounts Payable aging report</li>
+        <li>Last 2 years of business tax returns</li>
+        <li>QBO/accounting software login (read-only is fine initially)</li>
+      </ul>
+      <h4>Nice to Have (Within First 2 Weeks)</h4>
+      <ul class="checklist">
+        <li>Org chart or employee list with roles and comp</li>
+        <li>Current software/tool stack list</li>
+        <li>Any existing budgets or forecasts</li>
+        <li>Loan/debt schedules with terms and balances</li>
+        <li>Key contracts (leases, vendor agreements, customer contracts)</li>
+        <li>Insurance summary (coverage types, premiums, renewal dates)</li>
+        <li>Prior year's goals or strategic plan (if any)</li>
+      </ul>
+
+      <h3>Google Drive Folder Structure</h3>
+      <div class="template-block">📁 Alliance CFO — [Client Name]
+├── 📁 01 — Engagement & Admin
+│   ├── Signed Engagement Letter
+│   ├── Payment Setup Confirmation
+│   └── Contact Info & Key Dates
+├── 📁 02 — Source Documents
+│   ├── Bank Statements
+│   ├── Tax Returns
+│   ├── Contracts & Agreements
+│   └── Insurance
+├── 📁 03 — Financial Statements
+│   ├── Monthly P&L
+│   ├── Balance Sheet
+│   └── AR/AP Aging
+├── 📁 04 — Deliverables
+│   ├── Cash Flow Forecasts
+│   ├── Monthly Review Memos
+│   ├── KPI Dashboards
+│   └── Quarterly Strategic Reviews
+├── 📁 05 — Meeting Notes
+│   ├── Kickoff Call Notes
+│   └── Monthly Review Notes
+└── 📁 06 — Ad Hoc / Projects</div>
+
+      <h3>Kickoff Call Agenda (60 Minutes)</h3>
+      <table>
+        <tr><th>Time</th><th>Topic</th><th>Goal</th></tr>
+        <tr><td>0–5 min</td><td>Welcome & agenda review</td><td>Set expectations for the call</td></tr>
+        <tr><td>5–20 min</td><td>Business deep dive: story, model, team, growth trajectory</td><td>Understand the business beyond the numbers</td></tr>
+        <tr><td>20–35 min</td><td>Financial walkthrough: initial observations from documents</td><td>Share what stands out — cash position, margins, AR issues, debt structure</td></tr>
+        <tr><td>35–45 min</td><td>Priorities alignment: "What are the 3 things keeping you up at night?"</td><td>Define the first 30-day focus areas</td></tr>
+        <tr><td>45–55 min</td><td>Communication & cadence: how we'll work together</td><td>Set weekly/monthly rhythm, preferred channels</td></tr>
+        <tr><td>55–60 min</td><td>Next steps & action items</td><td>Both sides leave with clear to-dos and dates</td></tr>
+      </table>
+
+      <h3>First 30-Day Milestones</h3>
+      <table>
+        <tr><th>Week</th><th>Deliverable</th><th>Axel's Role</th><th>Gian's Role</th></tr>
+        <tr><td>Week 1</td><td>Financial data ingested, QBO access confirmed, preliminary review complete</td><td>Pull reports, organize data, flag anomalies</td><td>Review flags, schedule kickoff</td></tr>
+        <tr><td>Week 2</td><td>13-Week Cash Flow Forecast v1 + KPI baseline</td><td>Build first draft from bank data + P&L</td><td>Review, add context, validate assumptions</td></tr>
+        <tr><td>Week 3</td><td>Financial Health Assessment memo (1–2 pages)</td><td>Draft assessment with key findings</td><td>Add strategic commentary, finalize</td></tr>
+        <tr><td>Week 4</td><td>First Monthly Financial Review Call</td><td>Prep review memo, pull updated numbers</td><td>Lead the call, deliver insights</td></tr>
+      </table>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 3 ═══════════════════ -->
+  <div class="section" id="s3">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">3</div>
+      <h2>Recurring Deliverables (Scalable Templates)</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>A. 13-Week Cash Flow Forecast</h3>
+      <p>The single most valuable deliverable for any small business. This is what separates a CFO from a bookkeeper.</p>
+
+      <h4>Methodology</h4>
+      <ol>
+        <li><strong>Start with current cash balance</strong> — pull from bank accounts, not the books</li>
+        <li><strong>Map expected inflows week by week:</strong> recurring revenue, expected AR collections (by aging bucket), committed deposits, seasonal patterns</li>
+        <li><strong>Map expected outflows week by week:</strong> payroll (fixed cadence), rent/lease, loan payments, AP by due date, tax payments, recurring subscriptions, variable costs (COGS as % of revenue)</li>
+        <li><strong>Net weekly position</strong> = Starting cash + inflows − outflows</li>
+        <li><strong>Running balance</strong> — if any week dips below 2 weeks of operating expenses, flag it red</li>
+        <li><strong>Scenarios:</strong> Base case, best case (110% collections), worst case (75% collections + delayed AR)</li>
+      </ol>
+
+      <h4>Inputs Needed</h4>
+      <ul>
+        <li>Current bank balances (all accounts)</li>
+        <li>AR aging report (who owes what, when it's due)</li>
+        <li>AP aging report (what's owed, when it's due)</li>
+        <li>Payroll schedule and amounts</li>
+        <li>Recurring fixed costs (rent, insurance, loans, subscriptions)</li>
+        <li>Revenue pipeline / bookings / contracts</li>
+        <li>Known one-time expenses (equipment, taxes, bonuses)</li>
+      </ul>
+
+      <div class="callout">
+        <span class="tag tag-axel">AXEL</span> Builds the first draft by pulling QBO data, bank feeds, AR/AP aging. Populates the 13-week grid. Flags any weeks where cash goes negative or below safety threshold. Takes ~20 min of AI time vs 3–4 hours manual.<br><br>
+        <span class="tag tag-gian">GIAN</span> Reviews assumptions (especially revenue timing and one-off expenses). Adds context Axel can't know: "That $50K receivable from Smith Co is going to be 2 weeks late — they always are." Validates, adjusts, approves. ~30 min.
+      </div>
+
+      <h3>B. Monthly Financial Review Memo</h3>
+      <p>A 1–2 page narrative memo sent 2–3 days before the monthly review call. The client reads it, comes to the call prepared, and the call is strategic instead of educational.</p>
+
+      <h4>Structure</h4>
+      <ol>
+        <li><strong>Executive Summary</strong> (3 sentences): What happened this month. Good, bad, and what to watch.</li>
+        <li><strong>Revenue</strong>: Actual vs budget vs prior month. Breakdown by service line or customer segment. Trend direction.</li>
+        <li><strong>Expenses</strong>: Total spend vs budget. Call out anything unusual (one-time costs, overages). Gross margin and net margin trends.</li>
+        <li><strong>Cash Position</strong>: Current cash, burn rate, runway. AR/AP health. Updated 13-week forecast summary.</li>
+        <li><strong>KPIs</strong>: 3–5 key metrics with trend arrows (↑↓→). Benchmarked against targets.</li>
+        <li><strong>Recommendations</strong>: 1–3 specific actions. Not generic advice — "Raise hourly rate on residential jobs from $X to $Y" or "Collect the $23K from ABC Corp this week."</li>
+        <li><strong>Questions for Discussion</strong>: 2–3 strategic questions to frame the monthly call.</li>
+      </ol>
+
+      <div class="callout">
+        <span class="tag tag-axel">AXEL</span> Pulls all data from QBO, calculates variances, drafts the full memo including KPI section and initial recommendations. ~30 min AI time.<br><br>
+        <span class="tag tag-gian">GIAN</span> Reviews the draft, rewrites the recommendations section with strategic context, adds the "Questions for Discussion." Personalizes tone. ~20 min.
+      </div>
+
+      <h3>C. KPI Dashboard</h3>
+      <p>A single-page visual dashboard the client can glance at in 30 seconds and know how the business is performing.</p>
+
+      <h4>Universal KPIs (Every Client)</h4>
+      <ul>
+        <li>Revenue (actual vs target, monthly trend)</li>
+        <li>Gross Margin %</li>
+        <li>Net Profit Margin %</li>
+        <li>Cash on Hand / Cash Runway (weeks)</li>
+        <li>AR Days Outstanding</li>
+        <li>AP Days Outstanding</li>
+        <li>Monthly Burn Rate</li>
+      </ul>
+
+      <h4>Industry-Specific KPIs</h4>
+      <table>
+        <tr><th>Business Type</th><th>Add These KPIs</th></tr>
+        <tr><td>Property Management</td><td>Occupancy rate, rent collection rate, maintenance cost per unit, NOI per property</td></tr>
+        <tr><td>Professional Services</td><td>Utilization rate, revenue per employee, client retention rate, average project value</td></tr>
+        <tr><td>Dental/Medical</td><td>Production per provider, collection rate, new patient count, overhead ratio</td></tr>
+        <tr><td>HVAC/Trades</td><td>Revenue per tech, avg ticket size, callback rate, lead-to-close ratio</td></tr>
+        <tr><td>Franchise/Retail</td><td>Same-store sales growth, labor cost %, avg transaction value, customer count</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="tag tag-axel">AXEL</span> Builds the dashboard template, auto-pulls monthly data, updates visuals. Fully autonomous once template is set up.<br><br>
+        <span class="tag tag-gian">GIAN</span> Reviews once per month. Adjusts targets if strategy changes. 10 min.
+      </div>
+
+      <h3>D. Quarterly Strategic Review</h3>
+      <p>A 90-minute deep dive. This is the highest-value session — where you earn the retainer.</p>
+
+      <h4>Pre-Work (1 Week Before)</h4>
+      <ul>
+        <li>Axel prepares: Quarter-over-quarter financial comparison, annual target progress, cash flow trend analysis, competitive landscape update</li>
+        <li>Gian reviews and adds: Strategic observations, market trends, questions to challenge the owner</li>
+        <li>Client prepares: Biggest wins, biggest challenges, strategic questions for next quarter</li>
+      </ul>
+
+      <h4>Agenda (90 Minutes)</h4>
+      <table>
+        <tr><th>Time</th><th>Topic</th></tr>
+        <tr><td>0–10 min</td><td>Wins & challenges — let the owner talk first</td></tr>
+        <tr><td>10–30 min</td><td>Financial performance review: quarter vs plan, YTD vs annual targets</td></tr>
+        <tr><td>30–50 min</td><td>Strategic deep dive: 1–2 big decisions (hiring, expansion, pricing, M&A, debt)</td></tr>
+        <tr><td>50–70 min</td><td>Forward plan: next quarter priorities, updated forecasts, resource needs</td></tr>
+        <tr><td>70–80 min</td><td>Risk & opportunity scan: what could go wrong, what could accelerate growth</td></tr>
+        <tr><td>80–90 min</td><td>Action items, owners, deadlines — documented in writing before call ends</td></tr>
+      </table>
+
+      <h4>Deliverables After QBR</h4>
+      <ul>
+        <li>Updated 12-month forecast with new assumptions</li>
+        <li>Written strategic recommendations memo (1 page)</li>
+        <li>Action item tracker with owner assignments and due dates</li>
+      </ul>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 4 ═══════════════════ -->
+  <div class="section" id="s4">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">4</div>
+      <h2>Client Communication Cadence</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>The System</h3>
+      <p>Consistency builds trust. Every client gets the same rhythm regardless of tier (frequency varies by tier). Clients should never wonder "when will I hear from my CFO?"</p>
+
+      <h3>Weekly Async Check-In (All Tiers)</h3>
+      <p>A brief email or Slack message every Monday. Takes 5 minutes per client.</p>
+      <div class="template-block">Subject: Weekly Check-In — [Client Name]
+
+Hi [Name],
+
+Quick pulse check for the week:
+
+📊 <strong>Cash position:</strong> $[X] across accounts (up/down $[Y] from last week)
+⚡ <strong>Key items this week:</strong> [AR collection due from X / payroll Friday / quarterly tax payment]
+🔔 <strong>Heads up:</strong> [anything time-sensitive]
+
+Anything on your radar I should know about?
+
+— Gian</div>
+      <div class="callout">
+        <span class="tag tag-axel">AXEL</span> Drafts this every Monday morning by pulling bank balances and checking the calendar for upcoming deadlines. Gian reviews and sends. 2 min per client.
+      </div>
+
+      <h3>Monthly Financial Review Call (60 min)</h3>
+      <table>
+        <tr><th>Time</th><th>Topic</th></tr>
+        <tr><td>0–5 min</td><td>Quick personal check-in (relationships matter)</td></tr>
+        <tr><td>5–15 min</td><td>Owner's perspective: what happened this month, what's on their mind</td></tr>
+        <tr><td>15–35 min</td><td>Financial review: walk through the Monthly Review Memo</td></tr>
+        <tr><td>35–50 min</td><td>Strategic discussion: the 1–2 recommendations from the memo</td></tr>
+        <tr><td>50–55 min</td><td>Action items and decisions</td></tr>
+        <tr><td>55–60 min</td><td>Preview of next month's focus</td></tr>
+      </table>
+      <p><strong>Scheduling:</strong> Same week each month (e.g., 3rd week). Recurring calendar invite. Non-negotiable.</p>
+
+      <h3>Quarterly Strategy Session (90 min)</h3>
+      <p>See Section 3D for full agenda. Scheduled in the last 2 weeks of each quarter. This is the "zoom out" meeting.</p>
+
+      <h3>Ad-Hoc Support — Boundaries Matter</h3>
+      <table>
+        <tr><th>Tier</th><th>Access</th><th>Response SLA</th></tr>
+        <tr><td>Essential</td><td>Email only</td><td>48 hours (business days)</td></tr>
+        <tr><td>Growth</td><td>Email + Slack/text</td><td>24 hours</td></tr>
+        <tr><td>Strategic</td><td>Email + Slack/text + phone</td><td>Same business day</td></tr>
+      </table>
+
+      <div class="callout warning">
+        <strong>Boundary enforcement:</strong> If a client is texting you 5 times a day with bookkeeping questions, that's a scope creep problem — not a communication cadence problem. Address it directly: "Hey, I want to make sure I'm focused on the strategic work that moves the needle for you. For day-to-day questions like these, let's get you connected with a bookkeeper. I'll oversee their work."
+      </div>
+
+      <h3>Communication Tools</h3>
+      <ul>
+        <li><strong>Email:</strong> Default for all formal communication (memos, deliverables, proposals)</li>
+        <li><strong>Slack or text:</strong> Quick questions, time-sensitive items (Growth/Strategic only)</li>
+        <li><strong>Google Meet / Zoom:</strong> All scheduled calls (Calendly handles booking)</li>
+        <li><strong>Loom:</strong> Async video walkthroughs of dashboards or financial reports (huge value-add, takes 5 min to record)</li>
+        <li><strong>Google Drive:</strong> All shared documents and deliverables</li>
+      </ul>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 5 ═══════════════════ -->
+  <div class="section" id="s5">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">5</div>
+      <h2>Axel's Role (AI Operating System)</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>The 10x Efficiency Model</h3>
+      <p>A project that would take a solo CFO 10 hours takes Gian + Axel 1.5 hours. Here's how:</p>
+      <table>
+        <tr><th>Phase</th><th>Traditional</th><th>With Axel</th></tr>
+        <tr><td>Data gathering & organization</td><td>2–3 hours</td><td><span class="tag tag-axel">AXEL</span> 0 min (automated)</td></tr>
+        <tr><td>First-draft analysis & models</td><td>3–4 hours</td><td><span class="tag tag-axel">AXEL</span> 0 min (automated)</td></tr>
+        <tr><td>Report writing & formatting</td><td>2–3 hours</td><td><span class="tag tag-axel">AXEL</span> 0 min (automated)</td></tr>
+        <tr><td>Strategic review & refinement</td><td>1–2 hours</td><td><span class="tag tag-gian">GIAN</span> 45 min (reviewing, not building)</td></tr>
+        <tr><td>Client communication drafting</td><td>30–60 min</td><td><span class="tag tag-gian">GIAN</span> 15 min (editing Axel's draft)</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>~10 hours</strong></td><td><strong>~1.5 hours</strong></td></tr>
+      </table>
+
+      <h3>What Axel Does Autonomously</h3>
+      <ul>
+        <li>Pull and organize financial data from QBO, bank feeds, spreadsheets</li>
+        <li>Build first-draft 13-week cash flow forecasts</li>
+        <li>Generate monthly review memos with variance analysis</li>
+        <li>Update KPI dashboards with fresh data</li>
+        <li>Draft weekly check-in emails for each client</li>
+        <li>Research: industry benchmarks, competitor analysis, market data</li>
+        <li>Draft proposals, engagement letters, and follow-up emails</li>
+        <li>Build financial models and scenario analyses</li>
+        <li>Create client-facing reports and presentations</li>
+        <li>Monitor deadlines, tax dates, and renewal dates</li>
+        <li>Write LinkedIn content drafts (Mon/Wed/Fri)</li>
+        <li>Write weekly newsletter drafts</li>
+      </ul>
+
+      <h3>What Needs Gian's Review</h3>
+      <ul>
+        <li><strong>All final client deliverables</strong> — Axel drafts, Gian approves. Nothing goes to a client untouched.</li>
+        <li><strong>Strategic recommendations</strong> — Axel can analyze data, but "you should raise prices 15%" is Gian's call.</li>
+        <li><strong>Client-facing communications</strong> — Axel drafts, Gian personalizes and sends.</li>
+        <li><strong>Proposals and pricing</strong> — Axel templates, Gian customizes for the prospect.</li>
+        <li><strong>Anything with legal/regulatory implications</strong> — tax positions, entity structuring advice, contract terms.</li>
+      </ul>
+
+      <h3>How to Request Work from Axel</h3>
+      <p>Just ask. Via Telegram, chat, or however you're connected. Examples:</p>
+      <ul>
+        <li>"Axel, pull the latest P&L for CAS and draft a monthly review memo"</li>
+        <li>"Build me a 13-week cash flow forecast for Proper Thread using the data in their Drive folder"</li>
+        <li>"Draft a proposal for a $5K/mo Growth tier engagement for [prospect name]"</li>
+        <li>"What's the average gross margin for screen printing businesses doing $1–3M?"</li>
+        <li>"Write this week's newsletter — theme is AI tools for managing cash flow"</li>
+      </ul>
+      <div class="callout success">
+        <strong>The rule is simple:</strong> If it involves data, drafting, research, or formatting — Axel does it first. If it involves judgment, relationships, or final sign-off — that's Gian.
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 6 ═══════════════════ -->
+  <div class="section" id="s6">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">6</div>
+      <h2>AI Agent Setup Service</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>Positioning</h3>
+      <p>This is <strong>not</strong> a separate business. It's a complementary service under Alliance CFO. You're already talking to business owners about their operations — when you see they're missing calls, losing leads, or drowning in admin, you offer this.</p>
+      <p><strong>The pitch:</strong> "I'm your CFO. Part of my job is finding money you're leaving on the table. Right now, you're missing 30% of inbound calls. Let me fix that."</p>
+
+      <h3>Target Market</h3>
+      <ul>
+        <li>Service businesses missing inbound calls (dental, law, HVAC, property management, contractors)</li>
+        <li>Businesses without a dedicated receptionist or with after-hours call volume</li>
+        <li>Anyone spending $3K+/mo on a front-desk person who primarily answers phones and books appointments</li>
+      </ul>
+
+      <h3>The Offering</h3>
+      <table>
+        <tr><th>Component</th><th>Details</th></tr>
+        <tr><td><strong>Setup</strong></td><td>Done-for-you AI voice agent: answers calls, books appointments, handles FAQs, captures lead info, routes emergencies to a human</td></tr>
+        <tr><td><strong>Pricing</strong></td><td>$2,000–$5,000 one-time setup + $500–$1,000/mo management & optimization</td></tr>
+        <tr><td><strong>Platforms</strong></td><td>Vapi (primary — most flexible), Bland AI (simplest), Retell (best voice quality)</td></tr>
+        <tr><td><strong>Timeline</strong></td><td>Live in 1–2 weeks from kickoff</td></tr>
+      </table>
+
+      <h3>Sales Pitch Script</h3>
+      <div class="template-block">"Let me ask you something — when someone calls your office after hours or when your team's busy, what happens?"
+
+[They'll say: goes to voicemail / rings out / they call back later]
+
+"And what percentage of those people call back?"
+
+[They'll say: not many / maybe half / I don't know]
+
+"Industry data says about 80% of callers who hit voicemail never call back. They call the next business on Google. You're paying for marketing to get that phone to ring — and then losing the lead because nobody answered.
+
+Here's what I can set up for you: an AI receptionist that answers every call, 24/7, in a natural voice. It greets the caller, understands why they're calling, books appointments directly in your calendar, answers basic questions about your services and pricing, and texts you a summary of every call.
+
+It costs about 1/5th of a full-time receptionist and never calls in sick. I can have it live in about two weeks.
+
+Want me to show you a quick demo?"</div>
+
+      <h3>Delivery Process</h3>
+      <ol>
+        <li><strong>Discovery (30 min call):</strong> Map their call flow — what types of calls come in, what questions get asked, how appointments are booked, what's the emergency protocol</li>
+        <li><strong>Script development (Axel):</strong> Build the conversation flows, FAQ responses, appointment booking logic, escalation rules</li>
+        <li><strong>Platform setup (1–2 days):</strong> Configure Vapi/Bland AI with the scripts, connect to their calendar (Calendly, Google Cal, or native), set up phone number forwarding</li>
+        <li><strong>Testing (2–3 days):</strong> Run 20+ test calls covering edge cases. Refine responses.</li>
+        <li><strong>Client review (30 min call):</strong> Walk them through the system, let them test it, get approval</li>
+        <li><strong>Go live:</strong> Forward their business number to the AI agent (or set up as after-hours overflow)</li>
+        <li><strong>Week 1 review:</strong> Analyze call logs, refine scripts, adjust based on real interactions</li>
+        <li><strong>Ongoing:</strong> Monthly call log review, script updates, performance metrics (calls handled, appointments booked, leads captured)</li>
+      </ol>
+
+      <h3>When to Hire a Technical Partner</h3>
+      <p>At <strong>10+ active setups per month</strong>, the configuration and testing time exceeds what Gian + Axel can handle. At that point:</p>
+      <ul>
+        <li>Hire a part-time VA or contractor who specializes in Vapi/voice AI configuration</li>
+        <li>Cost: $2–3K/mo for a part-time specialist</li>
+        <li>Gian stays in the sales and relationship role; partner handles implementation</li>
+        <li>This should be self-funding by that volume (10 × $3K setup = $30K in setup fees alone)</li>
+      </ul>
+
+      <div class="callout">
+        <strong>Window:</strong> This opportunity has a 12–18 month window before it commoditizes. First movers who build client relationships now will retain them even as prices drop. Move fast.
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 7 ═══════════════════ -->
+  <div class="section" id="s7">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">7</div>
+      <h2>AI Newsletter — "AI for Small Business Owners"</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>The Concept</h3>
+      <p>A weekly newsletter that translates AI news into plain English for $1–10M business owners. Not "here's what OpenAI released." Instead: "Here's what changed this week that can save you time or make you money."</p>
+      <p><strong>Platform:</strong> Beehiiv (free tier to start, scales to paid as needed)</p>
+      <p><strong>Frequency:</strong> Weekly (Tuesday mornings, 8 AM MST)</p>
+
+      <h3>Content Structure (Each Issue)</h3>
+      <ol>
+        <li><strong>Gian's Note</strong> (50–100 words) — A brief personal take. "This week I used AI to do X for a client and it saved them Y hours." Builds trust. Gian writes or edits this in 5 min.</li>
+        <li><strong>The Big Story</strong> (200–300 words) — The one AI development this week that matters most to small business owners. Why it matters, what to do about it.</li>
+        <li><strong>3 Quick Wins</strong> (50 words each) — Specific AI tools, prompts, or tactics they can use this week. Actionable, not theoretical.</li>
+        <li><strong>Tool of the Week</strong> (100 words) — One AI tool with a mini-review: what it does, who it's for, cost, Gian's take.</li>
+        <li><strong>The Bottom Line</strong> (1 sentence) — Punchy takeaway they'll remember.</li>
+      </ol>
+
+      <div class="callout">
+        <span class="tag tag-axel">AXEL</span> Writes 95% of each issue: monitors AI news sources, curates stories, writes all sections, formats for Beehiiv.<br><br>
+        <span class="tag tag-gian">GIAN</span> Adds "Gian's Note" (or edits Axel's draft of it). Quick skim of the issue. Total time: 5–10 minutes per week.
+      </div>
+
+      <h3>Growth Strategy</h3>
+      <table>
+        <tr><th>Channel</th><th>Tactic</th><th>Expected Impact</th></tr>
+        <tr><td>LinkedIn</td><td>Mention newsletter in 1 post/week + link in profile. "I break this down in my newsletter — link in comments."</td><td>5–15 subs/week</td></tr>
+        <tr><td>Email Signature</td><td>"📧 Get my weekly AI newsletter: [link]" in every email</td><td>1–3 subs/week (slow but free)</td></tr>
+        <tr><td>Cross-Promotions</td><td>Partner with complementary newsletters via Beehiiv recommendations</td><td>10–30 subs/week once set up</td></tr>
+        <tr><td>Beehiiv Boosts</td><td>Get paid $1–3 per subscriber by recommending other newsletters to your audience</td><td>Also earns revenue</td></tr>
+        <tr><td>Client Referrals</td><td>Every CFO client gets auto-subscribed (with permission). They forward to peers.</td><td>Organic viral loop</td></tr>
+        <tr><td>SEO Audit Leads</td><td>Include newsletter opt-in in cold email sequences and audit reports</td><td>Passive growth from outbound</td></tr>
+      </table>
+
+      <h3>Monetization</h3>
+      <table>
+        <tr><th>Revenue Stream</th><th>When</th><th>Expected $</th></tr>
+        <tr><td><strong>Beehiiv Boosts</strong></td><td>500+ subscribers</td><td>$1–3 per subscriber earned by recommending other newsletters</td></tr>
+        <tr><td><strong>Sponsorships</strong></td><td>2,000+ subscribers</td><td>$25–50 CPM → $50–250 per issue</td></tr>
+        <tr><td><strong>CFO Lead Gen</strong></td><td>Immediately</td><td>Every subscriber is a potential $2,500/mo client. 1 conversion = 50x the effort</td></tr>
+        <tr><td><strong>AI Agent Upsells</strong></td><td>Immediately</td><td>Newsletter readers see Gian as the AI-savvy business advisor → warm leads for AI agent service</td></tr>
+      </table>
+
+      <h3>Launch Checklist</h3>
+      <ul class="checklist">
+        <li>Create Beehiiv account (free tier)</li>
+        <li>Set up newsletter: name, description, branding (navy/gold), welcome email</li>
+        <li>Write Issue #1 (Axel drafts, Gian reviews)</li>
+        <li>Create landing page on Beehiiv with clear value prop</li>
+        <li>Add newsletter link to: LinkedIn profile, email signature, website</li>
+        <li>Announce on LinkedIn with dedicated post</li>
+        <li>Send Issue #1 to personal network (BCC blast to 50–100 contacts)</li>
+        <li>Set up Beehiiv Boost recommendations (earn from day 1)</li>
+        <li>Schedule Issue #2 before Issue #1 goes out (always stay 1 ahead)</li>
+      </ul>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 8 ═══════════════════ -->
+  <div class="section" id="s8">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">8</div>
+      <h2>SEO Audit Lead Gen Machine</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>How It Works</h3>
+      <div class="template-block">Google Maps Scrape → Automated Website Audit → Branded PDF Report → Cold Email with Free Audit → Book Call → Close Remediation Package</div>
+
+      <h4>Step-by-Step</h4>
+      <ol>
+        <li><strong>Scrape Google Maps</strong> — Target: service businesses in specific cities/niches (dentists in Denver, HVAC in Phoenix, law firms in Dallas). Pull business name, website, phone, email.</li>
+        <li><strong>Automated Website Audit</strong> — Axel runs each website through a checklist: page speed (Google PageSpeed Insights API), mobile-friendliness, SSL certificate, meta tags, schema markup, Google Business Profile completeness, broken links, basic keyword analysis.</li>
+        <li><strong>Generate Branded PDF Report</strong> — Alliance CFO branded. Shows scores, issues found, estimated revenue impact. Professional, specific, useful — not a generic template.</li>
+        <li><strong>Cold Email</strong> — Send the free audit with a personalized opener: "Hi [Name], I ran a quick audit on [Business Name]'s website and found a few things costing you leads. I put together a free report — see attached. If you'd like to fix these, I can help. Here's my calendar: [Calendly link]"</li>
+        <li><strong>Follow Up</strong> — Day 3: "Did you get a chance to look at the audit?" Day 7: "Last follow-up — happy to walk you through it if helpful."</li>
+        <li><strong>Book Call</strong> — 15-min call to walk through the report and pitch remediation.</li>
+        <li><strong>Close Remediation Package</strong> — Fix the issues found in the audit.</li>
+      </ol>
+
+      <h3>Pricing</h3>
+      <table>
+        <tr><th>Package</th><th>Price</th><th>Includes</th></tr>
+        <tr><td>Quick Fix</td><td>$500</td><td>Fix top 3 critical issues (speed, meta tags, mobile)</td></tr>
+        <tr><td>Full Remediation</td><td>$1,000–1,500</td><td>Complete SEO cleanup + GBP optimization</td></tr>
+        <tr><td>Monthly Retainer</td><td>$300–500/mo</td><td>Ongoing monitoring, monthly report, continuous improvement</td></tr>
+      </table>
+
+      <h3>Volume Math</h3>
+      <table>
+        <tr><td>Emails sent per night</td><td>100 (across multiple sending domains)</td></tr>
+        <tr><td>Open rate (cold)</td><td>30–40% (with personalized audit attached)</td></tr>
+        <tr><td>Reply rate</td><td>1–2%</td></tr>
+        <tr><td>Warm leads per day</td><td>1–2</td></tr>
+        <tr><td>Close rate (warm lead → paid)</td><td>20–30%</td></tr>
+        <tr><td>Paid clients per week</td><td>1–3</td></tr>
+        <tr><td>Revenue per week</td><td>$500–$4,500</td></tr>
+      </table>
+
+      <h3>Infrastructure Needed</h3>
+      <ul>
+        <li><strong>Sending domains:</strong> 3–5 separate domains (not alliancecfosolutions.com — protect the main domain). Example: alliancecfo-reports.com, cfoseo-audit.com, etc.</li>
+        <li><strong>Email warmup:</strong> 2–3 weeks of sending light volume (10–20/day) before scaling. Use Instantly.ai or Smartlead for warmup.</li>
+        <li><strong>Email tool:</strong> Instantly.ai ($30/mo) or Smartlead ($39/mo) — handles sending, warmup, sequences, analytics</li>
+        <li><strong>Scraping:</strong> Axel handles Google Maps scraping + website auditing</li>
+        <li><strong>PDF generation:</strong> Axel generates branded PDFs automatically</li>
+        <li><strong>CRM:</strong> All replies flow into HubSpot pipeline</li>
+      </ul>
+
+      <h3>Gian's Role: 30 Minutes/Day</h3>
+      <ul>
+        <li><strong>10 min:</strong> Review hot leads (replies flagged by Axel) — decide who to call</li>
+        <li><strong>15 min:</strong> Take 1–2 calls (or schedule for later in the day)</li>
+        <li><strong>5 min:</strong> Review metrics (sent, opened, replied, booked)</li>
+      </ul>
+
+      <h3>Setup Checklist</h3>
+      <ul class="checklist">
+        <li>Purchase 3–5 sending domains ($10–12 each/year)</li>
+        <li>Set up email accounts on each domain (Google Workspace or Zoho)</li>
+        <li>Configure SPF, DKIM, DMARC for each domain</li>
+        <li>Sign up for Instantly.ai or Smartlead</li>
+        <li>Begin warmup period (2–3 weeks before sending)</li>
+        <li>Build audit report template (branded PDF)</li>
+        <li>Write cold email sequences (3-email series)</li>
+        <li>Build scraping pipeline for Google Maps data</li>
+        <li>Test end-to-end: scrape → audit → PDF → email → reply tracking</li>
+        <li>Go live at 25/day, scale to 100/day over 2 weeks</li>
+      </ul>
+
+      <div class="callout warning">
+        <strong>Critical:</strong> Never use your main domain (alliancecfosolutions.com) for cold outreach. If a sending domain gets flagged, it doesn't touch your primary brand.
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 9 ═══════════════════ -->
+  <div class="section" id="s9">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">9</div>
+      <h2>Week-by-Week Roadmap (12 Weeks)</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <p><strong>Start date:</strong> Monday after Hawaii (March 30, 2026)</p>
+      <p><strong>Revenue targets:</strong> $2K/mo incremental by Week 6, $5K/mo incremental by Week 12</p>
+
+      <div class="week-block">
+        <h4>Weeks 1–2 (Mar 30 – Apr 11): Foundation</h4>
+        <p><strong>Theme:</strong> Newsletter launch + domain warmup started</p>
+        <ul>
+          <li>🟢 <strong>Newsletter:</strong> Set up Beehiiv account, branding, welcome email, landing page</li>
+          <li>🟢 <strong>Newsletter:</strong> Write and send Issue #1. Announce on LinkedIn. BCC blast to personal network.</li>
+          <li>🟢 <strong>Newsletter:</strong> Write Issue #2 (stay 1 ahead)</li>
+          <li>🟡 <strong>SEO Machine:</strong> Purchase 3 sending domains. Set up email accounts. Configure DNS (SPF/DKIM/DMARC).</li>
+          <li>🟡 <strong>SEO Machine:</strong> Sign up for Instantly.ai. Begin domain warmup (2–3 weeks).</li>
+          <li>🟡 <strong>SEO Machine:</strong> Build audit report PDF template. Write 3-email cold sequence.</li>
+          <li>📋 <strong>Daily:</strong> LinkedIn post (M/W/F), 30 min client work, 30 min business development outreach</li>
+        </ul>
+      </div>
+
+      <div class="week-block">
+        <h4>Weeks 3–4 (Apr 14 – Apr 25): AI Agent Service + Newsletter Growth</h4>
+        <p><strong>Theme:</strong> First AI agent pitch + newsletter momentum</p>
+        <ul>
+          <li>🟢 <strong>Newsletter:</strong> Issues #3 and #4 out. Enable Beehiiv Boost recommendations.</li>
+          <li>🔵 <strong>AI Agents:</strong> Identify 5 businesses in network that could use AI voice agents</li>
+          <li>🔵 <strong>AI Agents:</strong> Reach out to 3 of them with the pitch. Offer first one at cost ($1K) to build a case study.</li>
+          <li>🔵 <strong>AI Agents:</strong> Set up Vapi account, build first demo agent, practice the pitch</li>
+          <li>🟡 <strong>SEO Machine:</strong> Continue warmup. Build scraping pipeline. Test audit process end-to-end.</li>
+          <li>📋 <strong>Daily:</strong> LinkedIn (M/W/F), newsletter prep (Tue), 2 outreach emails to potential AI agent clients</li>
+        </ul>
+      </div>
+
+      <div class="week-block">
+        <h4>Weeks 5–6 (Apr 28 – May 9): SEO Machine Goes Live</h4>
+        <p><strong>Theme:</strong> Outbound engine starts + first AI agent delivery</p>
+        <ul>
+          <li>🟡 <strong>SEO Machine:</strong> Warmup complete. Start sending 25 audits/day. Scale to 50/day by end of Week 6.</li>
+          <li>🟡 <strong>SEO Machine:</strong> Monitor deliverability daily. Adjust sending volume if needed.</li>
+          <li>🔵 <strong>AI Agents:</strong> Deliver first AI agent setup (if sold in Weeks 3–4). Document process, get testimonial.</li>
+          <li>🟢 <strong>Newsletter:</strong> Issues #5–6. Start cross-promotion outreach to 3 complementary newsletters.</li>
+          <li>📋 <strong>Daily:</strong> 10 min reviewing SEO leads + 15 min calls. LinkedIn. Newsletter Tuesday. AI agent work Wed/Thu.</li>
+        </ul>
+      </div>
+
+      <div class="week-block">
+        <h4>Weeks 7–8 (May 12 – May 23): First Advisory Client Push</h4>
+        <p><strong>Theme:</strong> Convert warm leads to advisory retainers</p>
+        <ul>
+          <li>🔴 <strong>Advisory:</strong> Target 3–5 discovery calls from combined pipeline (SEO leads, LinkedIn, network, AI agent upsells)</li>
+          <li>🔴 <strong>Advisory:</strong> Send 2–3 proposals. Goal: close 1 new advisory client at $2,500+/mo.</li>
+          <li>🟡 <strong>SEO Machine:</strong> Scale to 75–100 emails/day. Review and optimize email copy based on reply data.</li>
+          <li>🔵 <strong>AI Agents:</strong> Refine offering based on first delivery. Adjust pricing if needed. Pitch 3 more businesses.</li>
+          <li>🟢 <strong>Newsletter:</strong> Issues #7–8. Should be at 200–400 subscribers.</li>
+        </ul>
+      </div>
+
+      <div class="week-block">
+        <h4>Weeks 9–10 (May 26 – Jun 6): Scale What's Working</h4>
+        <p><strong>Theme:</strong> Double down on winners, cut losers</p>
+        <ul>
+          <li>📊 <strong>Review:</strong> What's generating leads? What's generating revenue? What's a time sink?</li>
+          <li>If SEO machine is converting → scale to 100+/day and consider adding a second niche/geography</li>
+          <li>If AI agents are selling → systemize delivery further, build proposal template, create one-pager</li>
+          <li>If newsletter is growing → invest in paid growth via Beehiiv Boosts or SparkLoop</li>
+          <li>If something isn't working → kill it or pause it. No sunk cost fallacy.</li>
+          <li>🔴 <strong>Advisory:</strong> Continue pipeline work. Should have 1 new client by now. Target 2nd.</li>
+        </ul>
+      </div>
+
+      <div class="week-block">
+        <h4>Weeks 11–12 (Jun 9 – Jun 20): Revenue Check</h4>
+        <p><strong>Theme:</strong> Where are we vs targets?</p>
+        <table>
+          <tr><th>Stream</th><th>Target by Week 12</th><th>Stretch Goal</th></tr>
+          <tr><td>CFO Advisory (new clients)</td><td>1 client @ $2,500/mo</td><td>2 clients @ $2,500+/mo</td></tr>
+          <tr><td>AI Agent Setups</td><td>2 setups completed ($4–10K)</td><td>3+ setups + 1 recurring</td></tr>
+          <tr><td>SEO Remediation</td><td>$1,500–3,000 in project revenue</td><td>$5K+ and 2 retainers</td></tr>
+          <tr><td>Newsletter Subscribers</td><td>500 subscribers</td><td>1,000 subscribers</td></tr>
+          <tr><td><strong>Total New Monthly Revenue</strong></td><td><strong>$3,500–5,000/mo</strong></td><td><strong>$7,000+/mo</strong></td></tr>
+        </table>
+        <ul>
+          <li>Full financial review of all revenue streams and time investment</li>
+          <li>$/hour analysis: which activities generate the most revenue per hour of Gian's time?</li>
+          <li>Plan for Weeks 13–24 based on data</li>
+        </ul>
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 10 ═══════════════════ -->
+  <div class="section" id="s10">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">10</div>
+      <h2>Daily Schedule (Post-Hawaii)</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>Ideal Day Structure</h3>
+      <table>
+        <tr><th>Time</th><th>Block</th><th>Activities</th></tr>
+        <tr><td>6:30–7:00</td><td>🌅 Wake Up</td><td>Coffee, no phone. Mental prep.</td></tr>
+        <tr><td>7:00–8:00</td><td>📧 Admin Block</td><td>Email triage, Slack/text responses, quick client replies. Check Axel's overnight work (newsletter drafts, reports, lead gen results).</td></tr>
+        <tr><td>8:00–8:30</td><td>📱 LinkedIn</td><td>Post content (M/W/F). Engage with feed (comment on 3–5 posts). Check messages.</td></tr>
+        <tr><td>8:30–9:30</td><td>🏋️ Exercise</td><td>Non-negotiable. Gym, run, hike. Clear head before deep work.</td></tr>
+        <tr><td>9:30–12:00</td><td>💼 Client Work</td><td>Deep work block. Review Axel's deliverable drafts, add strategic commentary, finalize reports. Client calls scheduled here.</td></tr>
+        <tr><td>12:00–1:00</td><td>🍽️ Lunch</td><td>Break. Step away from screens.</td></tr>
+        <tr><td>1:00–3:00</td><td>🚀 Business Development</td><td>Discovery calls, follow-ups, LinkedIn outreach, AI agent pitches, SEO lead review, proposal writing.</td></tr>
+        <tr><td>3:00–3:30</td><td>📊 SEO Lead Review</td><td>Check overnight SEO audit replies. Flag hot leads. Book calls for tomorrow.</td></tr>
+        <tr><td>3:30–4:30</td><td>🔧 Project Work</td><td>AI agent setups, newsletter finalization (Tuesdays), strategic projects.</td></tr>
+        <tr><td>4:30–5:00</td><td>📝 Wrap Up</td><td>Update CRM, prep tomorrow's priorities, queue Axel's overnight tasks.</td></tr>
+        <tr><td>5:00+</td><td>🏠 Family Time</td><td>Done. No client work. Phone on silent for business.</td></tr>
+      </table>
+
+      <h3>Weekly Rhythm</h3>
+      <table>
+        <tr><th>Day</th><th>Focus</th><th>Key Activities</th></tr>
+        <tr><td><strong>Monday</strong></td><td>Admin + Planning</td><td>Weekly plan review, CRM pipeline review, LinkedIn post, weekly client check-ins sent</td></tr>
+        <tr><td><strong>Tuesday</strong></td><td>Newsletter Day</td><td>Review and send newsletter (AM), client work, BNI meeting (if applicable)</td></tr>
+        <tr><td><strong>Wednesday</strong></td><td>Client Deep Work</td><td>LinkedIn post, monthly reviews/QBRs, deliverable finalization</td></tr>
+        <tr><td><strong>Thursday</strong></td><td>Business Development</td><td>Discovery calls, AI agent pitches, networking events, outreach</td></tr>
+        <tr><td><strong>Friday</strong></td><td>Close the Week</td><td>LinkedIn post, Upwork applications, CRM cleanup, weekly metrics review, plan next week</td></tr>
+      </table>
+
+      <div class="callout success">
+        <strong>The math:</strong> 5 hours/day × 5 days = 25 hours/week of focused work. At 3 clients ($2,500 avg) + side revenue, that's $300+/hr effective rate. This is the lifestyle business.
+      </div>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 11 ═══════════════════ -->
+  <div class="section" id="s11">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">11</div>
+      <h2>Discovery Call Framework</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>5-Phase Structure (20–45 min)</h3>
+      <p>This works for any prospect — CFO, AI agent, or advisory. Adapt the specifics, keep the structure.</p>
+
+      <h4>Phase 1: Rapport (2–3 min)</h4>
+      <div class="template-block">"Hey [Name], thanks for making time. Quick background — I'm a CPA and business operator here in Colorado. I own businesses and work as a fractional CFO for owners like you. But before I talk about me — tell me what's going on."</div>
+      <p><strong>Goal:</strong> Be human. Don't pitch. Let them talk first. Match their energy — if they're casual, be casual. If they're formal, meet them there.</p>
+
+      <h4>Phase 2: Understand (10–15 min)</h4>
+      <p>Ask 4–5 of these. Listen more than you talk.</p>
+      <ul>
+        <li><strong>"What's keeping you up at night financially?"</strong> — Opens the emotional door</li>
+        <li><strong>"Walk me through how you currently see your numbers."</strong> — Reveals sophistication level</li>
+        <li><strong>"When you make a big decision — hiring, expanding, taking on debt — how do you decide?"</strong> — Gut vs data</li>
+        <li><strong>"What's your revenue and roughly how many employees?"</strong> — Qualifies size</li>
+        <li><strong>"If you had a CFO sitting next to you right now, what's the first thing you'd ask?"</strong> — They tell you the scope</li>
+        <li><strong>"What does the next 12 months look like for you?"</strong> — Growth, stabilization, sale?</li>
+      </ul>
+
+      <h4>Phase 3: Probe (5–10 min)</h4>
+      <p>Go deeper on the pain they revealed. This is where you earn trust.</p>
+      <ul>
+        <li><strong>"You mentioned [X]. How long has that been a problem?"</strong></li>
+        <li><strong>"What's that costing you — not just in dollars, but in time, stress, missed opportunities?"</strong></li>
+        <li><strong>"Have you tried to solve this before? What happened?"</strong></li>
+        <li><strong>"If we could fix [X] in the next 90 days, what would that mean for you?"</strong></li>
+      </ul>
+
+      <h4>Phase 4: Position (5–7 min)</h4>
+      <div class="template-block">"Based on what you're telling me, here's what I think is going on: [reflect their pain back clearly]. Here's how I'd typically approach that.
+
+Month one: I'd get my arms around your books and cash flow. You'd have a clear picture of where you actually stand.
+
+Month two: You'd have a dashboard and forecast you can actually use — no more guessing.
+
+From there, we work on the strategic stuff — pricing, margins, growth planning, the decisions that actually move the needle."</div>
+      <p>Mention the CPA credential naturally. Don't brag — let it land: "I'm a CPA, so I can also handle the tax planning side, which most fractional CFOs can't."</p>
+
+      <h4>Phase 5: Close (2–3 min)</h4>
+      <div class="template-block">"I think there's a real fit here. Here's what I'd suggest — I'll put together a simple proposal with scope and pricing, and send it over by [specific day]. Take a look, ask questions, no pressure. Sound good?"</div>
+      <p><strong>Always name a specific day</strong> for the proposal. "This week" is weak. "Thursday by noon" is accountable.</p>
+
+      <h3>Objection Handling</h3>
+      <table>
+        <tr><th>Objection</th><th>Response</th></tr>
+        <tr><td><strong>"That's more than I expected"</strong></td><td>"I get that. Let me ask — what's the cost of continuing to make decisions without clear financial data? Most of my clients find one insight in the first month that pays for the entire engagement. If we find $5K in margin improvement on a $2,500 retainer, that's a 2x return in month one."</td></tr>
+        <tr><td><strong>"I need to think about it"</strong></td><td>"Totally fair. What specifically do you want to think through? I'd rather address any concerns now than have them linger." [If they push back: "No problem. I'll follow up [specific day]. What's the best way to reach you?"]</td></tr>
+        <tr><td><strong>"The timing isn't right"</strong></td><td>"When would be? I ask because most owners tell me the timing isn't right — right up until cash flow surprises them. What would need to change for the timing to feel right?"</td></tr>
+        <tr><td><strong>"I already have a bookkeeper"</strong></td><td>"Good — you should. I don't replace bookkeepers, I work with them. They handle the day-to-day data entry and reconciliation. I handle the 'what does this mean and what do we do about it' layer. Think of it as your bookkeeper records the score — I help you win the game."</td></tr>
+        <tr><td><strong>"Can I just pay hourly?"</strong></td><td>"I work on retainer because it aligns incentives — you get full access and consistent deliverables, I commit dedicated time to your business every month. Hourly creates a disincentive for you to call me. I want you to call me."</td></tr>
+      </table>
+
+      <h3>Follow-Up Sequence After Call</h3>
+      <table>
+        <tr><th>When</th><th>Action</th></tr>
+        <tr><td>Same day</td><td>Update HubSpot with detailed notes. Log pain points, size, timeline, likelihood.</td></tr>
+        <tr><td>Within 24 hrs</td><td>Send proposal + follow-up email: "Enjoyed our conversation. As promised, here's how I'd approach [their specific pain]."</td></tr>
+        <tr><td>Day 3</td><td>If no response: "Just checking in — did you get a chance to look at the proposal? Happy to answer any questions."</td></tr>
+        <tr><td>Day 7</td><td>If no response: "Hi [Name], circling back on the proposal. If the timing isn't right, no worries at all — just let me know and I'll check back in a few months."</td></tr>
+        <tr><td>Day 14</td><td>Final touch: "Last note from me on this — if anything changes, my door's open. Wishing you the best with [something specific they mentioned]."</td></tr>
+        <tr><td>Day 90</td><td>Soft re-engage: "Hey [Name], been thinking about your [specific challenge]. How's it going?"</td></tr>
+      </table>
+
+    </div></div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 12 ═══════════════════ -->
+  <div class="section" id="s12">
+    <div class="section-header" onclick="toggle(this)">
+      <div class="num">12</div>
+      <h2>Client Transition Plan (CAS & Ascend)</h2>
+      <span class="chevron">▸</span>
+    </div>
+    <div class="section-body"><div class="section-content">
+
+      <h3>Current Situation</h3>
+      <p><strong>Colorado Asset Solutions (CAS)</strong> and <strong>Ascend Property Management</strong> are low-paying bookkeeping clients. They eat time, ping throughout the day, and represent the wrong type of work at the wrong rates. They need to go — but strategically.</p>
+
+      <div class="callout danger">
+        <strong>TRIGGER: Do NOT transition until you have 2 advisory clients at $2,500+/mo secured.</strong> Never cut revenue before the replacement is in hand. Smart sequencing, not avoidance.
+      </div>
+
+      <h3>Three Options for Each Client</h3>
+
+      <h4>Option A: Raise Rates (Preferred First Step)</h4>
+      <p>If the client is willing to pay advisory rates, keep them — but change the scope.</p>
+      <div class="template-block">"Hey [Name], I want to talk about how we're working together. Over the past few months, I've been handling a lot of day-to-day bookkeeping tasks — transaction coding, reconciliations, data entry. That's important work, but it's not where I add the most value for you.
+
+What I'm really good at — and what I think would help your business the most — is the strategic layer: cash flow forecasting, financial analysis, helping you make better decisions with your numbers.
+
+Here's what I'd like to propose: I transition the bookkeeping work to a dedicated bookkeeper I trust, and I shift my role to a fractional CFO engagement. I'd oversee the bookkeeper's work, do the monthly financial reviews, build you a real forecast, and be your strategic finance partner.
+
+The bookkeeping would cost you about [$500-800/mo with a bookkeeper]. The CFO engagement would be [$2,500/mo]. Combined, it's more than you're paying now — but the value is in a completely different league.
+
+What do you think?"</div>
+
+      <h4>Option B: Transition to a Bookkeeper</h4>
+      <p>If they can't afford advisory rates, hand them off to a bookkeeper you trust.</p>
+      <div class="template-block">"Hey [Name], I've been doing some thinking about how to best serve you. Honestly, what you need right now is consistent, reliable bookkeeping — and that's not my highest and best use for you. I'm a CPA focused on financial strategy, and I want to make sure you're getting the right service at the right price.
+
+I'd like to introduce you to [Bookkeeper Name], who specializes in exactly the type of work you need. They're reliable, detail-oriented, and I'll work with them during the transition to make sure nothing falls through the cracks.
+
+I want this to be a smooth handoff — I'll stay involved for 30 days to ensure the transition goes well. And if you ever need strategic financial help down the road, I'm here."</div>
+
+      <h4>Option C: Release the Client</h4>
+      <p>If they're a net negative (too demanding, too cheap, bad fit), let them go.</p>
+      <div class="template-block">"Hey [Name], I've been evaluating my practice and I've made the decision to focus exclusively on fractional CFO advisory work going forward. That means I won't be able to continue providing bookkeeping services after [date — give 30 days notice].
+
+I want to make sure you're taken care of — I can recommend a couple of bookkeepers who'd be a great fit. I'll also make sure all your files and access are organized for whoever takes over.
+
+Thank you for trusting me with your finances. I genuinely wish you the best."</div>
+
+      <h3>Transition Timeline</h3>
+      <table>
+        <tr><th>Phase</th><th>Timing</th><th>Action</th></tr>
+        <tr><td>Pre-transition</td><td>Now – until 2 advisory clients signed</td><td>Keep serving CAS & Ascend. Don't cut revenue prematurely. Focus energy on landing advisory clients.</td></tr>
+        <tr><td>Decision</td><td>When 2nd advisory client signs</td><td>For each: decide Option A, B, or C based on relationship quality and willingness to pay advisory rates.</td></tr>
+        <tr><td>Conversation</td><td>Within 1 week of decision</td><td>Have the conversation. Use scripts above. Be direct, kind, and firm.</td></tr>
+        <tr><td>Transition</td><td>30-day notice period</td><td>If Option B: introduce bookkeeper, co-work for 2 weeks, hand off fully. If Option C: organize files, transfer access, final deliverables.</td></tr>
+        <tr><td>Complete</td><td>End of 30 days</td><td>Client fully transitioned. Gian's calendar is clear for advisory work.</td></tr>
+      </table>
+
+      <h3>Bookkeeper Network (Build Now)</h3>
+      <p>Start building relationships with 2–3 bookkeepers you trust <strong>before</strong> you need them:</p>
+      <ul>
+        <li>Local bookkeepers (Golden/Denver) who use QBO</li>
+        <li>Virtual bookkeeper services (Bench, Decimal, or independent)</li>
+        <li>These become two-way referral partners: they send you clients who outgrow bookkeeping, you send them clients who need bookkeeping</li>
+      </ul>
+
+      <div class="callout success">
+        <strong>The end state:</strong> Zero bookkeeping clients. 3–4 advisory clients at $2,500–$10K/mo. 20–30 hours/week. Axel handles the grunt work. Gian delivers strategic insight. That's the business.
+      </div>
+
+    </div></div>
+  </div>
+
+</main>
+
+<script>
+// ── NAV GENERATION ──
+const sections = [
+  'Firm Overview', 'Client Onboarding System', 'Recurring Deliverables',
+  'Client Communication Cadence', "Axel's Role (AI OS)", 'AI Agent Setup Service',
+  'AI Newsletter', 'SEO Audit Lead Gen Machine', '12-Week Roadmap',
+  'Daily Schedule', 'Discovery Call Framework', 'Client Transition Plan'
+];
+const nav = document.getElementById('nav');
+sections.forEach((s, i) => {
+  const a = document.createElement('a');
+  a.href = `#s${i+1}`;
+  a.innerHTML = `<span class="nav-num">${String(i+1).padStart(2,'0')}</span>${s}`;
+  a.addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+  });
+  nav.appendChild(a);
+});
+
+// ── TOGGLE ──
+function toggle(header) {
+  header.closest('.section').classList.toggle('open');
+}
+function toggleAll(open) {
+  document.querySelectorAll('.section').forEach(s => {
+    s.classList.toggle('open', open);
+  });
+}
+
+// ── SCROLL SPY ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      document.querySelectorAll('#nav a').forEach(a => a.classList.remove('active'));
+      const link = document.querySelector(`#nav a[href="#${id}"]`);
+      if (link) link.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
